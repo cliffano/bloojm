@@ -70,7 +70,7 @@ public class GravatarPlugin implements Plugin, Listener {
     /**
      * Meta data key for Gravatar ID.
      */
-    public static final String METADATA_GRAVATAR_ID = "blojsom-plugin-gravatar";
+    public static final String METADATA_GRAVATAR_ID = "gravatar-id";
 
     /**
      * Writes plugin init message.
