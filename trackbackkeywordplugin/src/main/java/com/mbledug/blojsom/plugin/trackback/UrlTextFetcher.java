@@ -109,7 +109,7 @@ class UrlTextFetcher {
      * @throws IOException when there's a problem with retrieving the text
      * content
      */
-    final String fetchText(final String url) throws IOException {
+    public final String fetchText(final String url) throws IOException {
 
         mHttpMethod.setURI(new URI(url, true));
         mHttpMethod.setFollowRedirects(true);

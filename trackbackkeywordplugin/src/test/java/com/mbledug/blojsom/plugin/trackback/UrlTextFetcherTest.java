@@ -21,7 +21,7 @@ public class UrlTextFetcherTest extends TestCase {
 
     public void testFetchTextSuccessWithValidUrl() {
         mMockHttpClient = mDataFixture.createMockHttpClient(false, null);
-        mMockHttpMethod = mDataFixture.createMockHttpMethod(DataFixture.VALID_URL);
+        mMockHttpMethod = mDataFixture.createMockHttpMethod(DataFixture.VALID_URL, DataFixture.TEXT_ALL_KEYWORDS);
         mFetcher = new UrlTextFetcher(mMockHttpClient, mMockHttpMethod);
         try {
             String text = mFetcher.fetchText(DataFixture.VALID_URL);
@@ -33,7 +33,7 @@ public class UrlTextFetcherTest extends TestCase {
 
     public void testFetchTextFailureWithInvalidUrl() {
         mMockHttpClient = mDataFixture.createMockHttpClient(false, new URIException());
-        mMockHttpMethod = mDataFixture.createMockHttpMethod(DataFixture.INVALID_URL);
+        mMockHttpMethod = mDataFixture.createMockHttpMethod(DataFixture.INVALID_URL, DataFixture.TEXT_ALL_KEYWORDS);
         mFetcher = new UrlTextFetcher(mMockHttpClient, mMockHttpMethod);
         try {
             String text = mFetcher.fetchText(DataFixture.INVALID_URL);
@@ -48,7 +48,7 @@ public class UrlTextFetcherTest extends TestCase {
 
     public void testFetchSuccessWithProxy() {
         mMockHttpClient = mDataFixture.createMockHttpClient(true, null);
-        mMockHttpMethod = mDataFixture.createMockHttpMethod(DataFixture.VALID_URL);
+        mMockHttpMethod = mDataFixture.createMockHttpMethod(DataFixture.VALID_URL, DataFixture.TEXT_ALL_KEYWORDS);
         mFetcher = new UrlTextFetcher(mMockHttpClient, mMockHttpMethod);
         try {
           mFetcher.setProxy(
@@ -62,27 +62,27 @@ public class UrlTextFetcherTest extends TestCase {
         }
     }
 
-//    public void testExecuteFailureInvalidProxy() {
-//        try {
-//            mFetcher.setProxy(DUMMY_PROXY_HOST, DUMMY_PROXY_PORT);
-//            mFetcher.fetchText(VALID_URL);
-//            fail("Test with invalid proxy should have failed at this point.");
-//        } catch (Exception e) {
-//            // exception is thrown as expected
-//        }
-//    }
-//
-//    public void testExecuteFailureInvalidAuthenticatedProxy() {
-//        try {
-//            mFetcher.setProxy(
-//                    DUMMY_PROXY_HOST,
-//                    DUMMY_PROXY_PORT,
-//                    DUMMY_PROXY_USERNAME,
-//                    DUMMY_PROXY_PASSWORD);
-//            mFetcher.fetchText(VALID_URL);
-//            fail("Test with invalid authenticated proxy should have failed at this point.");
-//        } catch (Exception e) {
-//            // exception is thrown as expected
-//        }
-//    }
+    public void testExecuteFailureInvalidProxy() {
+        try {
+            mFetcher.setProxy(DataFixture.DUMMY_PROXY_HOST, DataFixture.DUMMY_PROXY_PORT);
+            mFetcher.fetchText(DataFixture.VALID_URL);
+            fail("Test with invalid proxy should have failed at this point.");
+        } catch (Exception e) {
+            // exception is thrown as expected
+        }
+    }
+
+    public void testExecuteFailureInvalidAuthenticatedProxy() {
+        try {
+            mFetcher.setProxy(
+                    DataFixture.DUMMY_PROXY_HOST,
+                    DataFixture.DUMMY_PROXY_PORT,
+                    DataFixture.DUMMY_PROXY_USERNAME,
+                    DataFixture.DUMMY_PROXY_PASSWORD);
+            mFetcher.fetchText(DataFixture.VALID_URL);
+            fail("Test with invalid authenticated proxy should have failed at this point.");
+        } catch (Exception e) {
+            // exception is thrown as expected
+        }
+    }
 }

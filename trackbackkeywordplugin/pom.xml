@@ -10,6 +10,8 @@
     of all or at least one of the specified keywords which will determine
     whether the trackback is a spam or not. A trackback spam will then be
     deleted or moderated.
+    This plugin will not overwrite trackback deletion/moderation
+    status set up by other priorly executed plugins.
   </description>
   <inceptionYear>2005</inceptionYear>
   <name>TrackbackKeyword Plugin</name>
