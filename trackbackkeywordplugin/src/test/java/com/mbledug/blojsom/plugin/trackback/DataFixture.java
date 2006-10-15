@@ -67,11 +67,11 @@ public class DataFixture extends MockObjectTestCase {
         return (HttpMethod) mockHttpMethod.proxy();
     }
 
-    UrlTextFetcher createMockUrlTextFetcher(String text) {
+    UrlTextFetcher createMockUrlTextFetcher(String text, boolean withProxy, Exception executeMethodException) {
         Mock mockUrlTextFetcher = mock(
                 UrlTextFetcher.class,
                 new Class[]{HttpClient.class, HttpMethod.class},
-                new Object[]{createMockHttpClient(false, null), createMockHttpMethod(VALID_URL, text)});
+                new Object[]{createMockHttpClient(withProxy, executeMethodException), createMockHttpMethod(VALID_URL, text)});
         mockUrlTextFetcher.expects(once()).method("fetchText").will(returnValue(text));
         return (UrlTextFetcher) mockUrlTextFetcher.proxy();
     }

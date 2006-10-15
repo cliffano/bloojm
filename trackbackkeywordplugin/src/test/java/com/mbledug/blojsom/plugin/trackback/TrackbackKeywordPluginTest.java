@@ -1,5 +1,7 @@
 package com.mbledug.blojsom.plugin.trackback;
 
+import java.io.IOException;
+
 import java.util.Map;
 
 import junit.framework.TestCase;
@@ -19,7 +21,19 @@ public class TrackbackKeywordPluginTest extends TestCase {
     }
 
     public void testProcessEventTrackbackNotSpamSuspect() {
-        UrlTextFetcher urlTextFetcher = mDataFixture.createMockUrlTextFetcher(DataFixture.TEXT_ALL_KEYWORDS);
+        UrlTextFetcher urlTextFetcher = mDataFixture.createMockUrlTextFetcher(DataFixture.TEXT_ALL_KEYWORDS, false, null);
+        Listener trackbackKeywordPlugin = new TrackbackKeywordPlugin(urlTextFetcher);
+        TrackbackResponseSubmissionEvent event = mDataFixture.createTrackbackResponseSubmissionEventWithEnabledPlugin();
+        Map metaData = event.getMetaData();
+        assertNull(metaData.get(TrackbackPlugin.BLOJSOM_PLUGIN_TRACKBACK_METADATA_DESTROY));
+        assertNull(metaData.get(TrackbackModerationPlugin.BLOJSOM_TRACKBACK_MODERATION_PLUGIN_APPROVED));
+        trackbackKeywordPlugin.processEvent(event);
+        assertNull(metaData.get(TrackbackPlugin.BLOJSOM_PLUGIN_TRACKBACK_METADATA_DESTROY));
+        assertNull(metaData.get(TrackbackModerationPlugin.BLOJSOM_TRACKBACK_MODERATION_PLUGIN_APPROVED));
+    }
+
+    public void testProcessEventTrackbackWithIoException() {
+        UrlTextFetcher urlTextFetcher = mDataFixture.createMockUrlTextFetcher(DataFixture.TEXT_ALL_KEYWORDS, false, new IOException());
         Listener trackbackKeywordPlugin = new TrackbackKeywordPlugin(urlTextFetcher);
         TrackbackResponseSubmissionEvent event = mDataFixture.createTrackbackResponseSubmissionEventWithEnabledPlugin();
         Map metaData = event.getMetaData();
@@ -31,7 +45,7 @@ public class TrackbackKeywordPluginTest extends TestCase {
     }
 
     public void testProcessEventTrackbackNotSpamSuspectBehindProxy() {
-        UrlTextFetcher urlTextFetcher = mDataFixture.createMockUrlTextFetcher(DataFixture.TEXT_ALL_KEYWORDS);
+        UrlTextFetcher urlTextFetcher = mDataFixture.createMockUrlTextFetcher(DataFixture.TEXT_ALL_KEYWORDS, true, null);
         Listener trackbackKeywordPlugin = new TrackbackKeywordPlugin(urlTextFetcher);
         TrackbackResponseSubmissionEvent event = mDataFixture.createTrackbackResponseSubmissionEventWithEnabledPluginBehindProxy();
         Map metaData = event.getMetaData();
@@ -43,7 +57,7 @@ public class TrackbackKeywordPluginTest extends TestCase {
     }
 
     public void testProcessEventTrackbackNotSpamSuspectBehindAuthenticatedProxy() {
-        UrlTextFetcher urlTextFetcher = mDataFixture.createMockUrlTextFetcher(DataFixture.TEXT_ALL_KEYWORDS);
+        UrlTextFetcher urlTextFetcher = mDataFixture.createMockUrlTextFetcher(DataFixture.TEXT_ALL_KEYWORDS, true, null);
         Listener trackbackKeywordPlugin = new TrackbackKeywordPlugin(urlTextFetcher);
         TrackbackResponseSubmissionEvent event = mDataFixture.createTrackbackResponseSubmissionEventWithEnabledPluginBehindAuthenticatedProxy();
         Map metaData = event.getMetaData();
@@ -55,7 +69,7 @@ public class TrackbackKeywordPluginTest extends TestCase {
     }
 
     public void testProcessEventTrackbackSpamSuspectToBeDeleted() {
-        UrlTextFetcher urlTextFetcher = mDataFixture.createMockUrlTextFetcher(DataFixture.TEXT_NO_KEYWORD);
+        UrlTextFetcher urlTextFetcher = mDataFixture.createMockUrlTextFetcher(DataFixture.TEXT_NO_KEYWORD, false, null);
         Listener trackbackKeywordPlugin = new TrackbackKeywordPlugin(urlTextFetcher);
         TrackbackResponseSubmissionEvent event = mDataFixture.createTrackbackResponseSubmissionEventWithEnabledPluginAndTextHasAllKeywordsForDeletion();
         Map metaData = event.getMetaData();
@@ -67,7 +81,7 @@ public class TrackbackKeywordPluginTest extends TestCase {
     }
 
     public void testProcessEventTrackbackSpamSuspectToBeModerated() {
-        UrlTextFetcher urlTextFetcher = mDataFixture.createMockUrlTextFetcher(DataFixture.TEXT_NO_KEYWORD);
+        UrlTextFetcher urlTextFetcher = mDataFixture.createMockUrlTextFetcher(DataFixture.TEXT_NO_KEYWORD, false, null);
         Listener trackbackKeywordPlugin = new TrackbackKeywordPlugin(urlTextFetcher);
         TrackbackResponseSubmissionEvent event = mDataFixture.createTrackbackResponseSubmissionEventWithEnabledPluginAndTextHasOneKeywordForModeration();
         Map metaData = event.getMetaData();
