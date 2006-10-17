@@ -3,6 +3,7 @@ package com.mbledug.blojsom.plugin.trackback;
 import java.io.IOException;
 
 import java.util.Map;
+import java.util.Properties;
 
 import junit.framework.TestCase;
 
@@ -46,8 +47,12 @@ public class TrackbackKeywordPluginTest extends TestCase {
 
     public void testProcessEventTrackbackNotSpamSuspectBehindProxy() {
         UrlTextFetcher urlTextFetcher = mDataFixture.createMockUrlTextFetcher(DataFixture.TEXT_ALL_KEYWORDS, true, null);
-        Listener trackbackKeywordPlugin = new TrackbackKeywordPlugin(urlTextFetcher);
-        TrackbackResponseSubmissionEvent event = mDataFixture.createTrackbackResponseSubmissionEventWithEnabledPluginBehindProxy();
+        TrackbackKeywordPlugin trackbackKeywordPlugin = new TrackbackKeywordPlugin(urlTextFetcher);
+        Properties properties = new Properties();
+        properties.setProperty(TrackbackKeywordPlugin.PROPERTY_PROXY_HOST, DataFixture.DUMMY_PROXY_HOST);
+        properties.setProperty(TrackbackKeywordPlugin.PROPERTY_PROXY_PORT, String.valueOf(DataFixture.DUMMY_PROXY_PORT));
+        trackbackKeywordPlugin.setProperties(properties);
+        TrackbackResponseSubmissionEvent event = mDataFixture.createTrackbackResponseSubmissionEventWithEnabledPlugin();
         Map metaData = event.getMetaData();
         assertNull(metaData.get(TrackbackPlugin.BLOJSOM_PLUGIN_TRACKBACK_METADATA_DESTROY));
         assertNull(metaData.get(TrackbackModerationPlugin.BLOJSOM_TRACKBACK_MODERATION_PLUGIN_APPROVED));
@@ -58,8 +63,14 @@ public class TrackbackKeywordPluginTest extends TestCase {
 
     public void testProcessEventTrackbackNotSpamSuspectBehindAuthenticatedProxy() {
         UrlTextFetcher urlTextFetcher = mDataFixture.createMockUrlTextFetcher(DataFixture.TEXT_ALL_KEYWORDS, true, null);
-        Listener trackbackKeywordPlugin = new TrackbackKeywordPlugin(urlTextFetcher);
-        TrackbackResponseSubmissionEvent event = mDataFixture.createTrackbackResponseSubmissionEventWithEnabledPluginBehindAuthenticatedProxy();
+        TrackbackKeywordPlugin trackbackKeywordPlugin = new TrackbackKeywordPlugin(urlTextFetcher);
+        Properties properties = new Properties();
+        properties.setProperty(TrackbackKeywordPlugin.PROPERTY_PROXY_HOST, DataFixture.DUMMY_PROXY_HOST);
+        properties.setProperty(TrackbackKeywordPlugin.PROPERTY_PROXY_PORT, String.valueOf(DataFixture.DUMMY_PROXY_PORT));
+        properties.setProperty(TrackbackKeywordPlugin.PROPERTY_PROXY_USERNAME, DataFixture.DUMMY_PROXY_USERNAME);
+        properties.setProperty(TrackbackKeywordPlugin.PROPERTY_PROXY_PASSWORD, DataFixture.DUMMY_PROXY_PASSWORD);
+        trackbackKeywordPlugin.setProperties(properties);
+        TrackbackResponseSubmissionEvent event = mDataFixture.createTrackbackResponseSubmissionEventWithEnabledPlugin();
         Map metaData = event.getMetaData();
         assertNull(metaData.get(TrackbackPlugin.BLOJSOM_PLUGIN_TRACKBACK_METADATA_DESTROY));
         assertNull(metaData.get(TrackbackModerationPlugin.BLOJSOM_TRACKBACK_MODERATION_PLUGIN_APPROVED));
@@ -70,8 +81,13 @@ public class TrackbackKeywordPluginTest extends TestCase {
 
     public void testProcessEventTrackbackSpamSuspectToBeDeleted() {
         UrlTextFetcher urlTextFetcher = mDataFixture.createMockUrlTextFetcher(DataFixture.TEXT_NO_KEYWORD, false, null);
-        Listener trackbackKeywordPlugin = new TrackbackKeywordPlugin(urlTextFetcher);
-        TrackbackResponseSubmissionEvent event = mDataFixture.createTrackbackResponseSubmissionEventWithEnabledPluginAndTextHasAllKeywordsForDeletion();
+        TrackbackKeywordPlugin trackbackKeywordPlugin = new TrackbackKeywordPlugin(urlTextFetcher);
+        Properties properties = new Properties();
+        properties.setProperty(TrackbackKeywordPlugin.PROPERTY_KEYWORDS, DataFixture.CSV_MORE_THAN_ONE_KEYWORDS);
+        properties.setProperty(TrackbackKeywordPlugin.PROPERTY_ACTION, TrackbackKeywordPlugin.ACTION_DELETE);
+        properties.setProperty(TrackbackKeywordPlugin.PROPERTY_CHECK_TYPE, TrackbackKeywordPlugin.CHECK_TYPE_ALL);
+        trackbackKeywordPlugin.setProperties(properties);
+        TrackbackResponseSubmissionEvent event = mDataFixture.createTrackbackResponseSubmissionEventWithEnabledPlugin();
         Map metaData = event.getMetaData();
         assertNull(metaData.get(TrackbackPlugin.BLOJSOM_PLUGIN_TRACKBACK_METADATA_DESTROY));
         assertNull(metaData.get(TrackbackModerationPlugin.BLOJSOM_TRACKBACK_MODERATION_PLUGIN_APPROVED));
@@ -82,8 +98,11 @@ public class TrackbackKeywordPluginTest extends TestCase {
 
     public void testProcessEventTrackbackSpamSuspectToBeModerated() {
         UrlTextFetcher urlTextFetcher = mDataFixture.createMockUrlTextFetcher(DataFixture.TEXT_NO_KEYWORD, false, null);
-        Listener trackbackKeywordPlugin = new TrackbackKeywordPlugin(urlTextFetcher);
-        TrackbackResponseSubmissionEvent event = mDataFixture.createTrackbackResponseSubmissionEventWithEnabledPluginAndTextHasOneKeywordForModeration();
+        TrackbackKeywordPlugin trackbackKeywordPlugin = new TrackbackKeywordPlugin(urlTextFetcher);
+        Properties properties = new Properties();
+        properties.setProperty(TrackbackKeywordPlugin.PROPERTY_KEYWORDS, DataFixture.CSV_ONE_KEYWORD);
+        trackbackKeywordPlugin.setProperties(properties);
+        TrackbackResponseSubmissionEvent event = mDataFixture.createTrackbackResponseSubmissionEventWithEnabledPlugin();
         Map metaData = event.getMetaData();
         assertNull(metaData.get(TrackbackPlugin.BLOJSOM_PLUGIN_TRACKBACK_METADATA_DESTROY));
         assertNull(metaData.get(TrackbackModerationPlugin.BLOJSOM_TRACKBACK_MODERATION_PLUGIN_APPROVED));

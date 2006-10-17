@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -109,48 +110,10 @@ public class DataFixture extends MockObjectTestCase {
         return event;
     }
 
-    TrackbackResponseSubmissionEvent createTrackbackResponseSubmissionEventWithEnabledPluginBehindProxy() {
-        TrackbackResponseSubmissionEvent event = createTrackbackResponseSubmissionEvent();
-        Blog blog = event.getBlog();
-        blog.setProperty(TrackbackKeywordPlugin.PROPERTY_ENABLED, "true");
-        blog.setProperty(TrackbackKeywordPlugin.PROPERTY_PROXY_HOST, DUMMY_PROXY_HOST);
-        blog.setProperty(TrackbackKeywordPlugin.PROPERTY_PROXY_PORT, String.valueOf(DUMMY_PROXY_PORT));
-        return event;
-    }
-
-    TrackbackResponseSubmissionEvent createTrackbackResponseSubmissionEventWithEnabledPluginBehindAuthenticatedProxy() {
-        TrackbackResponseSubmissionEvent event = createTrackbackResponseSubmissionEvent();
-        Blog blog = event.getBlog();
-        blog.setProperty(TrackbackKeywordPlugin.PROPERTY_ENABLED, "true");
-        blog.setProperty(TrackbackKeywordPlugin.PROPERTY_PROXY_HOST, DUMMY_PROXY_HOST);
-        blog.setProperty(TrackbackKeywordPlugin.PROPERTY_PROXY_PORT, String.valueOf(DUMMY_PROXY_PORT));
-        blog.setProperty(TrackbackKeywordPlugin.PROPERTY_PROXY_USERNAME, DUMMY_PROXY_USERNAME);
-        blog.setProperty(TrackbackKeywordPlugin.PROPERTY_PROXY_PASSWORD, DUMMY_PROXY_PASSWORD);
-        return event;
-    }
-
     TrackbackResponseSubmissionEvent createTrackbackResponseSubmissionEventWithDisabledPlugin() {
         TrackbackResponseSubmissionEvent event = createTrackbackResponseSubmissionEvent();
         Blog blog = event.getBlog();
         blog.setProperty(TrackbackKeywordPlugin.PROPERTY_ENABLED, "false");
-        return event;
-    }
-
-    TrackbackResponseSubmissionEvent createTrackbackResponseSubmissionEventWithEnabledPluginAndTextHasAllKeywordsForDeletion() {
-        TrackbackResponseSubmissionEvent event = createTrackbackResponseSubmissionEvent();
-        Blog blog = event.getBlog();
-        blog.setProperty(TrackbackKeywordPlugin.PROPERTY_ENABLED, "true");
-        blog.setProperty(TrackbackKeywordPlugin.PROPERTY_KEYWORDS, CSV_MORE_THAN_ONE_KEYWORDS);
-        blog.setProperty(TrackbackKeywordPlugin.PROPERTY_ACTION, TrackbackKeywordPlugin.ACTION_DELETE);
-        blog.setProperty(TrackbackKeywordPlugin.PROPERTY_CHECK_TYPE, TrackbackKeywordPlugin.CHECK_TYPE_ALL);
-        return event;
-    }
-
-    TrackbackResponseSubmissionEvent createTrackbackResponseSubmissionEventWithEnabledPluginAndTextHasOneKeywordForModeration() {
-        TrackbackResponseSubmissionEvent event = createTrackbackResponseSubmissionEvent();
-        Blog blog = event.getBlog();
-        blog.setProperty(TrackbackKeywordPlugin.PROPERTY_ENABLED, "true");
-        blog.setProperty(TrackbackKeywordPlugin.PROPERTY_KEYWORDS, CSV_ONE_KEYWORD);
         return event;
     }
 

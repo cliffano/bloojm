@@ -30,6 +30,7 @@ package com.mbledug.blojsom.plugin.trackback;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Properties;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -63,40 +64,39 @@ public class TrackbackKeywordPlugin implements Listener {
     public static final String PROPERTY_ENABLED = "trackbackkeyword-enabled";
 
     /**
-     * Blog property for comma separated keywords.
+     * Plugin property for comma separated keywords.
      */
-    public static final String PROPERTY_KEYWORDS = "trackbackkeyword-keywords";
+    public static final String PROPERTY_KEYWORDS = "keywords";
 
     /**
-     * Blog property for action on spam suspect.
+     * Plugin property for action on spam suspect.
      */
-    public static final String PROPERTY_ACTION = "trackbackkeyword-action";
+    public static final String PROPERTY_ACTION = "action";
 
     /**
-     * Blog property for proxy host.
+     * Plugin property for keyword check type.
+     */
+    public static final String PROPERTY_CHECK_TYPE = "checktype";
+
+    /**
+     * Plugin property for proxy host.
      */
     public static final String PROPERTY_PROXY_HOST = "proxy-host";
 
     /**
-     * Blog property for proxy port.
+     * Plugin property for proxy port.
      */
     public static final String PROPERTY_PROXY_PORT = "proxy-port";
 
     /**
-     * Blog property for proxy username.
+     * Plugin property for proxy username.
      */
     public static final String PROPERTY_PROXY_USERNAME = "proxy-username";
 
     /**
-     * Blog property for proxy password.
+     * Plugin property for proxy password.
      */
     public static final String PROPERTY_PROXY_PASSWORD = "proxy-password";
-
-    /**
-     * Blog property for keyword check type.
-     */
-    public static final String PROPERTY_CHECK_TYPE =
-            "trackbackkeyword-checktype";
 
     /**
      * Delete action on spam suspect.
@@ -119,11 +119,17 @@ public class TrackbackKeywordPlugin implements Listener {
     private UrlTextFetcher mUrlTextFetcher;
 
     /**
+     * Plugin properties.
+     */
+    private Properties mProperties;
+
+    /**
      * Creates an instance of TrackbackKeywordPlugin with default
      * UrlTextFetcher.
      */
     public TrackbackKeywordPlugin() {
         mUrlTextFetcher = new UrlTextFetcher();
+        mProperties = new Properties();
     }
 
     /**
@@ -133,6 +139,15 @@ public class TrackbackKeywordPlugin implements Listener {
      */
     public TrackbackKeywordPlugin(final UrlTextFetcher urlTextFetcher) {
         mUrlTextFetcher = urlTextFetcher;
+        mProperties = new Properties();
+    }
+
+    /**
+     * Sets TrackbackKeywordPlugin properties.
+     * @param properties the plugin properties
+     */
+    public final void setProperties(final Properties properties) {
+        mProperties = properties;
     }
 
     /**
@@ -166,17 +181,17 @@ public class TrackbackKeywordPlugin implements Listener {
                 String url = trackbackEvent.getSubmitterItem2();
                 setProxy(
                         mUrlTextFetcher,
-                        blog.getProperty(PROPERTY_PROXY_HOST),
-                        blog.getProperty(PROPERTY_PROXY_PORT),
-                        blog.getProperty(PROPERTY_PROXY_USERNAME),
-                        blog.getProperty(PROPERTY_PROXY_PASSWORD));
+                        mProperties.getProperty(PROPERTY_PROXY_HOST),
+                        mProperties.getProperty(PROPERTY_PROXY_PORT),
+                        mProperties.getProperty(PROPERTY_PROXY_USERNAME),
+                        mProperties.getProperty(PROPERTY_PROXY_PASSWORD));
                 try {
                     if (isSpamSuspect(
-                            blog.getProperty(PROPERTY_CHECK_TYPE),
+                            mProperties.getProperty(PROPERTY_CHECK_TYPE),
                             mUrlTextFetcher.fetchText(url),
-                            blog.getProperty(PROPERTY_KEYWORDS))) {
-                        addTrackbackAction(
-                                blog.getProperty(PROPERTY_ACTION), metaData);
+                            mProperties.getProperty(PROPERTY_KEYWORDS))) {
+                        addTrackbackAction(mProperties
+                                .getProperty(PROPERTY_ACTION), metaData);
                     }
                 } catch (IOException ioe) {
                     LOG.error("Unable to retrieve text for trackback with url: "
