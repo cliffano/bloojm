@@ -46,14 +46,14 @@ import org.blojsom.util.BlojsomUtils;
  * Checks the content of trackback URL for the existence of all or at least one
  * of the specified keywords which will determine whether the trackback is a
  * spam or not. A trackback spam will then be deleted or moderated.
- * TrackbackKeywordPlugin will not overwrite trackback deletion/moderation
- * status set up by other priorly executed plugins.
+ * {@link TrackbackKeywordPlugin} will not overwrite trackback
+ * deletion/moderation status set up by other priorly executed plugins.
  * @author Cliffano Subagio
  */
 public class TrackbackKeywordPlugin implements Listener {
 
     /**
-     * Logger for TrackbackKeywordPlugin.
+     * Logger for {@link TrackbackKeywordPlugin}.
      */
     private static final Log LOG = LogFactory.
             getLog(TrackbackKeywordPlugin.class);
@@ -124,8 +124,8 @@ public class TrackbackKeywordPlugin implements Listener {
     private Properties mProperties;
 
     /**
-     * Creates an instance of TrackbackKeywordPlugin with default
-     * UrlTextFetcher.
+     * Creates an instance of {@link TrackbackKeywordPlugin} with default
+     * {@link UrlTextFetcher}.
      */
     public TrackbackKeywordPlugin() {
         mUrlTextFetcher = new UrlTextFetcher();
@@ -133,9 +133,9 @@ public class TrackbackKeywordPlugin implements Listener {
     }
 
     /**
-     * Creates an instance of TrackbackKeywordPlugin with specified
-     * UrlTextFetcher.
-     * @param urlTextFetcher the specified UrlTextFetcher
+     * Creates an instance of {@link TrackbackKeywordPlugin} with specified
+     * {@link UrlTextFetcher}.
+     * @param urlTextFetcher the specified {@link UrlTextFetcher}
      */
     public TrackbackKeywordPlugin(final UrlTextFetcher urlTextFetcher) {
         mUrlTextFetcher = urlTextFetcher;
@@ -143,7 +143,7 @@ public class TrackbackKeywordPlugin implements Listener {
     }
 
     /**
-     * Sets TrackbackKeywordPlugin properties.
+     * Sets {@link TrackbackKeywordPlugin} properties.
      * @param properties the plugin properties
      */
     public final void setProperties(final Properties properties) {
@@ -151,7 +151,8 @@ public class TrackbackKeywordPlugin implements Listener {
     }
 
     /**
-     * handleEvent method has an empty implementation in TrackbackKeywordPlugin.
+     * handleEvent method has an empty implementation in
+     * {@link TrackbackKeywordPlugin}.
      * @param event the event to handle asynchronously
      */
     public final void handleEvent(final Event event) {
@@ -202,8 +203,8 @@ public class TrackbackKeywordPlugin implements Listener {
     }
 
     /**
-     * Sets proxy to UrlTextFetcher.
-     * @param urlTextFetcher the UrlTextFetcher to set proxy to.
+     * Sets proxy to {@link UrlTextFetcher}.
+     * @param urlTextFetcher the {@link UrlTextFetcher} to set proxy to.
      * @param proxyHost proxy host name
      * @param proxyPort proxy port number
      * @param proxyUsername proxy username

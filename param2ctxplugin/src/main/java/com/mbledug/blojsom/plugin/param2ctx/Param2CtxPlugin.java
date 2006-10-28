@@ -41,14 +41,14 @@ import org.blojsom.plugin.Plugin;
 import org.blojsom.plugin.PluginException;
 
 /**
- * Param2CtxPlugin puts request parameters into context map for convenient
- * retrieval from Velocity templates.
+ * {@link Param2CtxPlugin} puts request parameters into context map for
+ * convenient retrieval from Velocity templates.
  * @author Cliffano Subagio
  */
 public class Param2CtxPlugin implements Plugin {
 
     /**
-     * Logger for Param2CtxPlugin.
+     * Logger for {@link Param2CtxPlugin}.
      */
     private static final Log LOG = LogFactory.getLog(Param2CtxPlugin.class);
 
@@ -82,7 +82,7 @@ public class Param2CtxPlugin implements Plugin {
     }
 
     /**
-     * cleanup method has an empty implementation in Param2CtxPlugin.
+     * cleanup method has an empty implementation in {@link Param2CtxPlugin}.
      * @throws PluginException when there's an error performing cleanup of
      * this plugin
      */

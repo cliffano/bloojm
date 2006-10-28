@@ -33,7 +33,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 /**
- * GravatarHelper provides helper methods to Gravatar Plugin.
+ * {@link GravatarHelper} provides helper methods to Gravatar Plugin.
  * @author Cliffano Subagio
  */
 final class GravatarHelper {

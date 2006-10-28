@@ -50,9 +50,9 @@ import org.blojsom.plugin.comment.event.CommentAddedEvent;
 import org.blojsom.plugin.comment.event.CommentEvent;
 
 /**
- * GravatarPlugin attaches a Gravatar ID to each blog entry comment, which can
- * then be used to display Gravatar (Globally Recognized Avatar) image available
- * from <a href="http://gravatar.com">gravatar.com</a> .
+ * {@link GravatarPlugin} attaches a Gravatar ID to each blog entry comment,
+ * which can then be used to display Gravatar (Globally Recognized Avatar) image
+ * available from <a href="http://gravatar.com">gravatar.com</a> .
  * The process of attaching Gravatar ID is done at 2 places:
  * - when a new comment is added, Gravatar ID will be added to comments with
  *   author email and Gravatar ID will be persisted as comment meta data.
@@ -63,7 +63,7 @@ import org.blojsom.plugin.comment.event.CommentEvent;
 public class GravatarPlugin implements Plugin, Listener {
 
     /**
-     * Logger for GravatarPlugin.
+     * Logger for {@link GravatarPlugin}.
      */
     private static final Log LOG = LogFactory.getLog(GravatarPlugin.class);
 
@@ -113,7 +113,7 @@ public class GravatarPlugin implements Plugin, Listener {
     }
 
     /**
-     * cleanup method has an empty implementation in GravatarPlugin.
+     * cleanup method has an empty implementation in {@link GravatarPlugin}.
      * @throws PluginException when there's an error performing cleanup of
      * this plugin
      */
@@ -129,7 +129,7 @@ public class GravatarPlugin implements Plugin, Listener {
     }
 
     /**
-     * handleEvent method has an empty implementation in GravatarPlugin.
+     * handleEvent method has an empty implementation in {@link GravatarPlugin}.
      * @param event the event to handle asynchronously
      */
     public final void handleEvent(final Event event) {

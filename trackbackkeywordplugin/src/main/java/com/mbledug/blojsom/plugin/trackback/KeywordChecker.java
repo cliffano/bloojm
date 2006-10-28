@@ -29,7 +29,7 @@
 package com.mbledug.blojsom.plugin.trackback;
 
 /**
- * KeywordChecker checks the existence of a keyword within a text.
+ * {@link KeywordChecker} checks the existence of a keyword within a text.
  * @author Cliffano Subagio
  */
 class KeywordChecker {
@@ -40,7 +40,7 @@ class KeywordChecker {
     private String[] mKeywords;
 
     /**
-     * Creates instance of KeywordChecker with specified keywords.
+     * Creates instance of {@link KeywordChecker} with specified keywords.
      * @param keywords an array of keywords to be checked for existence
      */
     KeywordChecker(final String[] keywords) {

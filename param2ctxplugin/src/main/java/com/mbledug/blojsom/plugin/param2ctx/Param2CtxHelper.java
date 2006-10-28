@@ -37,13 +37,13 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * Param2CtxHelper provides helper methods to Param2Ctx Plugin.
+ * {@link Param2CtxHelper} provides helper methods to Param2Ctx Plugin.
  * @author Cliffano Subagio
  */
 final class Param2CtxHelper {
 
     /**
-     * Logger for Param2CtxHelper.
+     * Logger for {@link Param2CtxHelper}.
      */
     private static final Log LOG = LogFactory.getLog(Param2CtxHelper.class);
 

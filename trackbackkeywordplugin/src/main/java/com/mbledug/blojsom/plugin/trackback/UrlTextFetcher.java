@@ -38,7 +38,8 @@ import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.methods.GetMethod;
 
 /**
- * UrlTextFetcher manages the connection to a url and fetches its text content.
+ * {@link UrlTextFetcher} manages the connection to a url and fetches its text
+ * content.
  * @author Cliffano Subagio
  */
 class UrlTextFetcher {
@@ -54,7 +55,7 @@ class UrlTextFetcher {
     private HttpMethod mHttpMethod;
 
     /**
-     * Creates a ConnectionManager instance. Initialises HttpClient and
+     * Creates a {@link UrlTextFetcher} instance. Initialises HttpClient and
      * HttpMethod.
      */
     UrlTextFetcher() {
@@ -63,7 +64,7 @@ class UrlTextFetcher {
     }
 
     /**
-     * Create a UrlTextFetcher instance with specified HttpClient and
+     * Create a {@link UrlTextFetcher} instance with specified HttpClient and
      * HttpMethod.
      * @param httpClient the http client
      * @param httpMethod the http method
