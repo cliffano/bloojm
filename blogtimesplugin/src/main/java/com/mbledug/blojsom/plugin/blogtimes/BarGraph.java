@@ -29,11 +29,10 @@
 package com.mbledug.blojsom.plugin.blogtimes;
 
 /**
- * BarGraphMeasurement provides measurement values required to draw the bar
- * graph.
+ * {@link BarGraph} provides details required to draw the bar graph image.
  * @author Cliffano Subagio
  */
-class BarGraphMeasurement {
+final class BarGraph {
 
     /**
      * Time unit from java.util.Calendar class.
@@ -58,14 +57,14 @@ class BarGraphMeasurement {
     private int mMaxValue;
 
     /**
-     * Create an instance of BarGraphMeasurement.
+     * Create an instance of {@link BarGraph}.
      * @param calendarUnit the calendar unit value. Use the time units available
      *          from java.util.Calendar class.
      * @param scaler time scaler value
      * @param interval timeline interval value
      * @param maxValue maximum time unit value
      */
-    BarGraphMeasurement (
+    BarGraph(
             final int calendarUnit,
             final int scaler,
             final int interval,
@@ -77,34 +76,34 @@ class BarGraphMeasurement {
     }
 
     /**
-     * Gets
-     * @return
+     * Gets calendar unit value.
+     * @return the calendar unit value
      */
-    int getCalendarUnit() {
+    final int getCalendarUnit() {
         return mCalendarUnit;
     }
 
     /**
-     * Gets
-     * @return
+     * Gets time scaler value.
+     * @return the time scaler value
      */
-    int getScaler() {
+    final int getScaler() {
         return mScaler;
     }
 
     /**
-     * Gets
-     * @return
+     * Gets timeline interval value.
+     * @return the timeline interval value
      */
-    int getInterval() {
+    final int getInterval() {
         return mInterval;
     }
 
     /**
-     * Gets
-     * @return
+     * Gets maximum time unit value.
+     * @return the maximum time unit value
      */
-    int getMaxValue() {
+    final int getMaxValue() {
         return mMaxValue;
     }
 }

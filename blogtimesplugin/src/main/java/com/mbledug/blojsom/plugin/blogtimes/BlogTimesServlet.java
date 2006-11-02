@@ -61,9 +61,9 @@ public class BlogTimesServlet extends HttpServlet {
         String flavor = String.valueOf(httpServletRequest.
                 getParameter("flavor"));
 
-        BarGraphFactory factory = new BarGraphFactory();
+        BarGraphImageCreator creator = new BarGraphImageCreator();
 
-        BufferedImage image = factory.createImage(flavor, dates);
+        BufferedImage image = creator.createImage(flavor, dates);
 
         httpServletResponse.setContentType("image/png");
         httpServletResponse.setHeader("Cache-Control", "no-cache");
