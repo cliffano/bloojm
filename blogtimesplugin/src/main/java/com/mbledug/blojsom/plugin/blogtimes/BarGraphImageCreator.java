@@ -113,7 +113,7 @@ final class BarGraphImageCreator {
             final BarGraph barGraph,
             final Date[] dates) {
 
-        final int TIMELINE_SIZE = 1;
+        final int timelineSize = 1;
 
         for (int i = 0; i < dates.length; i++) {
             int totalSeconds = calculateTotalSeconds(
@@ -124,37 +124,37 @@ final class BarGraphImageCreator {
                     String.valueOf(Math.round(mBoxWidth * multiplier)));
             graphics.setPaint(mTimelineColor);
             graphics.fill(new Rectangle2D.Double(
-                    pos, BOX_BORDER_SIZE, TIMELINE_SIZE, mBoxHeight));
+                    pos, BOX_BORDER_SIZE, timelineSize, mBoxHeight));
         }
     }
 
     private void drawTimeIntervals(
             final Graphics2D graphics, final BarGraph barGraph) {
 
-        final int FONT_SIZE = 12;
-        final int FONT_MARGIN_HEIGHT = 2;
-        final int FONT_MARGIN_WIDTH = 5;
-        final int TIMELINE_START = 0;
-        final int INTERVAL_WIDTH = 1;
-        final int INTERVAL_HEIGHT = 5;
+        final int fontSize = 12;
+        final int fontMarginHeight = 2;
+        final int fontMarginWidth = 5;
+        final int timelineStart = 0;
+        final int intervalWidth = 1;
+        final int intervalHeight = 5;
 
-        graphics.setFont(new Font(null, Font.PLAIN, FONT_SIZE));
-        for (int i = TIMELINE_START; i <= barGraph.getMaxValue();
+        graphics.setFont(new Font(null, Font.PLAIN, fontSize));
+        for (int i = timelineStart; i <= barGraph.getMaxValue();
                 i += barGraph.getInterval()) {
 
-            int pos = BOX_MARGIN + ((i * mBoxWidth) /
-                    (barGraph.getMaxValue() - TIMELINE_START));
+            int pos = BOX_MARGIN + ((i * mBoxWidth)
+                    / (barGraph.getMaxValue() - timelineStart));
 
-            if (i != TIMELINE_START && i != barGraph.getMaxValue()) {
+            if (i != timelineStart && i != barGraph.getMaxValue()) {
                 graphics.setPaint(mTimelineColor);
                 graphics.fill(new Rectangle2D.Double(
-                        pos, mBoxHeight - INTERVAL_HEIGHT, INTERVAL_WIDTH,
-                        INTERVAL_HEIGHT));
+                        pos, mBoxHeight - intervalHeight, intervalWidth,
+                        intervalHeight));
             }
 
             graphics.setColor(mFontColor);
-            graphics.drawString(String.valueOf(i), pos - FONT_MARGIN_WIDTH,
-                    mBoxHeight + BOX_MARGIN - FONT_MARGIN_HEIGHT);
+            graphics.drawString(String.valueOf(i), pos - fontMarginWidth,
+                    mBoxHeight + BOX_MARGIN - fontMarginHeight);
         }
     }
 
@@ -172,12 +172,12 @@ final class BarGraphImageCreator {
                 BOX_BORDER_SIZE));
     }
 
-    private final int calculateTotalSeconds(
+    private int calculateTotalSeconds(
             final int calendarUnit, final Date date) {
 
-        if (calendarUnit != Calendar.SECOND &&
-                calendarUnit != Calendar.MINUTE &&
-                calendarUnit != Calendar.HOUR_OF_DAY) {
+        if (calendarUnit != Calendar.SECOND
+                && calendarUnit != Calendar.MINUTE
+                && calendarUnit != Calendar.HOUR_OF_DAY) {
             throw new IllegalArgumentException("Invalid calendar unit: "
                     + calendarUnit);
         }

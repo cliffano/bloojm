@@ -41,6 +41,13 @@ import org.blojsom.blog.Entry;
 import org.blojsom.plugin.Plugin;
 import org.blojsom.plugin.PluginException;
 
+/**
+ * {@link BlogTimesPlugin} generates a graph image summary of the blog entries'
+ * posting times with configurable colors and sizes.
+ * This class retrieves the entries dates and passes it as session attribute to
+ * {@link BlogTimesPlugin}.
+ * @author Cliffano Subagio
+ */
 public class BlogTimesPlugin implements Plugin {
 
     /**
@@ -48,7 +55,11 @@ public class BlogTimesPlugin implements Plugin {
      */
     private static final Log LOG = LogFactory.getLog(BlogTimesPlugin.class);
 
-    public static final String DATES_SESSION_KEY = "blogtimes-sessionkey";
+    /**
+     * Session attribute name for storing an array of Dates presenting
+     * blog times.
+     */
+    public static final String DATES_SESSION_KEY = "blogtimes-dates";
 
     /**
      * Writes plugin init message.
@@ -59,14 +70,14 @@ public class BlogTimesPlugin implements Plugin {
     }
 
     /**
-     * TODO:
-     *
+     * Retrieves the entries' dates and stores them in an array within a session
+     * attribute.
      * @param httpServletRequest http servlet request
      * @param httpServletResponse http servlet response
      * @param blog blog instance
      * @param context context
      * @param entries blog entries retrieved for the particular request
-     * @return entries with Gravatar ID added to the comments
+     * @return the original/unmodified blog entries
      * @throws PluginException when there's an error processing the blog entries
      */
     public final Entry[] process(

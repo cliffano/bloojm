@@ -79,7 +79,7 @@ final class BarGraph {
      * Gets calendar unit value.
      * @return the calendar unit value
      */
-    final int getCalendarUnit() {
+    int getCalendarUnit() {
         return mCalendarUnit;
     }
 
@@ -87,7 +87,7 @@ final class BarGraph {
      * Gets time scaler value.
      * @return the time scaler value
      */
-    final int getScaler() {
+    int getScaler() {
         return mScaler;
     }
 
@@ -95,7 +95,7 @@ final class BarGraph {
      * Gets timeline interval value.
      * @return the timeline interval value
      */
-    final int getInterval() {
+    int getInterval() {
         return mInterval;
     }
 
@@ -103,7 +103,7 @@ final class BarGraph {
      * Gets maximum time unit value.
      * @return the maximum time unit value
      */
-    final int getMaxValue() {
+    int getMaxValue() {
         return mMaxValue;
     }
 }

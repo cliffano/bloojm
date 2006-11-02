@@ -113,7 +113,7 @@ final class BarGraphFactory {
      * @param flavor the flavor
      * @return the {@link BarGraph} based on the flavor
      */
-    static final BarGraph getBarGraph(final String flavor) {
+    static BarGraph getBarGraph(final String flavor) {
         BarGraph barGraph;
         if (flavor == null) {
             barGraph = (BarGraph) mBarGraphs.get(FLAVOR_DEFAULT);

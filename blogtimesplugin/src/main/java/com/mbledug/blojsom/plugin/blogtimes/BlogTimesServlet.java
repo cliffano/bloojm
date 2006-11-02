@@ -41,6 +41,11 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+/**
+ * {@link BlogTimesServlet} serves graph image of the blog times based on the
+ * specified flavor.
+ * @author Cliffano Subagio
+ */
 public class BlogTimesServlet extends HttpServlet {
 
     /**
@@ -48,10 +53,20 @@ public class BlogTimesServlet extends HttpServlet {
      */
     private static final Log LOG = LogFactory.getLog(BlogTimesServlet.class);
 
+    /**
+     * Writes servlet init message.
+     */
     public final void init() {
         LOG.info("Initialising BlogTimesServlet.");
     }
 
+    /**
+     * Writes the image to response output stream. Image is based on flavor
+     * request parameter and it contains the blog times dates passed from
+     * the session.
+     * @param httpServletRequest the servlet request
+     * @param httpServletResponse  the servlet response
+     */
     public final void service(
             final HttpServletRequest httpServletRequest,
             final HttpServletResponse httpServletResponse) {
@@ -79,6 +94,9 @@ public class BlogTimesServlet extends HttpServlet {
         }
     }
 
+    /**
+     * Writes servlet destroy message.
+     */
     public final void destroy() {
         LOG.info("Destroying BlogTimesServlet.");
     }
