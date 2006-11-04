@@ -43,27 +43,77 @@ import java.util.Date;
  */
 final class BarGraphImageCreator {
 
+    /**
+     * Default background color.
+     */
     private static final Color DEFAULT_BACKGROUND_COLOR = Color.BLACK;
+    /**
+     * Default box border color.
+     */
     private static final Color DEFAULT_BOX_BORDER_COLOR = Color.WHITE;
+    /**
+     * Default box background color.
+     */
     private static final Color DEFAULT_BOX_BACKGROUND_COLOR =
             new Color(235, 235, 235);
+    /**
+     * Default timeline color.
+     */
     private static final Color DEFAULT_TIMELINE_COLOR =
             new Color(102, 102, 102);
+    /**
+     * Default font color.
+     */
     private static final Color DEFAULT_FONT_COLOR = Color.BLACK;
+    /**
+     * Default box height in pixels.
+     */
     private static final int DEFAULT_BOX_HEIGHT = 25;
+    /**
+     * Default box width in pixels.
+     */
     private static final int DEFAULT_BOX_WIDTH = 350;
-
+    /**
+     * Default box margin in pixels.
+     */
     private static final int BOX_MARGIN = 15;
+    /**
+     * Default box border size in pixels.
+     */
     private static final int BOX_BORDER_SIZE = 1;
 
+    /**
+     * Background color.
+     */
     private Color mBackgroundColor;
+    /**
+     * Box border color.
+     */
     private Color mBoxBorderColor;
+    /**
+     * Box background color.
+     */
     private Color mBoxBackgroundColor;
+    /**
+     * Timeline color.
+     */
     private Color mTimelineColor;
+    /**
+     * Font color.
+     */
     private Color mFontColor;
+    /**
+     * Box height.
+     */
     private int mBoxHeight;
+    /**
+     * Box width.
+     */
     private int mBoxWidth;
 
+    /**
+     * Creates an instance of {@link BarGraphImageCreator}.
+     */
     BarGraphImageCreator() {
         mBackgroundColor = DEFAULT_BACKGROUND_COLOR;
         mBoxBorderColor = DEFAULT_BOX_BORDER_COLOR;
@@ -74,6 +124,12 @@ final class BarGraphImageCreator {
         mBoxWidth = DEFAULT_BOX_WIDTH;
     }
 
+    /**
+     * Creates the bar graph image with the dates timelines drawn on it.
+     * @param flavor the flavor of the timeline to draw
+     * @param dates the dates for the timelines
+     * @return the bar graph image
+     */
     BufferedImage createImage(final String flavor, final Date[] dates) {
 
         BarGraph barGraph = BarGraphFactory.getBarGraph(flavor);
@@ -84,8 +140,10 @@ final class BarGraphImageCreator {
                 BufferedImage.TYPE_INT_RGB);
 
         Graphics2D graphics = createBackground(image);
-        drawTimelines(graphics, barGraph, dates);
-        drawTimeIntervals(graphics, barGraph);
+        drawTimelines(graphics, dates,
+                barGraph.getCalendarUnit(), barGraph.getScaler());
+        drawTimeIntervals(
+                graphics, barGraph.getMaxValue(), barGraph.getInterval());
         drawBorders(graphics);
 
         graphics.dispose();
@@ -93,6 +151,11 @@ final class BarGraphImageCreator {
         return image;
     }
 
+    /**
+     * Creates the background graphics from the buffered image.
+     * @param image the buffered image to create the graphics from
+     * @return the background graphics
+     */
     private Graphics2D createBackground(final BufferedImage image) {
 
         Graphics2D graphics = image.createGraphics();
@@ -108,18 +171,26 @@ final class BarGraphImageCreator {
         return graphics;
     }
 
+    /**
+     * Draws the timelines on the graphics.
+     * @param graphics the graphics to draw on
+     * @param dates the dates of the timelines
+     * @param calendarUnit the calendar unit
+     * @param scaler the scaler value
+     */
     private void drawTimelines(
             final Graphics2D graphics,
-            final BarGraph barGraph,
-            final Date[] dates) {
+            final Date[] dates,
+            final int calendarUnit,
+            final int scaler) {
 
         final int timelineSize = 1;
 
         for (int i = 0; i < dates.length; i++) {
             int totalSeconds = calculateTotalSeconds(
-                    barGraph.getCalendarUnit(), dates[i]);
+                    calendarUnit, dates[i]);
             float multiplier = Float.parseFloat(
-                    String.valueOf(totalSeconds)) / barGraph.getScaler();
+                    String.valueOf(totalSeconds)) / scaler;
             int pos = BOX_MARGIN + Integer.parseInt(
                     String.valueOf(Math.round(mBoxWidth * multiplier)));
             graphics.setPaint(mTimelineColor);
@@ -128,8 +199,16 @@ final class BarGraphImageCreator {
         }
     }
 
+    /**
+     * Draws time intervals on the graphics.
+     * @param graphics the graphics to draw on
+     * @param timelineEnd the end value of the timeline
+     * @param interval the interval value of the timeline
+     */
     private void drawTimeIntervals(
-            final Graphics2D graphics, final BarGraph barGraph) {
+            final Graphics2D graphics,
+            final int timelineEnd,
+            final int interval) {
 
         final int fontSize = 12;
         final int fontMarginHeight = 2;
@@ -139,13 +218,12 @@ final class BarGraphImageCreator {
         final int intervalHeight = 5;
 
         graphics.setFont(new Font(null, Font.PLAIN, fontSize));
-        for (int i = timelineStart; i <= barGraph.getMaxValue();
-                i += barGraph.getInterval()) {
+        for (int i = timelineStart; i <= timelineEnd; i += interval) {
 
             int pos = BOX_MARGIN + ((i * mBoxWidth)
-                    / (barGraph.getMaxValue() - timelineStart));
+                    / (timelineEnd - timelineStart));
 
-            if (i != timelineStart && i != barGraph.getMaxValue()) {
+            if (i != timelineStart && i != timelineEnd) {
                 graphics.setPaint(mTimelineColor);
                 graphics.fill(new Rectangle2D.Double(
                         pos, mBoxHeight - intervalHeight, intervalWidth,
@@ -158,6 +236,10 @@ final class BarGraphImageCreator {
         }
     }
 
+    /**
+     * Draws the borders on the graphics.
+     * @param graphics the graphics to draw on
+     */
     private void drawBorders(final Graphics2D graphics) {
 
         graphics.setPaint(mBoxBorderColor);
@@ -172,6 +254,13 @@ final class BarGraphImageCreator {
                 BOX_BORDER_SIZE));
     }
 
+    /**
+     * Calculates the total number of seconds within the date based on the
+     * calendar unit.
+     * @param calendarUnit the calendar unit
+     * @param date the date to check
+     * @return the total number of seconds
+     */
     private int calculateTotalSeconds(
             final int calendarUnit, final Date date) {
 

@@ -49,6 +49,11 @@ import org.apache.commons.logging.LogFactory;
 public class BlogTimesServlet extends HttpServlet {
 
     /**
+     * Serial version UID.
+     */
+    private static final long serialVersionUID = -730159056055669116L;
+
+    /**
      * Log for BlogTimesServlet.
      */
     private static final Log LOG = LogFactory.getLog(BlogTimesServlet.class);
