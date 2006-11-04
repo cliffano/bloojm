@@ -46,16 +46,15 @@ final class BarGraphImageCreator {
     /**
      * Default background color.
      */
-    private static final Color DEFAULT_BACKGROUND_COLOR = Color.BLACK;
+    private static final Color DEFAULT_BACKGROUND_COLOR = Color.WHITE;
     /**
      * Default box border color.
      */
-    private static final Color DEFAULT_BOX_BORDER_COLOR = Color.WHITE;
+    private static final Color DEFAULT_BOX_BORDER_COLOR = Color.GRAY;
     /**
      * Default box background color.
      */
-    private static final Color DEFAULT_BOX_BACKGROUND_COLOR =
-            new Color(235, 235, 235);
+    private static final Color DEFAULT_BOX_BACKGROUND_COLOR = Color.LIGHT_GRAY;
     /**
      * Default timeline color.
      */
@@ -264,13 +263,6 @@ final class BarGraphImageCreator {
     private int calculateTotalSeconds(
             final int calendarUnit, final Date date) {
 
-        if (calendarUnit != Calendar.SECOND
-                && calendarUnit != Calendar.MINUTE
-                && calendarUnit != Calendar.HOUR_OF_DAY) {
-            throw new IllegalArgumentException("Invalid calendar unit: "
-                    + calendarUnit);
-        }
-
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
 
@@ -285,5 +277,61 @@ final class BarGraphImageCreator {
         }
 
         return totalSeconds;
+    }
+
+    /**
+     * Sets the background color.
+     * @param backgroundColor the background color to set
+     */
+    public void setBackgroundColor(final Color backgroundColor) {
+        mBackgroundColor = backgroundColor;
+    }
+
+    /**
+     * Sets the box background color.
+     * @param boxBackgroundColor the box background color to set
+     */
+    public void setBoxBackgroundColor(final Color boxBackgroundColor) {
+        mBoxBackgroundColor = boxBackgroundColor;
+    }
+
+    /**
+     * Sets the box border color.
+     * @param boxBorderColor the box border color to set
+     */
+    public void setBoxBorderColor(final Color boxBorderColor) {
+        mBoxBorderColor = boxBorderColor;
+    }
+
+    /**
+     * Sets the box height.
+     * @param boxHeight the box height to set
+     */
+    public void setBoxHeight(final int boxHeight) {
+        mBoxHeight = boxHeight;
+    }
+
+    /**
+     * Sets the box width.
+     * @param boxWidth the box width to set
+     */
+    public void setBoxWidth(final int boxWidth) {
+        mBoxWidth = boxWidth;
+    }
+
+    /**
+     * Sets the font color.
+     * @param fontColor the font color to set
+     */
+    public void setFontColor(final Color fontColor) {
+        mFontColor = fontColor;
+    }
+
+    /**
+     * Sets the timeline color.
+     * @param timelineColor the timeline color to set
+     */
+    public void setTimelineColor(final Color timelineColor) {
+        mTimelineColor = timelineColor;
     }
 }
