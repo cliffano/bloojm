@@ -64,27 +64,27 @@ final class BarGraphFactory {
      */
     private static final BarGraph BAR_GRAPH_SECOND_OF_MINUTE = new BarGraph(
             Calendar.SECOND,
-            TimeUnit.SECONDS_IN_MINUTE,
+            BlogTimesHelper.SECONDS_IN_MINUTE,
             5,
-            TimeUnit.MAX_SECOND_IN_MINUTE);
+            BlogTimesHelper.MAX_SECOND_IN_MINUTE);
 
     /**
      * {@link BarGraph} for minute-of-hour flavor.
      */
     private static final BarGraph BAR_GRAPH_MINUTE_OF_HOUR = new BarGraph(
             Calendar.MINUTE,
-            TimeUnit.SECONDS_IN_HOUR,
+            BlogTimesHelper.SECONDS_IN_HOUR,
             5,
-            TimeUnit.MAX_MINUTE_IN_HOUR);
+            BlogTimesHelper.MAX_MINUTE_IN_HOUR);
 
     /**
      * {@link BarGraph} for hour-of-day flavor.
      */
     private static final BarGraph BAR_GRAPH_HOUR_OF_DAY = new BarGraph(
             Calendar.HOUR_OF_DAY,
-            TimeUnit.SECONDS_IN_DAY,
+            BlogTimesHelper.SECONDS_IN_DAY,
             2,
-            TimeUnit.MAX_HOUR_IN_DAY);
+            BlogTimesHelper.MAX_HOUR_IN_DAY);
 
     /**
      * Map of {@link BarGraph}s, containing flavor-{@link BarGraph}, as

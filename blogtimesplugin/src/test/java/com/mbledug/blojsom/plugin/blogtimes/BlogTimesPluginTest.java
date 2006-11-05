@@ -1,6 +1,7 @@
 package com.mbledug.blojsom.plugin.blogtimes;
 
 import java.util.HashMap;
+import java.util.Properties;
 
 import junit.framework.TestCase;
 
@@ -34,6 +35,33 @@ public class BlogTimesPluginTest extends TestCase {
             blogTimesPlugin.destroy();
         } catch (PluginException pe) {
             fail("PluginException should not occur: " + pe);
+        }
+    }
+
+    public void testInitWithValidProperties() {
+        Properties properties = DataFixture.createPropertiesWithValidValues();
+
+        BlogTimesPlugin blogTimesPlugin = new BlogTimesPlugin();
+        blogTimesPlugin.setProperties(properties);
+
+        try {
+            blogTimesPlugin.init();
+        } catch (PluginException pe) {
+            fail("PluginException should not occur: " + pe);
+        }
+    }
+
+    public void testInitWithInvalidPropertiesGivesPluginException() {
+        Properties properties = DataFixture.createPropertiesWithInvalidValues();
+
+        BlogTimesPlugin blogTimesPlugin = new BlogTimesPlugin();
+        blogTimesPlugin.setProperties(properties);
+
+        try {
+            blogTimesPlugin.init();
+            fail("PluginException should've occured.");
+        } catch (PluginException pe) {
+            // expected PluginException
         }
     }
 }

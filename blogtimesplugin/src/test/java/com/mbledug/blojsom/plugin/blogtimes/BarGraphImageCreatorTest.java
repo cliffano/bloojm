@@ -38,6 +38,22 @@ public class BarGraphImageCreatorTest extends TestCase {
                 creator.createImage(null, DataFixture.createRandomDates(25)));
     }
 
+    public void testCreateImageOverrideConfigurationsWithInvalidBoxDimensionGivesIllegalArgumentException() throws IOException {
+        BarGraphImageCreator creator = new BarGraphImageCreator();
+        try {
+            creator.setBoxHeight(0);
+            fail("IllegalArgumentException should've been thrown for invalid box height.");
+        } catch (IllegalArgumentException iae) {
+            // expected IllegalArgumentException
+        }
+        try {
+            creator.setBoxWidth(-1);
+            fail("IllegalArgumentException should've been thrown for invalid box width.");
+        } catch (IllegalArgumentException iae) {
+            // expected IllegalArgumentException
+        }
+    }
+
     private void writePngImageFile(String filename, BufferedImage image) throws IOException {
         File file = new File("target/" + filename);
         ImageIO.write(image, "png", file);

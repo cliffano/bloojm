@@ -28,8 +28,10 @@
  */
 package com.mbledug.blojsom.plugin.blogtimes;
 
+import java.awt.Color;
 import java.util.Date;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -40,6 +42,7 @@ import org.blojsom.blog.Blog;
 import org.blojsom.blog.Entry;
 import org.blojsom.plugin.Plugin;
 import org.blojsom.plugin.PluginException;
+import org.blojsom.util.BlojsomUtils;
 
 /**
  * {@link BlogTimesPlugin} generates a graph image summary of the blog entries'
@@ -59,14 +62,93 @@ public class BlogTimesPlugin implements Plugin {
      * Session attribute name for storing an array of Dates presenting
      * blog times.
      */
-    public static final String DATES_SESSION_KEY = "blogtimes-dates";
+    public static final String SESSION_ATTR_DATES = "blogtimes-dates";
 
     /**
-     * Writes plugin init message.
+     * Session attribute name for storing {@link BarGraphImageCreator}.
+     */
+    public static final String SESSION_ATTR_CREATOR = "blogtimes-creator";
+
+    /**
+     * Plugin property for background color.
+     */
+    public static final String PROPERTY_BACKGROUND_COLOR =
+            "image-background-color";
+
+    /**
+     * Plugin property for box border color.
+     */
+    public static final String PROPERTY_BOX_BORDER_COLOR = "bar-border-color";
+
+    /**
+     * Plugin property for box background color.
+     */
+    public static final String PROPERTY_BOX_BACKGROUND_COLOR =
+            "bar-background-color";
+
+    /**
+     * Plugin property for timeline color.
+     */
+    public static final String PROPERTY_TIMELINE_COLOR = "bar-timeline-color";
+
+    /**
+     * Plugin property for time interval color.
+     */
+    public static final String PROPERTY_TIME_INTERVAL_COLOR =
+            "bar-timeinterval-color";
+
+    /**
+     * Plugin property for font color.
+     */
+    public static final String PROPERTY_FONT_COLOR = "font-color";
+
+    /**
+     * Plugin property for box height.
+     */
+    public static final String PROPERTY_BOX_HEIGHT = "bar-height";
+
+    /**
+     * Plugin property for box width.
+     */
+    public static final String PROPERTY_BOX_WIDTH = "bar-width";
+
+    /**
+     * Plugin properties.
+     */
+    private Properties mProperties;
+
+    /**
+     * Bar graph image creator.
+     */
+    private BarGraphImageCreator mBarGraphImageCreator;
+
+    /**
+     * Creates an instance of {@link BlogTimesPlugin}}.
+     */
+    public BlogTimesPlugin() {
+        mProperties = new Properties();
+    }
+
+    /**
+     * Sets {@link BlogTimesPlugin} properties.
+     * @param properties the plugin properties
+     */
+    public final void setProperties(final Properties properties) {
+        mProperties = properties;
+    }
+
+    /**
+     * Writes plugin init message. Initialises {@link BarGraphImageCreator}..
      * @throws PluginException when there's an error in initialising this plugin
      */
     public final void init() throws PluginException {
         LOG.info("Initialising BlogTimesPlugin.");
+        try {
+            initBarGraphCreator();
+        } catch (IllegalArgumentException iae) {
+            throw new PluginException(
+                    "Invalid BlogTimesPlugin configuration properties. ");
+        }
     }
 
     /**
@@ -92,7 +174,10 @@ public class BlogTimesPlugin implements Plugin {
         for (int i = 0; i < entries.length; i++) {
             dates[i] = entries[i].getDate();
         }
-        httpServletRequest.getSession().setAttribute(DATES_SESSION_KEY, dates);
+        httpServletRequest.getSession().setAttribute(SESSION_ATTR_DATES, dates);
+
+        httpServletRequest.getSession().setAttribute(SESSION_ATTR_CREATOR,
+                mBarGraphImageCreator);
 
         return entries;
     }
@@ -111,5 +196,60 @@ public class BlogTimesPlugin implements Plugin {
      */
     public final void destroy() throws PluginException {
         LOG.info("Destroying BlogTimesPlugin.");
+    }
+
+    /**
+     * Initialises bar graph creator and applies configuration properties.
+     */
+    private void initBarGraphCreator() {
+        mBarGraphImageCreator = new BarGraphImageCreator();
+        if (!BlojsomUtils.checkNullOrBlank(
+                mProperties.getProperty(PROPERTY_BACKGROUND_COLOR))) {
+            Color backgroundColor = BlogTimesHelper.hexToColor(
+                    mProperties.getProperty(PROPERTY_BACKGROUND_COLOR));
+            mBarGraphImageCreator.setBackgroundColor(backgroundColor);
+        }
+        if (!BlojsomUtils.checkNullOrBlank(
+                mProperties.getProperty(PROPERTY_BOX_BORDER_COLOR))) {
+            Color boxBorderColor = BlogTimesHelper.hexToColor(
+                    mProperties.getProperty(PROPERTY_BOX_BORDER_COLOR));
+            mBarGraphImageCreator.setBoxBorderColor(boxBorderColor);
+        }
+        if (!BlojsomUtils.checkNullOrBlank(
+                mProperties.getProperty(PROPERTY_BOX_BACKGROUND_COLOR))) {
+            Color boxBackgroundColor = BlogTimesHelper.hexToColor(
+                    mProperties.getProperty(PROPERTY_BOX_BACKGROUND_COLOR));
+            mBarGraphImageCreator.setBoxBackgroundColor(boxBackgroundColor);
+        }
+        if (!BlojsomUtils.checkNullOrBlank(
+                mProperties.getProperty(PROPERTY_TIMELINE_COLOR))) {
+            Color timelineColor = BlogTimesHelper.hexToColor(
+                    mProperties.getProperty(PROPERTY_TIMELINE_COLOR));
+            mBarGraphImageCreator.setTimelineColor(timelineColor);
+        }
+        if (!BlojsomUtils.checkNullOrBlank(
+                mProperties.getProperty(PROPERTY_TIME_INTERVAL_COLOR))) {
+            Color timeIntervalColor = BlogTimesHelper.hexToColor(
+                    mProperties.getProperty(PROPERTY_TIME_INTERVAL_COLOR));
+            mBarGraphImageCreator.setTimeIntervalColor(timeIntervalColor);
+        }
+        if (!BlojsomUtils.checkNullOrBlank(
+                mProperties.getProperty(PROPERTY_FONT_COLOR))) {
+            Color fontColor = BlogTimesHelper.hexToColor(
+                    mProperties.getProperty(PROPERTY_FONT_COLOR));
+            mBarGraphImageCreator.setFontColor(fontColor);
+        }
+        if (!BlojsomUtils.checkNullOrBlank(
+                mProperties.getProperty(PROPERTY_BOX_HEIGHT))) {
+            int boxHeight = Integer.parseInt(
+                    mProperties.getProperty(PROPERTY_BOX_HEIGHT));
+            mBarGraphImageCreator.setBoxHeight(boxHeight);
+        }
+        if (!BlojsomUtils.checkNullOrBlank(
+                mProperties.getProperty(PROPERTY_BOX_WIDTH))) {
+            int boxWidth = Integer.parseInt(
+                    mProperties.getProperty(PROPERTY_BOX_WIDTH));
+            mBarGraphImageCreator.setBoxWidth(boxWidth);
+        }
     }
 }

@@ -28,11 +28,13 @@
  */
 package com.mbledug.blojsom.plugin.blogtimes;
 
+import java.awt.Color;
+
 /**
  * Holds constants related to time values.
  * @author Cliffano
  */
-class TimeUnit {
+final class BlogTimesHelper {
 
     /**
      * Maximum second value in a minute.
@@ -63,4 +65,41 @@ class TimeUnit {
      * Number of seconds in a day.
      */
     static final int SECONDS_IN_DAY = MAX_HOUR_IN_DAY * SECONDS_IN_HOUR;
+
+    /**
+     * Hides default constructor of helper class.
+     */
+    private BlogTimesHelper() {
+    }
+
+    /**
+     * Converts a hexadecimal color to Color object
+     * e.g. ff0000 will be converted to Color 255 0 0
+     * @param hex the hexadecimal color
+     * @return Color object of the hexadecimal value
+     */
+    static Color hexToColor(final String hex) {
+
+        final int hexColorDigitSize = 6;
+        final int hexRadix = 16;
+        final int hexRgbDigitSize = 2;
+        final int redStartIndex = 0;
+        final int greenStartIndex = 2;
+        final int blueStartIndex = 4;
+
+        if (hex == null || hex.length() != hexColorDigitSize) {
+            throw new IllegalArgumentException("Invalid hex color value.");
+        }
+
+        int red = Integer.parseInt(hex.substring(
+                redStartIndex, redStartIndex + hexRgbDigitSize),
+                hexRadix);
+        int green = Integer.parseInt(hex.substring(
+                greenStartIndex, greenStartIndex + hexRgbDigitSize),
+                hexRadix);
+        int blue = Integer.parseInt(hex.substring(
+                blueStartIndex, blueStartIndex + hexRgbDigitSize),
+                hexRadix);
+        return new Color(red, green, blue);
+    }
 }

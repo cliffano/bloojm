@@ -76,12 +76,13 @@ public class BlogTimesServlet extends HttpServlet {
             final HttpServletRequest httpServletRequest,
             final HttpServletResponse httpServletResponse) {
 
+        BarGraphImageCreator creator = (BarGraphImageCreator)
+                httpServletRequest.getSession().
+                getAttribute(BlogTimesPlugin.SESSION_ATTR_CREATOR);
         Date[] dates = (Date[]) httpServletRequest.getSession().
-                getAttribute(BlogTimesPlugin.DATES_SESSION_KEY);
+                getAttribute(BlogTimesPlugin.SESSION_ATTR_DATES);
         String flavor = String.valueOf(httpServletRequest.
                 getParameter("flavor"));
-
-        BarGraphImageCreator creator = new BarGraphImageCreator();
 
         BufferedImage image = creator.createImage(flavor, dates);
 

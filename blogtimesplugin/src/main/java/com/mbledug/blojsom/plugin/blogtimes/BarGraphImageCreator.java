@@ -33,6 +33,7 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -41,7 +42,12 @@ import java.util.Date;
  * based on the specified dates and bar graph flavor.
  * @author Cliffano
  */
-final class BarGraphImageCreator {
+final class BarGraphImageCreator implements Serializable {
+
+    /**
+     * Serial version UID.
+     */
+    private static final long serialVersionUID = -5504243324549206189L;
 
     /**
      * Default background color.
@@ -60,6 +66,11 @@ final class BarGraphImageCreator {
      */
     private static final Color DEFAULT_TIMELINE_COLOR =
             new Color(102, 102, 102);
+    /**
+     * Default time interval color.
+     */
+    private static final Color DEFAULT_TIME_INTERVAL_COLOR =
+            new Color(51, 51, 51);
     /**
      * Default font color.
      */
@@ -98,6 +109,10 @@ final class BarGraphImageCreator {
      */
     private Color mTimelineColor;
     /**
+     * Time interval color.
+     */
+    private Color mTimeIntervalColor;
+    /**
      * Font color.
      */
     private Color mFontColor;
@@ -118,6 +133,7 @@ final class BarGraphImageCreator {
         mBoxBorderColor = DEFAULT_BOX_BORDER_COLOR;
         mBoxBackgroundColor = DEFAULT_BOX_BACKGROUND_COLOR;
         mTimelineColor = DEFAULT_TIMELINE_COLOR;
+        mTimeIntervalColor = DEFAULT_TIME_INTERVAL_COLOR;
         mFontColor = DEFAULT_FONT_COLOR;
         mBoxHeight = DEFAULT_BOX_HEIGHT;
         mBoxWidth = DEFAULT_BOX_WIDTH;
@@ -223,7 +239,7 @@ final class BarGraphImageCreator {
                     / (timelineEnd - timelineStart));
 
             if (i != timelineStart && i != timelineEnd) {
-                graphics.setPaint(mTimelineColor);
+                graphics.setPaint(mTimeIntervalColor);
                 graphics.fill(new Rectangle2D.Double(
                         pos, mBoxHeight - intervalHeight, intervalWidth,
                         intervalHeight));
@@ -269,10 +285,10 @@ final class BarGraphImageCreator {
         int totalSeconds = calendar.get(Calendar.SECOND);
         if (calendarUnit != Calendar.SECOND) {
             totalSeconds += calendar.get(
-                    Calendar.MINUTE) * TimeUnit.SECONDS_IN_MINUTE;
+                    Calendar.MINUTE) * BlogTimesHelper.SECONDS_IN_MINUTE;
             if (calendarUnit != Calendar.MINUTE) {
                 totalSeconds += calendar.get(
-                        Calendar.HOUR_OF_DAY) * TimeUnit.SECONDS_IN_HOUR;
+                        Calendar.HOUR_OF_DAY) * BlogTimesHelper.SECONDS_IN_HOUR;
             }
         }
 
@@ -308,6 +324,9 @@ final class BarGraphImageCreator {
      * @param boxHeight the box height to set
      */
     public void setBoxHeight(final int boxHeight) {
+        if (boxHeight <= 0) {
+            throw new IllegalArgumentException("Invalid box height.");
+        }
         mBoxHeight = boxHeight;
     }
 
@@ -316,6 +335,9 @@ final class BarGraphImageCreator {
      * @param boxWidth the box width to set
      */
     public void setBoxWidth(final int boxWidth) {
+        if (boxWidth <= 0) {
+            throw new IllegalArgumentException("Invalid box width.");
+        }
         mBoxWidth = boxWidth;
     }
 
@@ -333,5 +355,13 @@ final class BarGraphImageCreator {
      */
     public void setTimelineColor(final Color timelineColor) {
         mTimelineColor = timelineColor;
+    }
+
+    /**
+     * Sets the time interval color.
+     * @param timeIntervalColor the time interval color to set
+     */
+    public void setTimeIntervalColor(final Color timeIntervalColor) {
+        mTimeIntervalColor = timeIntervalColor;
     }
 }

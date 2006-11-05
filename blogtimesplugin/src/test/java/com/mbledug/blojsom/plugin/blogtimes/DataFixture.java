@@ -2,6 +2,7 @@ package com.mbledug.blojsom.plugin.blogtimes;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Properties;
 import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
@@ -38,16 +39,41 @@ public class DataFixture extends MockObjectTestCase {
         return entries;
     }
 
+    static Properties createPropertiesWithValidValues() {
+        Properties properties = new Properties();
+        properties.put("image-background-color", "ff00ff");
+        properties.put("bar-border-color", "ff00ff");
+        properties.put("bar-background-color", "ff00ff");
+        properties.put("bar-timeline-color", "ff00ff");
+        properties.put("bar-timeinterval-color", "ff00ff");
+        properties.put("font-color", "ff00ff");
+        properties.put("bar-height", "20");
+        properties.put("bar-width", "10");
+        return properties;
+    }
+
+    static Properties createPropertiesWithInvalidValues() {
+        Properties properties = new Properties();
+        properties.put("image-background-color", "ff00ffaa");
+        properties.put("bar-border-color", "ff00ffaa");
+        properties.put("bar-background-color", "ff00ffaa");
+        properties.put("bar-timeline-color", "ff00ffaa");
+        properties.put("bar-timeinterval-color", "ff00ffaa");
+        properties.put("font-color", "ff00ffaa");
+        properties.put("bar-height", "-1");
+        properties.put("bar-width", "-1");
+        return properties;
+    }
 
     HttpSession createMockHttpSessionSetAttribute() {
         Mock mockHttpSession = mock(HttpSession.class);
-        mockHttpSession.expects(once()).method("setAttribute");
+        mockHttpSession.expects(atLeastOnce()).method("setAttribute");
         return (HttpSession) mockHttpSession.proxy();
     }
 
     HttpServletRequest createMockHttpServletRequestSetSessionAttribute() {
         Mock mockHttpServletRequest = mock(HttpServletRequest.class);
-        mockHttpServletRequest.expects(once()).method("getSession").will(returnValue(createMockHttpSessionSetAttribute()));
+        mockHttpServletRequest.expects(atLeastOnce()).method("getSession").will(returnValue(createMockHttpSessionSetAttribute()));
         return (HttpServletRequest) mockHttpServletRequest.proxy();
     }
 
