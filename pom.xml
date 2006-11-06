@@ -6,6 +6,7 @@
   <packaging>pom</packaging>
   <modules>
     <module>blogtimesplugin</module>
+    <module>galleryplugin</module>
     <module>gravatarplugin</module>
     <module>param2ctxplugin</module>
     <module>trackbackkeywordplugin</module>
