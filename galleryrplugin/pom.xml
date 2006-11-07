@@ -7,6 +7,7 @@
   <version>0.2-SNAPSHOT</version>
   <description>
     Blojsom plugin that retrieves information of photos/photosets stored in Flickr.
+    This plugin is useful for creating a simple a photo gallery.
   </description>
   <inceptionYear>2005</inceptionYear>
   <name>Galleryr Plugin</name>

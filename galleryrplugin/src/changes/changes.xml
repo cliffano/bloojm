@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<document>
+  <properties>
+    <title>Changes</title>
+  </properties>
+  <body>
+    <release version="0.2-SNAPSHOT" date="current">
+      <action type="update" dev="cliffano">
+        Updated plugin implementation to work with Blojsom 3.
+        Refactored implementation from GalleryrPlugin 0.1, added unit tests.
+        Entry meta data now holds Flickrj's Photo objects (was GalleryrPhoto).
+      </action>
+    </release>
+    <release version="0.1" date="11-08-2005">
+      <action type="add" dev="cliffano">
+        Initial release.
+      </action>
+    </release>
+  </body>
+</document>
