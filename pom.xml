@@ -9,6 +9,7 @@
     <module>galleryplugin</module>
     <module>gravatarplugin</module>
     <module>param2ctxplugin</module>
+    <module>scodeplugin</module>
     <module>trackbackkeywordplugin</module>
   </modules>
   <version>0.1-SNAPSHOT</version>
