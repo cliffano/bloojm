@@ -12,7 +12,7 @@ import org.jmock.cglib.MockObjectTestCase;
 
 public class DataFixture extends MockObjectTestCase {
 
-    public static final String API_KEY = "aa75aa3951ee1a2f1244fdbd8ce11e1d";
+    public static final String API_KEY = "e7322167b9314f6e600bc7ec86b5bd40";
     public static final String PHOTO_IDS_CSV = "31670708,31671077";
     public static final String PHOTOSET_IDS_CSV = "711101,711155";
 

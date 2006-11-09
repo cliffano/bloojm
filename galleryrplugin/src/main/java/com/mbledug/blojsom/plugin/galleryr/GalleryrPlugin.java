@@ -58,7 +58,7 @@ public class GalleryrPlugin implements Plugin {
     /**
      * Plugin property for Flickr API key.
      */
-    private static final String PROPERTY_API_KEY = "apikey";
+    private static final String PROPERTY_API_KEY = "galleryr-apikey";
 
     /**
      * Meta data key for photosets ID.
@@ -73,7 +73,7 @@ public class GalleryrPlugin implements Plugin {
     /**
      * Meta data for Flickr photos.
      */
-    private static final String METADATA_PHOTOS = "blojsom-plugin-galleryr";
+    private static final String METADATA_PHOTOS = "galleryr-photos";
 
     /**
      * Plugin properties.

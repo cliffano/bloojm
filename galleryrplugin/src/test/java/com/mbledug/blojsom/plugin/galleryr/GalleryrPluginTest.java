@@ -30,7 +30,7 @@ public class GalleryrPluginTest extends TestCase {
         DataFixture dataFixture = new DataFixture();
 
         Properties properties = new Properties();
-        properties.put("apikey", DataFixture.API_KEY);
+        properties.put("galleryr-apikey", DataFixture.API_KEY);
 
         GalleryrPlugin galleryrPlugin = new GalleryrPlugin();
         galleryrPlugin.setProperties(properties);
@@ -47,7 +47,7 @@ public class GalleryrPluginTest extends TestCase {
                     entries);
 
             DatabaseEntry entry = (DatabaseEntry) entries[0];
-            List photos = (List) entry.getMetaData().get("blojsom-plugin-galleryr");
+            List photos = (List) entry.getMetaData().get("galleryr-photos");
             assertNotNull(photos);
             assertTrue(photos.size() > 0);
             for (Iterator it = photos.iterator(); it.hasNext();) {
