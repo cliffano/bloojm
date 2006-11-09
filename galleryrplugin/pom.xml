@@ -45,7 +45,7 @@
     <dependency>
       <groupId>flickrj</groupId>
       <artifactId>flickrapi</artifactId>
-      <version>1.0b1</version>
+      <version>1.0a9</version>
       <scope>compile</scope>
     </dependency>
     <dependency>

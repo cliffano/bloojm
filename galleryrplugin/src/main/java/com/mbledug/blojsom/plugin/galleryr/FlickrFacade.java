@@ -67,14 +67,6 @@ class FlickrFacade {
     private Flickr mFlickr;
 
     /**
-     * Creates an instance of {@link FlickrFacade} with specified Flickr client.
-     * @param flickr the Flickr client
-     */
-    FlickrFacade(final Flickr flickr) {
-        mFlickr = flickr;
-    }
-
-    /**
      * Creates an instance of {@link FlickrFacade} with specified API key.
      * @param apiKey Flickr API key
      */
