@@ -1,7 +1,7 @@
 package com.mbledug.blojsom.plugin.blogtimes;
 
 import java.util.HashMap;
-import java.util.Properties;
+import java.util.Map;
 
 import junit.framework.TestCase;
 
@@ -18,17 +18,20 @@ public class BlogTimesPluginTest extends TestCase {
         mDataFixture = new DataFixture();
     }
 
-    public void testProcessStoresDatesAsSessionAttribute() {
-        Plugin blogTimesPlugin = new BlogTimesPlugin();
+    public void testProcessStoresBarGraphImageCreatorAndDatesAsSessionAttribute() {
         Entry[] entries = DataFixture.createEntryWithDates(
             DataFixture.createRandomDates(10));
+        DatabaseBlog blog = new DatabaseBlog();
+        blog.setProperties(new HashMap());
+
+        Plugin blogTimesPlugin = new BlogTimesPlugin();
 
         try {
             blogTimesPlugin.init();
             entries = blogTimesPlugin.process(
                     mDataFixture.createMockHttpServletRequestSetSessionAttribute(),
                     mDataFixture.createMockHttpServletResponse(),
-                    new DatabaseBlog(),
+                    blog,
                     new HashMap(),
                     entries);
             blogTimesPlugin.cleanup();
@@ -38,27 +41,45 @@ public class BlogTimesPluginTest extends TestCase {
         }
     }
 
-    public void testInitWithValidProperties() {
-        Properties properties = DataFixture.createPropertiesWithValidValues();
+    public void testProcessWithValidBlogProperties() {
+        DatabaseBlog blog = new DatabaseBlog();
+        blog.setProperties(DataFixture.createPropertiesWithValidValues());
+        Entry[] entries = DataFixture.createEntryWithDates(
+                DataFixture.createRandomDates(10));
 
         BlogTimesPlugin blogTimesPlugin = new BlogTimesPlugin();
-        blogTimesPlugin.setProperties(properties);
 
         try {
             blogTimesPlugin.init();
+            entries = blogTimesPlugin.process(
+                    mDataFixture.createMockHttpServletRequestSetSessionAttribute(),
+                    mDataFixture.createMockHttpServletResponse(),
+                    blog,
+                    new HashMap(),
+                    entries);
+            blogTimesPlugin.cleanup();
+            blogTimesPlugin.destroy();
         } catch (PluginException pe) {
             fail("PluginException should not occur: " + pe);
         }
     }
 
-    public void testInitWithInvalidPropertiesGivesPluginException() {
-        Properties properties = DataFixture.createPropertiesWithInvalidValues();
+    public void testProcessWithInvalidPropertiesGivesPluginException() {
+        DatabaseBlog blog = new DatabaseBlog();
+        blog.setProperties(DataFixture.createPropertiesWithInvalidValues());
+        Entry[] entries = DataFixture.createEntryWithDates(
+                DataFixture.createRandomDates(10));
 
         BlogTimesPlugin blogTimesPlugin = new BlogTimesPlugin();
-        blogTimesPlugin.setProperties(properties);
 
         try {
             blogTimesPlugin.init();
+            entries = blogTimesPlugin.process(
+                    mDataFixture.createMockHttpServletRequestSetSessionAttribute(),
+                    mDataFixture.createMockHttpServletResponse(),
+                    blog,
+                    new HashMap(),
+                    entries);
             fail("PluginException should've occured.");
         } catch (PluginException pe) {
             // expected PluginException

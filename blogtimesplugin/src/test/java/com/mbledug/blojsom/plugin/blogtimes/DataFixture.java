@@ -2,7 +2,8 @@ package com.mbledug.blojsom.plugin.blogtimes;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Properties;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
@@ -39,8 +40,8 @@ public class DataFixture extends MockObjectTestCase {
         return entries;
     }
 
-    static Properties createPropertiesWithValidValues() {
-        Properties properties = new Properties();
+    static Map createPropertiesWithValidValues() {
+        Map properties = new HashMap();
         properties.put("image-background-color", "ff00ff");
         properties.put("bar-border-color", "ff00ff");
         properties.put("bar-background-color", "ff00ff");
@@ -52,8 +53,8 @@ public class DataFixture extends MockObjectTestCase {
         return properties;
     }
 
-    static Properties createPropertiesWithInvalidValues() {
-        Properties properties = new Properties();
+    static Map createPropertiesWithInvalidValues() {
+        Map properties = new HashMap();
         properties.put("image-background-color", "ff00ffaa");
         properties.put("bar-border-color", "ff00ffaa");
         properties.put("bar-background-color", "ff00ffaa");

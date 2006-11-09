@@ -31,7 +31,6 @@ package com.mbledug.blojsom.plugin.blogtimes;
 import java.awt.Color;
 import java.util.Date;
 import java.util.Map;
-import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -113,47 +112,17 @@ public class BlogTimesPlugin implements Plugin {
     public static final String PROPERTY_BOX_WIDTH = "bar-width";
 
     /**
-     * Plugin properties.
-     */
-    private Properties mProperties;
-
-    /**
-     * Bar graph image creator.
-     */
-    private BarGraphImageCreator mBarGraphImageCreator;
-
-    /**
-     * Creates an instance of {@link BlogTimesPlugin}}.
-     */
-    public BlogTimesPlugin() {
-        mProperties = new Properties();
-    }
-
-    /**
-     * Sets {@link BlogTimesPlugin} properties.
-     * @param properties the plugin properties
-     */
-    public final void setProperties(final Properties properties) {
-        mProperties = properties;
-    }
-
-    /**
-     * Writes plugin init message. Initialises {@link BarGraphImageCreator}..
+     * Writes plugin init message.
      * @throws PluginException when there's an error in initialising this plugin
      */
     public final void init() throws PluginException {
         LOG.info("Initialising BlogTimesPlugin.");
-        try {
-            initBarGraphCreator();
-        } catch (IllegalArgumentException iae) {
-            throw new PluginException(
-                    "Invalid BlogTimesPlugin configuration properties. ");
-        }
     }
 
     /**
-     * Retrieves the entries' dates and stores them in an array within a session
-     * attribute.
+     * Creates {@link BarGraphImageCreator} configured for each blog stores it
+     * as session attribute. Retrieves the entries' dates and stores them in an
+     * array within a session attribute.
      * @param httpServletRequest http servlet request
      * @param httpServletResponse http servlet response
      * @param blog blog instance
@@ -170,14 +139,22 @@ public class BlogTimesPlugin implements Plugin {
             final Entry[] entries)
             throws PluginException {
 
+        try {
+            BarGraphImageCreator barGraphImageCreator =
+                    createBarGraphImageCreator(blog);
+            httpServletRequest.getSession().setAttribute(SESSION_ATTR_CREATOR,
+                    barGraphImageCreator);
+        } catch (IllegalArgumentException iae) {
+            throw new PluginException(
+                    "Invalid BlogTimesPlugin configuration properties for "
+                    + " blog id: " + blog.getBlogId());
+        }
+
         Date[] dates = new Date[entries.length];
         for (int i = 0; i < entries.length; i++) {
             dates[i] = entries[i].getDate();
         }
         httpServletRequest.getSession().setAttribute(SESSION_ATTR_DATES, dates);
-
-        httpServletRequest.getSession().setAttribute(SESSION_ATTR_CREATOR,
-                mBarGraphImageCreator);
 
         return entries;
     }
@@ -199,57 +176,60 @@ public class BlogTimesPlugin implements Plugin {
     }
 
     /**
-     * Initialises bar graph creator and applies configuration properties.
+     * Creates bar graph image creator and applies configuration properties.
+     * @param blog blog which holds configuration properties
+     * @return the created bar graph image creator
      */
-    private void initBarGraphCreator() {
-        mBarGraphImageCreator = new BarGraphImageCreator();
+    private BarGraphImageCreator createBarGraphImageCreator(final Blog blog) {
+        BarGraphImageCreator barGraphImageCreator = new BarGraphImageCreator();
         if (!BlojsomUtils.checkNullOrBlank(
-                mProperties.getProperty(PROPERTY_BACKGROUND_COLOR))) {
+                blog.getProperty(PROPERTY_BACKGROUND_COLOR))) {
             Color backgroundColor = BlogTimesHelper.hexToColor(
-                    mProperties.getProperty(PROPERTY_BACKGROUND_COLOR));
-            mBarGraphImageCreator.setBackgroundColor(backgroundColor);
+                    blog.getProperty(PROPERTY_BACKGROUND_COLOR));
+            barGraphImageCreator.setBackgroundColor(backgroundColor);
         }
         if (!BlojsomUtils.checkNullOrBlank(
-                mProperties.getProperty(PROPERTY_BOX_BORDER_COLOR))) {
+                blog.getProperty(PROPERTY_BOX_BORDER_COLOR))) {
             Color boxBorderColor = BlogTimesHelper.hexToColor(
-                    mProperties.getProperty(PROPERTY_BOX_BORDER_COLOR));
-            mBarGraphImageCreator.setBoxBorderColor(boxBorderColor);
+                    blog.getProperty(PROPERTY_BOX_BORDER_COLOR));
+            barGraphImageCreator.setBoxBorderColor(boxBorderColor);
         }
         if (!BlojsomUtils.checkNullOrBlank(
-                mProperties.getProperty(PROPERTY_BOX_BACKGROUND_COLOR))) {
+                blog.getProperty(PROPERTY_BOX_BACKGROUND_COLOR))) {
             Color boxBackgroundColor = BlogTimesHelper.hexToColor(
-                    mProperties.getProperty(PROPERTY_BOX_BACKGROUND_COLOR));
-            mBarGraphImageCreator.setBoxBackgroundColor(boxBackgroundColor);
+                    blog.getProperty(PROPERTY_BOX_BACKGROUND_COLOR));
+            barGraphImageCreator.setBoxBackgroundColor(boxBackgroundColor);
         }
         if (!BlojsomUtils.checkNullOrBlank(
-                mProperties.getProperty(PROPERTY_TIMELINE_COLOR))) {
+                blog.getProperty(PROPERTY_TIMELINE_COLOR))) {
             Color timelineColor = BlogTimesHelper.hexToColor(
-                    mProperties.getProperty(PROPERTY_TIMELINE_COLOR));
-            mBarGraphImageCreator.setTimelineColor(timelineColor);
+                    blog.getProperty(PROPERTY_TIMELINE_COLOR));
+            barGraphImageCreator.setTimelineColor(timelineColor);
         }
         if (!BlojsomUtils.checkNullOrBlank(
-                mProperties.getProperty(PROPERTY_TIME_INTERVAL_COLOR))) {
+                blog.getProperty(PROPERTY_TIME_INTERVAL_COLOR))) {
             Color timeIntervalColor = BlogTimesHelper.hexToColor(
-                    mProperties.getProperty(PROPERTY_TIME_INTERVAL_COLOR));
-            mBarGraphImageCreator.setTimeIntervalColor(timeIntervalColor);
+                    blog.getProperty(PROPERTY_TIME_INTERVAL_COLOR));
+            barGraphImageCreator.setTimeIntervalColor(timeIntervalColor);
         }
         if (!BlojsomUtils.checkNullOrBlank(
-                mProperties.getProperty(PROPERTY_FONT_COLOR))) {
+                blog.getProperty(PROPERTY_FONT_COLOR))) {
             Color fontColor = BlogTimesHelper.hexToColor(
-                    mProperties.getProperty(PROPERTY_FONT_COLOR));
-            mBarGraphImageCreator.setFontColor(fontColor);
+                    blog.getProperty(PROPERTY_FONT_COLOR));
+            barGraphImageCreator.setFontColor(fontColor);
         }
         if (!BlojsomUtils.checkNullOrBlank(
-                mProperties.getProperty(PROPERTY_BOX_HEIGHT))) {
+                blog.getProperty(PROPERTY_BOX_HEIGHT))) {
             int boxHeight = Integer.parseInt(
-                    mProperties.getProperty(PROPERTY_BOX_HEIGHT));
-            mBarGraphImageCreator.setBoxHeight(boxHeight);
+                    blog.getProperty(PROPERTY_BOX_HEIGHT));
+            barGraphImageCreator.setBoxHeight(boxHeight);
         }
         if (!BlojsomUtils.checkNullOrBlank(
-                mProperties.getProperty(PROPERTY_BOX_WIDTH))) {
+                blog.getProperty(PROPERTY_BOX_WIDTH))) {
             int boxWidth = Integer.parseInt(
-                    mProperties.getProperty(PROPERTY_BOX_WIDTH));
-            mBarGraphImageCreator.setBoxWidth(boxWidth);
+                    blog.getProperty(PROPERTY_BOX_WIDTH));
+            barGraphImageCreator.setBoxWidth(boxWidth);
         }
+        return barGraphImageCreator;
     }
 }
