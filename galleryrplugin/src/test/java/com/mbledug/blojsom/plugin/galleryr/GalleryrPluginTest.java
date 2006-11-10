@@ -30,7 +30,7 @@ public class GalleryrPluginTest extends TestCase {
         DataFixture dataFixture = new DataFixture();
 
         Properties properties = new Properties();
-        properties.put("galleryr-apikey", DataFixture.API_KEY);
+        properties.put(GalleryrPlugin.PROPERTY_API_KEY, DataFixture.API_KEY);
 
         GalleryrPlugin galleryrPlugin = new GalleryrPlugin();
         galleryrPlugin.setProperties(properties);
@@ -47,7 +47,7 @@ public class GalleryrPluginTest extends TestCase {
                     entries);
 
             DatabaseEntry entry = (DatabaseEntry) entries[0];
-            List photos = (List) entry.getMetaData().get("galleryr-photos");
+            List photos = (List) entry.getMetaData().get(GalleryrPlugin.METADATA_PHOTOS);
             assertNotNull(photos);
             assertTrue(photos.size() > 0);
             for (Iterator it = photos.iterator(); it.hasNext();) {

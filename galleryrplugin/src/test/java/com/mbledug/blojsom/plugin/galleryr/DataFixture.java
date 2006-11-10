@@ -18,8 +18,8 @@ public class DataFixture extends MockObjectTestCase {
 
     Entry createEntryWithGalleryrMetaData() {
         Map metaData = new HashMap();
-        metaData.put("galleryr-photosets-id", PHOTOSET_IDS_CSV);
-        metaData.put("galleryr-photos-id", PHOTO_IDS_CSV);
+        metaData.put(GalleryrPlugin.METADATA_PHOTOSET_IDS, PHOTOSET_IDS_CSV);
+        metaData.put(GalleryrPlugin.METADATA_PHOTO_IDS, PHOTO_IDS_CSV);
 
         DatabaseEntry entry = new DatabaseEntry();
         entry.setMetaData(metaData);

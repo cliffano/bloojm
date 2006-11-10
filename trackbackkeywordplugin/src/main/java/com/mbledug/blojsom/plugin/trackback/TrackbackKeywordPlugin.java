@@ -66,17 +66,18 @@ public class TrackbackKeywordPlugin implements Listener {
     /**
      * Plugin property for comma separated keywords.
      */
-    public static final String PROPERTY_KEYWORDS = "keywords";
+    public static final String PROPERTY_KEYWORDS = "trackbackkeyword-keywords";
 
     /**
      * Plugin property for action on spam suspect.
      */
-    public static final String PROPERTY_ACTION = "action";
+    public static final String PROPERTY_ACTION = "trackbackkeyword-action";
 
     /**
      * Plugin property for keyword check type.
      */
-    public static final String PROPERTY_CHECK_TYPE = "checktype";
+    public static final String PROPERTY_CHECK_TYPE =
+            "trackbackkeyword-checktype";
 
     /**
      * Plugin property for proxy host.
@@ -188,10 +189,10 @@ public class TrackbackKeywordPlugin implements Listener {
                         mProperties.getProperty(PROPERTY_PROXY_PASSWORD));
                 try {
                     if (isSpamSuspect(
-                            mProperties.getProperty(PROPERTY_CHECK_TYPE),
+                            blog.getProperty(PROPERTY_CHECK_TYPE),
                             mUrlTextFetcher.fetchText(url),
-                            mProperties.getProperty(PROPERTY_KEYWORDS))) {
-                        addTrackbackAction(mProperties
+                            blog.getProperty(PROPERTY_KEYWORDS))) {
+                        addTrackbackAction(blog
                                 .getProperty(PROPERTY_ACTION), metaData);
                     }
                 } catch (IOException ioe) {

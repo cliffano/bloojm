@@ -58,22 +58,22 @@ public class GalleryrPlugin implements Plugin {
     /**
      * Plugin property for Flickr API key.
      */
-    private static final String PROPERTY_API_KEY = "galleryr-apikey";
+    public static final String PROPERTY_API_KEY = "flickr-apikey";
 
     /**
      * Meta data key for photosets ID.
      */
-    private static final String METADATA_PHOTOSET_IDS = "galleryr-photosets-id";
+    public static final String METADATA_PHOTOSET_IDS = "galleryr-photosets-id";
 
     /**
      * Meta data key for photos ID.
      */
-    private static final String METADATA_PHOTO_IDS = "galleryr-photos-id";
+    public static final String METADATA_PHOTO_IDS = "galleryr-photos-id";
 
     /**
      * Meta data for Flickr photos.
      */
-    private static final String METADATA_PHOTOS = "galleryr-photos";
+    public static final String METADATA_PHOTOS = "galleryr-photos";
 
     /**
      * Plugin properties.
