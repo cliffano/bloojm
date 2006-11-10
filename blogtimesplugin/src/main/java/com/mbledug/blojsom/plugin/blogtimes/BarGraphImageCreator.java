@@ -54,13 +54,13 @@ final class BarGraphImageCreator implements Serializable {
      */
     private static final Color DEFAULT_BACKGROUND_COLOR = Color.WHITE;
     /**
-     * Default box border color.
+     * Default border color.
      */
-    private static final Color DEFAULT_BOX_BORDER_COLOR = Color.GRAY;
+    private static final Color DEFAULT_BORDER_COLOR = Color.GRAY;
     /**
-     * Default box background color.
+     * Default bar background color.
      */
-    private static final Color DEFAULT_BOX_BACKGROUND_COLOR = Color.LIGHT_GRAY;
+    private static final Color DEFAULT_BAR_BACKGROUND_COLOR = Color.LIGHT_GRAY;
     /**
      * Default timeline color.
      */
@@ -76,34 +76,34 @@ final class BarGraphImageCreator implements Serializable {
      */
     private static final Color DEFAULT_FONT_COLOR = Color.BLACK;
     /**
-     * Default box height in pixels.
+     * Default bar height in pixels.
      */
-    private static final int DEFAULT_BOX_HEIGHT = 25;
+    private static final int DEFAULT_BAR_HEIGHT = 25;
     /**
-     * Default box width in pixels.
+     * Default bar width in pixels.
      */
-    private static final int DEFAULT_BOX_WIDTH = 350;
+    private static final int DEFAULT_BAR_WIDTH = 350;
     /**
-     * Default box margin in pixels.
+     * Default bar margin in pixels.
      */
-    private static final int BOX_MARGIN = 15;
+    private static final int BAR_MARGIN = 15;
     /**
-     * Default box border size in pixels.
+     * Default bar border size in pixels.
      */
-    private static final int BOX_BORDER_SIZE = 1;
+    private static final int BAR_BORDER_SIZE = 1;
 
     /**
      * Background color.
      */
     private Color mBackgroundColor;
     /**
-     * Box border color.
+     * Border color.
      */
-    private Color mBoxBorderColor;
+    private Color mBorderColor;
     /**
-     * Box background color.
+     * Bar background color.
      */
-    private Color mBoxBackgroundColor;
+    private Color mBarBackgroundColor;
     /**
      * Timeline color.
      */
@@ -117,26 +117,26 @@ final class BarGraphImageCreator implements Serializable {
      */
     private Color mFontColor;
     /**
-     * Box height.
+     * Bar height.
      */
-    private int mBoxHeight;
+    private int mBarHeight;
     /**
-     * Box width.
+     * Bar width.
      */
-    private int mBoxWidth;
+    private int mBarWidth;
 
     /**
      * Creates an instance of {@link BarGraphImageCreator}.
      */
     BarGraphImageCreator() {
         mBackgroundColor = DEFAULT_BACKGROUND_COLOR;
-        mBoxBorderColor = DEFAULT_BOX_BORDER_COLOR;
-        mBoxBackgroundColor = DEFAULT_BOX_BACKGROUND_COLOR;
+        mBorderColor = DEFAULT_BORDER_COLOR;
+        mBarBackgroundColor = DEFAULT_BAR_BACKGROUND_COLOR;
         mTimelineColor = DEFAULT_TIMELINE_COLOR;
         mTimeIntervalColor = DEFAULT_TIME_INTERVAL_COLOR;
         mFontColor = DEFAULT_FONT_COLOR;
-        mBoxHeight = DEFAULT_BOX_HEIGHT;
-        mBoxWidth = DEFAULT_BOX_WIDTH;
+        mBarHeight = DEFAULT_BAR_HEIGHT;
+        mBarWidth = DEFAULT_BAR_WIDTH;
     }
 
     /**
@@ -150,8 +150,8 @@ final class BarGraphImageCreator implements Serializable {
         BarGraph barGraph = BarGraphFactory.getBarGraph(flavor);
 
         BufferedImage image = new BufferedImage(
-                mBoxWidth + (BOX_MARGIN * 2),
-                mBoxHeight + BOX_MARGIN,
+                mBarWidth + (BAR_MARGIN * 2),
+                mBarHeight + BAR_MARGIN,
                 BufferedImage.TYPE_INT_RGB);
 
         Graphics2D graphics = createBackground(image);
@@ -179,9 +179,9 @@ final class BarGraphImageCreator implements Serializable {
         graphics.fill(new Rectangle2D.Double(
                 0, 0, image.getWidth(), image.getHeight()));
 
-        graphics.setPaint(mBoxBackgroundColor);
+        graphics.setPaint(mBarBackgroundColor);
         graphics.fill(new Rectangle2D.Double(
-                BOX_MARGIN + 1, 1, mBoxWidth - 1, mBoxHeight - 1));
+                BAR_MARGIN + 1, 1, mBarWidth - 1, mBarHeight - 1));
 
         return graphics;
     }
@@ -206,11 +206,11 @@ final class BarGraphImageCreator implements Serializable {
                     calendarUnit, dates[i]);
             float multiplier = Float.parseFloat(
                     String.valueOf(totalSeconds)) / scaler;
-            int pos = BOX_MARGIN + Integer.parseInt(
-                    String.valueOf(Math.round(mBoxWidth * multiplier)));
+            int pos = BAR_MARGIN + Integer.parseInt(
+                    String.valueOf(Math.round(mBarWidth * multiplier)));
             graphics.setPaint(mTimelineColor);
             graphics.fill(new Rectangle2D.Double(
-                    pos, BOX_BORDER_SIZE, timelineSize, mBoxHeight));
+                    pos, BAR_BORDER_SIZE, timelineSize, mBarHeight));
         }
     }
 
@@ -235,19 +235,19 @@ final class BarGraphImageCreator implements Serializable {
         graphics.setFont(new Font(null, Font.PLAIN, fontSize));
         for (int i = timelineStart; i <= timelineEnd; i += interval) {
 
-            int pos = BOX_MARGIN + ((i * mBoxWidth)
+            int pos = BAR_MARGIN + ((i * mBarWidth)
                     / (timelineEnd - timelineStart));
 
             if (i != timelineStart && i != timelineEnd) {
                 graphics.setPaint(mTimeIntervalColor);
                 graphics.fill(new Rectangle2D.Double(
-                        pos, mBoxHeight - intervalHeight, intervalWidth,
+                        pos, mBarHeight - intervalHeight, intervalWidth,
                         intervalHeight));
             }
 
             graphics.setColor(mFontColor);
             graphics.drawString(String.valueOf(i), pos - fontMarginWidth,
-                    mBoxHeight + BOX_MARGIN - fontMarginHeight);
+                    mBarHeight + BAR_MARGIN - fontMarginHeight);
         }
     }
 
@@ -257,16 +257,16 @@ final class BarGraphImageCreator implements Serializable {
      */
     private void drawBorders(final Graphics2D graphics) {
 
-        graphics.setPaint(mBoxBorderColor);
-        graphics.fill(new Rectangle2D.Double(BOX_MARGIN, 0, BOX_BORDER_SIZE,
-                mBoxHeight));
+        graphics.setPaint(mBorderColor);
+        graphics.fill(new Rectangle2D.Double(BAR_MARGIN, 0, BAR_BORDER_SIZE,
+                mBarHeight));
         graphics.fill(new Rectangle2D.Double(
-                BOX_MARGIN + mBoxWidth - BOX_BORDER_SIZE, 0, BOX_BORDER_SIZE,
-                mBoxHeight));
-        graphics.fill(new Rectangle2D.Double(BOX_MARGIN, 0, mBoxWidth,
-                BOX_BORDER_SIZE));
-        graphics.fill(new Rectangle2D.Double(BOX_MARGIN, mBoxHeight, mBoxWidth,
-                BOX_BORDER_SIZE));
+                BAR_MARGIN + mBarWidth - BAR_BORDER_SIZE, 0, BAR_BORDER_SIZE,
+                mBarHeight));
+        graphics.fill(new Rectangle2D.Double(BAR_MARGIN, 0, mBarWidth,
+                BAR_BORDER_SIZE));
+        graphics.fill(new Rectangle2D.Double(BAR_MARGIN, mBarHeight, mBarWidth,
+                BAR_BORDER_SIZE));
     }
 
     /**
@@ -304,41 +304,41 @@ final class BarGraphImageCreator implements Serializable {
     }
 
     /**
-     * Sets the box background color.
-     * @param boxBackgroundColor the box background color to set
+     * Sets the bar background color.
+     * @param barBackgroundColor the bar background color to set
      */
-    public void setBoxBackgroundColor(final Color boxBackgroundColor) {
-        mBoxBackgroundColor = boxBackgroundColor;
+    public void setBarBackgroundColor(final Color barBackgroundColor) {
+        mBarBackgroundColor = barBackgroundColor;
     }
 
     /**
-     * Sets the box border color.
-     * @param boxBorderColor the box border color to set
+     * Sets the border color.
+     * @param borderColor the border color to set
      */
-    public void setBoxBorderColor(final Color boxBorderColor) {
-        mBoxBorderColor = boxBorderColor;
+    public void setBorderColor(final Color borderColor) {
+        mBorderColor = borderColor;
     }
 
     /**
-     * Sets the box height.
-     * @param boxHeight the box height to set
+     * Sets the bar height.
+     * @param barHeight the bar height to set
      */
-    public void setBoxHeight(final int boxHeight) {
-        if (boxHeight <= 0) {
-            throw new IllegalArgumentException("Invalid box height.");
+    public void setBarHeight(final int barHeight) {
+        if (barHeight <= 0) {
+            throw new IllegalArgumentException("Invalid bar height.");
         }
-        mBoxHeight = boxHeight;
+        mBarHeight = barHeight;
     }
 
     /**
-     * Sets the box width.
-     * @param boxWidth the box width to set
+     * Sets the bar width.
+     * @param barWidth the bar width to set
      */
-    public void setBoxWidth(final int boxWidth) {
-        if (boxWidth <= 0) {
-            throw new IllegalArgumentException("Invalid box width.");
+    public void setBarWidth(final int barWidth) {
+        if (barWidth <= 0) {
+            throw new IllegalArgumentException("Invalid bar width.");
         }
-        mBoxWidth = boxWidth;
+        mBarWidth = barWidth;
     }
 
     /**

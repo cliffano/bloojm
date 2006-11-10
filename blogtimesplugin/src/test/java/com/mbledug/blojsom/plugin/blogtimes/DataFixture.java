@@ -42,27 +42,27 @@ public class DataFixture extends MockObjectTestCase {
 
     static Map createPropertiesWithValidValues() {
         Map properties = new HashMap();
-        properties.put("image-background-color", "ff00ff");
-        properties.put("bar-border-color", "ff00ff");
-        properties.put("bar-background-color", "ff00ff");
-        properties.put("bar-timeline-color", "ff00ff");
-        properties.put("bar-timeinterval-color", "ff00ff");
-        properties.put("font-color", "ff00ff");
-        properties.put("bar-height", "20");
-        properties.put("bar-width", "10");
+        properties.put(BlogTimesPlugin.PROPERTY_BACKGROUND_COLOR, "ff00ff");
+        properties.put(BlogTimesPlugin.PROPERTY_BORDER_COLOR, "ff00ff");
+        properties.put(BlogTimesPlugin.PROPERTY_BAR_BACKGROUND_COLOR, "ff00ff");
+        properties.put(BlogTimesPlugin.PROPERTY_TIMELINE_COLOR, "ff00ff");
+        properties.put(BlogTimesPlugin.PROPERTY_TIME_INTERVAL_COLOR, "ff00ff");
+        properties.put(BlogTimesPlugin.PROPERTY_FONT_COLOR, "ff00ff");
+        properties.put(BlogTimesPlugin.PROPERTY_BAR_HEIGHT, "20");
+        properties.put(BlogTimesPlugin.PROPERTY_BAR_WIDTH, "10");
         return properties;
     }
 
     static Map createPropertiesWithInvalidValues() {
         Map properties = new HashMap();
-        properties.put("image-background-color", "ff00ffaa");
-        properties.put("bar-border-color", "ff00ffaa");
-        properties.put("bar-background-color", "ff00ffaa");
-        properties.put("bar-timeline-color", "ff00ffaa");
-        properties.put("bar-timeinterval-color", "ff00ffaa");
-        properties.put("font-color", "ff00ffaa");
-        properties.put("bar-height", "-1");
-        properties.put("bar-width", "-1");
+        properties.put(BlogTimesPlugin.PROPERTY_BACKGROUND_COLOR, "ff00ffaa");
+        properties.put(BlogTimesPlugin.PROPERTY_BORDER_COLOR, "ff00ffaa");
+        properties.put(BlogTimesPlugin.PROPERTY_BAR_BACKGROUND_COLOR, "ff00ffaa");
+        properties.put(BlogTimesPlugin.PROPERTY_TIMELINE_COLOR, "ff00ffaa");
+        properties.put(BlogTimesPlugin.PROPERTY_TIME_INTERVAL_COLOR, "ff00ffaa");
+        properties.put(BlogTimesPlugin.PROPERTY_FONT_COLOR, "ff00ffaa");
+        properties.put(BlogTimesPlugin.PROPERTY_BAR_HEIGHT, "-1");
+        properties.put(BlogTimesPlugin.PROPERTY_BAR_WIDTH, "-1");
         return properties;
     }
 

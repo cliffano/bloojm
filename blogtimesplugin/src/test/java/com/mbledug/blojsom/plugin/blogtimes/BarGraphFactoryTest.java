@@ -5,11 +5,11 @@ import junit.framework.TestCase;
 public class BarGraphFactoryTest extends TestCase {
 
     public void testGetBarGraphWithSupportedFlavors() {
-        BarGraph barGraphSecondOfMinute = BarGraphFactory.getBarGraph("second-of-minute");
+        BarGraph barGraphSecondOfMinute = BarGraphFactory.getBarGraph(BlogTimesPlugin.FLAVOR_SECOND_OF_MINUTE);
         assertNotNull(barGraphSecondOfMinute);
-        BarGraph barGraphMinuteOfHour = BarGraphFactory.getBarGraph("minute-of-hour");
+        BarGraph barGraphMinuteOfHour = BarGraphFactory.getBarGraph(BlogTimesPlugin.FLAVOR_MINUTE_OF_HOUR);
         assertNotNull(barGraphMinuteOfHour);
-        BarGraph barGraphHourOfDay = BarGraphFactory.getBarGraph("hour-of-day");
+        BarGraph barGraphHourOfDay = BarGraphFactory.getBarGraph(BlogTimesPlugin.FLAVOR_HOUR_OF_DAY);
         assertNotNull(barGraphHourOfDay);
     }
 

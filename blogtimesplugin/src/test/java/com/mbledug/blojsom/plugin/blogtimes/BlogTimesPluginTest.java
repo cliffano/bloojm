@@ -1,7 +1,6 @@
 package com.mbledug.blojsom.plugin.blogtimes;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import junit.framework.TestCase;
 

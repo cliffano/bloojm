@@ -16,11 +16,11 @@ public class BarGraphImageCreatorTest extends TestCase {
         BarGraphImageCreator creator = new BarGraphImageCreator();
         Date[] dates = DataFixture.createRandomDates(25);
         writePngImageFile("secondOfMinute.png",
-                creator.createImage("second-of-minute", dates));
+                creator.createImage(BlogTimesPlugin.FLAVOR_SECOND_OF_MINUTE, dates));
         writePngImageFile("minuteOfHour.png",
-                creator.createImage("minute-of-hour", dates));
+                creator.createImage(BlogTimesPlugin.FLAVOR_MINUTE_OF_HOUR, dates));
         writePngImageFile("hourOfDay.png",
-                creator.createImage("hour-of-day", dates));
+                creator.createImage(BlogTimesPlugin.FLAVOR_HOUR_OF_DAY, dates));
         writePngImageFile("default.png",
                 creator.createImage(null, dates));
     }
@@ -28,10 +28,10 @@ public class BarGraphImageCreatorTest extends TestCase {
     public void testCreateImageOverrideConfigurations() throws IOException {
         BarGraphImageCreator creator = new BarGraphImageCreator();
         creator.setBackgroundColor(Color.YELLOW);
-        creator.setBoxBackgroundColor(Color.CYAN);
-        creator.setBoxBorderColor(Color.BLACK);
-        creator.setBoxHeight(20);
-        creator.setBoxWidth(200);
+        creator.setBarBackgroundColor(Color.CYAN);
+        creator.setBorderColor(Color.BLACK);
+        creator.setBarHeight(20);
+        creator.setBarWidth(200);
         creator.setFontColor(Color.RED);
         creator.setTimelineColor(Color.ORANGE);
         writePngImageFile("override.png",
@@ -41,13 +41,13 @@ public class BarGraphImageCreatorTest extends TestCase {
     public void testCreateImageOverrideConfigurationsWithInvalidBoxDimensionGivesIllegalArgumentException() throws IOException {
         BarGraphImageCreator creator = new BarGraphImageCreator();
         try {
-            creator.setBoxHeight(0);
+            creator.setBarHeight(0);
             fail("IllegalArgumentException should've been thrown for invalid box height.");
         } catch (IllegalArgumentException iae) {
             // expected IllegalArgumentException
         }
         try {
-            creator.setBoxWidth(-1);
+            creator.setBarWidth(-1);
             fail("IllegalArgumentException should've been thrown for invalid box width.");
         } catch (IllegalArgumentException iae) {
             // expected IllegalArgumentException

@@ -69,47 +69,67 @@ public class BlogTimesPlugin implements Plugin {
     public static final String SESSION_ATTR_CREATOR = "blogtimes-creator";
 
     /**
-     * Plugin property for background color.
+     * Blog property for background color.
      */
     public static final String PROPERTY_BACKGROUND_COLOR =
-            "image-background-color";
+            "blogtimes-image-background-color";
 
     /**
-     * Plugin property for box border color.
+     * Blog property for bar border color.
      */
-    public static final String PROPERTY_BOX_BORDER_COLOR = "bar-border-color";
+    public static final String PROPERTY_BORDER_COLOR =
+            "blogtimes-bar-border-color";
 
     /**
-     * Plugin property for box background color.
+     * Blog property for bar background color.
      */
-    public static final String PROPERTY_BOX_BACKGROUND_COLOR =
-            "bar-background-color";
+    public static final String PROPERTY_BAR_BACKGROUND_COLOR =
+            "blogtimes-bar-background-color";
 
     /**
-     * Plugin property for timeline color.
+     * Blog property for timeline color.
      */
-    public static final String PROPERTY_TIMELINE_COLOR = "bar-timeline-color";
+    public static final String PROPERTY_TIMELINE_COLOR =
+            "blogtimes-bar-timeline-color";
 
     /**
-     * Plugin property for time interval color.
+     * Blog property for time interval color.
      */
     public static final String PROPERTY_TIME_INTERVAL_COLOR =
-            "bar-timeinterval-color";
+            "blogtimes-bar-timeinterval-color";
 
     /**
-     * Plugin property for font color.
+     * Blog property for font color.
      */
-    public static final String PROPERTY_FONT_COLOR = "font-color";
+    public static final String PROPERTY_FONT_COLOR =
+            "blogtimes-font-color";
 
     /**
-     * Plugin property for box height.
+     * Blog property for box height.
      */
-    public static final String PROPERTY_BOX_HEIGHT = "bar-height";
+    public static final String PROPERTY_BAR_HEIGHT =
+            "blogtimes-bar-height";
 
     /**
-     * Plugin property for box width.
+     * Blog property for box width.
      */
-    public static final String PROPERTY_BOX_WIDTH = "bar-width";
+    public static final String PROPERTY_BAR_WIDTH =
+            "blogtimes-bar-width";
+
+    /**
+     * Flavor String for second-of-minute.
+     */
+    public static final String FLAVOR_SECOND_OF_MINUTE = "second-of-minute";
+
+    /**
+     * Flavor String for minute-of-hour.
+     */
+    public static final String FLAVOR_MINUTE_OF_HOUR = "minute-of-hour";
+
+    /**
+     * Flavor String for hour-of-day.
+     */
+    public static final String FLAVOR_HOUR_OF_DAY = "hour-of-day";
 
     /**
      * Writes plugin init message.
@@ -189,16 +209,16 @@ public class BlogTimesPlugin implements Plugin {
             barGraphImageCreator.setBackgroundColor(backgroundColor);
         }
         if (!BlojsomUtils.checkNullOrBlank(
-                blog.getProperty(PROPERTY_BOX_BORDER_COLOR))) {
+                blog.getProperty(PROPERTY_BORDER_COLOR))) {
             Color boxBorderColor = BlogTimesHelper.hexToColor(
-                    blog.getProperty(PROPERTY_BOX_BORDER_COLOR));
-            barGraphImageCreator.setBoxBorderColor(boxBorderColor);
+                    blog.getProperty(PROPERTY_BORDER_COLOR));
+            barGraphImageCreator.setBorderColor(boxBorderColor);
         }
         if (!BlojsomUtils.checkNullOrBlank(
-                blog.getProperty(PROPERTY_BOX_BACKGROUND_COLOR))) {
+                blog.getProperty(PROPERTY_BAR_BACKGROUND_COLOR))) {
             Color boxBackgroundColor = BlogTimesHelper.hexToColor(
-                    blog.getProperty(PROPERTY_BOX_BACKGROUND_COLOR));
-            barGraphImageCreator.setBoxBackgroundColor(boxBackgroundColor);
+                    blog.getProperty(PROPERTY_BAR_BACKGROUND_COLOR));
+            barGraphImageCreator.setBarBackgroundColor(boxBackgroundColor);
         }
         if (!BlojsomUtils.checkNullOrBlank(
                 blog.getProperty(PROPERTY_TIMELINE_COLOR))) {
@@ -219,16 +239,16 @@ public class BlogTimesPlugin implements Plugin {
             barGraphImageCreator.setFontColor(fontColor);
         }
         if (!BlojsomUtils.checkNullOrBlank(
-                blog.getProperty(PROPERTY_BOX_HEIGHT))) {
+                blog.getProperty(PROPERTY_BAR_HEIGHT))) {
             int boxHeight = Integer.parseInt(
-                    blog.getProperty(PROPERTY_BOX_HEIGHT));
-            barGraphImageCreator.setBoxHeight(boxHeight);
+                    blog.getProperty(PROPERTY_BAR_HEIGHT));
+            barGraphImageCreator.setBarHeight(boxHeight);
         }
         if (!BlojsomUtils.checkNullOrBlank(
-                blog.getProperty(PROPERTY_BOX_WIDTH))) {
+                blog.getProperty(PROPERTY_BAR_WIDTH))) {
             int boxWidth = Integer.parseInt(
-                    blog.getProperty(PROPERTY_BOX_WIDTH));
-            barGraphImageCreator.setBoxWidth(boxWidth);
+                    blog.getProperty(PROPERTY_BAR_WIDTH));
+            barGraphImageCreator.setBarWidth(boxWidth);
         }
         return barGraphImageCreator;
     }

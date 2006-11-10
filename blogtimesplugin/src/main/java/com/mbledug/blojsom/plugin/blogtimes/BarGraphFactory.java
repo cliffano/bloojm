@@ -40,24 +40,10 @@ import java.util.Map;
 final class BarGraphFactory {
 
     /**
-     * Flavor String for second-of-minute.
-     */
-    private static final String FLAVOR_SECOND_OF_MINUTE = "second-of-minute";
-
-    /**
-     * Flavor String for minute-of-hour.
-     */
-    private static final String FLAVOR_MINUTE_OF_HOUR = "minute-of-hour";
-
-    /**
-     * Flavor String for hour-of-day.
-     */
-    private static final String FLAVOR_HOUR_OF_DAY = "hour-of-day";
-
-    /**
      * Default flavor String.
      */
-    private static final String FLAVOR_DEFAULT = FLAVOR_HOUR_OF_DAY;
+    private static final String FLAVOR_DEFAULT =
+            BlogTimesPlugin.FLAVOR_HOUR_OF_DAY;
 
     /**
      * {@link BarGraph} for second-of-minute flavor.
@@ -94,9 +80,12 @@ final class BarGraphFactory {
 
     static {
         mBarGraphs = new HashMap();
-        mBarGraphs.put(FLAVOR_SECOND_OF_MINUTE, BAR_GRAPH_SECOND_OF_MINUTE);
-        mBarGraphs.put(FLAVOR_MINUTE_OF_HOUR, BAR_GRAPH_MINUTE_OF_HOUR);
-        mBarGraphs.put(FLAVOR_HOUR_OF_DAY, BAR_GRAPH_HOUR_OF_DAY);
+        mBarGraphs.put(BlogTimesPlugin.FLAVOR_SECOND_OF_MINUTE,
+                BAR_GRAPH_SECOND_OF_MINUTE);
+        mBarGraphs.put(BlogTimesPlugin.FLAVOR_MINUTE_OF_HOUR,
+                BAR_GRAPH_MINUTE_OF_HOUR);
+        mBarGraphs.put(BlogTimesPlugin.FLAVOR_HOUR_OF_DAY,
+                BAR_GRAPH_HOUR_OF_DAY);
     }
 
     /**
