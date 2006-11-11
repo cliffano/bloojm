@@ -82,12 +82,11 @@ public class TrackbackKeywordPluginTest extends TestCase {
     public void testProcessEventTrackbackSpamSuspectToBeDeleted() {
         UrlTextFetcher urlTextFetcher = mDataFixture.createMockUrlTextFetcher(DataFixture.TEXT_NO_KEYWORD, false, null);
         TrackbackKeywordPlugin trackbackKeywordPlugin = new TrackbackKeywordPlugin(urlTextFetcher);
-        Properties properties = new Properties();
-        properties.setProperty(TrackbackKeywordPlugin.PROPERTY_KEYWORDS, DataFixture.CSV_MORE_THAN_ONE_KEYWORDS);
-        properties.setProperty(TrackbackKeywordPlugin.PROPERTY_ACTION, TrackbackKeywordPlugin.ACTION_DELETE);
-        properties.setProperty(TrackbackKeywordPlugin.PROPERTY_CHECK_TYPE, TrackbackKeywordPlugin.CHECK_TYPE_ALL);
-        trackbackKeywordPlugin.setProperties(properties);
         TrackbackResponseSubmissionEvent event = mDataFixture.createTrackbackResponseSubmissionEventWithEnabledPlugin();
+        Map properties = event.getBlog().getProperties();
+        properties.put(TrackbackKeywordPlugin.PROPERTY_KEYWORDS, DataFixture.CSV_MORE_THAN_ONE_KEYWORDS);
+        properties.put(TrackbackKeywordPlugin.PROPERTY_ACTION, TrackbackKeywordPlugin.ACTION_DELETE);
+        properties.put(TrackbackKeywordPlugin.PROPERTY_CHECK_TYPE, TrackbackKeywordPlugin.CHECK_TYPE_ALL);
         Map metaData = event.getMetaData();
         assertNull(metaData.get(TrackbackPlugin.BLOJSOM_PLUGIN_TRACKBACK_METADATA_DESTROY));
         assertNull(metaData.get(TrackbackModerationPlugin.BLOJSOM_TRACKBACK_MODERATION_PLUGIN_APPROVED));
@@ -99,10 +98,9 @@ public class TrackbackKeywordPluginTest extends TestCase {
     public void testProcessEventTrackbackSpamSuspectToBeModerated() {
         UrlTextFetcher urlTextFetcher = mDataFixture.createMockUrlTextFetcher(DataFixture.TEXT_NO_KEYWORD, false, null);
         TrackbackKeywordPlugin trackbackKeywordPlugin = new TrackbackKeywordPlugin(urlTextFetcher);
-        Properties properties = new Properties();
-        properties.setProperty(TrackbackKeywordPlugin.PROPERTY_KEYWORDS, DataFixture.CSV_ONE_KEYWORD);
-        trackbackKeywordPlugin.setProperties(properties);
         TrackbackResponseSubmissionEvent event = mDataFixture.createTrackbackResponseSubmissionEventWithEnabledPlugin();
+        Map properties = event.getBlog().getProperties();
+        properties.put(TrackbackKeywordPlugin.PROPERTY_KEYWORDS, DataFixture.CSV_ONE_KEYWORD);
         Map metaData = event.getMetaData();
         assertNull(metaData.get(TrackbackPlugin.BLOJSOM_PLUGIN_TRACKBACK_METADATA_DESTROY));
         assertNull(metaData.get(TrackbackModerationPlugin.BLOJSOM_TRACKBACK_MODERATION_PLUGIN_APPROVED));
