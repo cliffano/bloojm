@@ -96,7 +96,7 @@ public class BlogTimesServlet extends HttpServlet {
             out.flush();
             out.close();
         } catch (IOException ioe) {
-            LOG.error("");
+            LOG.error("Unable to write BlogTimes image.");
         }
     }
 
