@@ -39,6 +39,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.blojsom.blog.Blog;
 import org.blojsom.blog.Entry;
+import org.blojsom.plugin.Plugin;
 import org.blojsom.plugin.PluginException;
 import org.blojsom.plugin.comment.CommentPlugin;
 
@@ -48,7 +49,7 @@ import org.blojsom.plugin.comment.CommentPlugin;
  * answer, then comment is marked for deletion.
  * @author Cliffano Subagio
  */
-public class SCodePlugin {
+public class SCodePlugin implements Plugin {
 
     /**
      * Logger for {@link TrackbackKeywordPlugin}.
