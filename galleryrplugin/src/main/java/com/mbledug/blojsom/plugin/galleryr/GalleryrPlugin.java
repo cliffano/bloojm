@@ -31,7 +31,6 @@ package com.mbledug.blojsom.plugin.galleryr;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -76,37 +75,11 @@ public class GalleryrPlugin implements Plugin {
     public static final String METADATA_PHOTOS = "galleryr-photos";
 
     /**
-     * Plugin properties.
-     */
-    private Properties mProperties;
-
-    /**
-     * Creates an instance of {@link GalleryrPlugin}.
-     */
-    public GalleryrPlugin() {
-        mProperties = new Properties();
-    }
-
-    /**
-     * Sets {@link GalleryrPlugin} properties.
-     * @param properties the plugin properties
-     */
-    public final void setProperties(final Properties properties) {
-        mProperties = properties;
-    }
-
-    /**
      * Writes plugin init message.
      * @throws PluginException when there's an error in initialising this plugin
      */
     public final void init() throws PluginException {
         LOG.info("Initialising GalleryrPlugin.");
-
-        if (BlojsomUtils.checkNullOrBlank(
-                mProperties.getProperty(PROPERTY_API_KEY))) {
-            throw new PluginException("Invalid Flickr API key: "
-                    + mProperties.getProperty(PROPERTY_API_KEY));
-        }
     }
 
     /**
@@ -119,7 +92,8 @@ public class GalleryrPlugin implements Plugin {
      * @param context context
      * @param entries blog entries retrieved for the particular request
      * @return entries with Flickr photos added to entry meta data
-     * @throws PluginException when there's an error processing the blog entries
+     * @throws PluginException when Flickr API key is invalid or when there's an
+     * error processing the blog entries
      */
     public final Entry[] process(
             final HttpServletRequest httpServletRequest,
@@ -129,8 +103,14 @@ public class GalleryrPlugin implements Plugin {
             final Entry[] entries)
             throws PluginException {
 
+        if (BlojsomUtils.checkNullOrBlank(blog.getProperty(PROPERTY_API_KEY))) {
+            throw new PluginException("Invalid Flickr API key: "
+                    + blog.getProperty(PROPERTY_API_KEY)
+                    + ", for blog id: " + blog.getBlogId());
+        }
+
         FlickrFacade flickrFacade = new FlickrFacade(
-                mProperties.getProperty(PROPERTY_API_KEY));
+                blog.getProperty(PROPERTY_API_KEY));
 
         for (int i = 0; i < entries.length; i++) {
             Map entryMetaData = entries[i].getMetaData();

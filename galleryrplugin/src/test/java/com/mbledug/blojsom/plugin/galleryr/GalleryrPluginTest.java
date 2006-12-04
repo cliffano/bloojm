@@ -3,10 +3,12 @@ package com.mbledug.blojsom.plugin.galleryr;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import junit.framework.TestCase;
 
+import org.blojsom.blog.Blog;
 import org.blojsom.blog.Entry;
 import org.blojsom.blog.database.DatabaseBlog;
 import org.blojsom.blog.database.DatabaseEntry;
@@ -16,10 +18,31 @@ import com.aetrion.flickr.photos.Photo;
 
 public class GalleryrPluginTest extends TestCase {
 
-    public void testInitWithNullApiKeyGivesPluginException() {
+    private DataFixture mDataFixture;
+
+    protected void setUp() {
+        mDataFixture = new DataFixture();
+    }
+
+    public void testProcessWithNullApiKeyGivesPluginException() {
         GalleryrPlugin galleryrPlugin = new GalleryrPlugin();
         try {
             galleryrPlugin.init();
+
+            Entry[] entries = new Entry[]{mDataFixture.createEntryWithGalleryrMetaData()};
+
+            Map properties = new HashMap();
+            properties.put(GalleryrPlugin.PROPERTY_API_KEY, "");
+            Blog blog = new DatabaseBlog();
+            blog.setProperties(properties);
+
+            galleryrPlugin.process(
+                    mDataFixture.createMockHttpServletRequest(),
+                    mDataFixture.createMockHttpServletResponse(),
+                    blog,
+                    new HashMap(),
+                    entries);
+
             fail("PluginException should've been thrown.");
         } catch (PluginException pe) {
             // expected PluginException
@@ -27,22 +50,22 @@ public class GalleryrPluginTest extends TestCase {
     }
 
     public void testProcessSetsPhotosAsEntryMetadata() {
-        DataFixture dataFixture = new DataFixture();
-
-        Properties properties = new Properties();
-        properties.put(GalleryrPlugin.PROPERTY_API_KEY, DataFixture.API_KEY);
 
         GalleryrPlugin galleryrPlugin = new GalleryrPlugin();
-        galleryrPlugin.setProperties(properties);
         try {
             galleryrPlugin.init();
 
-            Entry[] entries = new Entry[]{dataFixture.createEntryWithGalleryrMetaData()};
+            Entry[] entries = new Entry[]{mDataFixture.createEntryWithGalleryrMetaData()};
+
+            Map properties = new HashMap();
+            properties.put(GalleryrPlugin.PROPERTY_API_KEY, DataFixture.API_KEY);
+            Blog blog = new DatabaseBlog();
+            blog.setProperties(properties);
 
             galleryrPlugin.process(
-                    dataFixture.createMockHttpServletRequest(),
-                    dataFixture.createMockHttpServletResponse(),
-                    new DatabaseBlog(),
+                    mDataFixture.createMockHttpServletRequest(),
+                    mDataFixture.createMockHttpServletResponse(),
+                    blog,
                     new HashMap(),
                     entries);
 
