@@ -43,11 +43,12 @@ import org.blojsom.blog.Blog;
 import org.blojsom.blog.Comment;
 import org.blojsom.blog.Entry;
 import org.blojsom.event.Event;
+import org.blojsom.event.EventBroadcaster;
 import org.blojsom.event.Listener;
 import org.blojsom.plugin.Plugin;
 import org.blojsom.plugin.PluginException;
-import org.blojsom.plugin.comment.event.CommentAddedEvent;
-import org.blojsom.plugin.comment.event.CommentEvent;
+import org.blojsom.plugin.comment.event.CommentResponseSubmissionEvent;
+import org.blojsom.plugin.response.event.ResponseSubmissionEvent;
 
 /**
  * {@link GravatarPlugin} attaches a Gravatar ID to each blog entry comment,
@@ -73,11 +74,33 @@ public class GravatarPlugin implements Plugin, Listener {
     public static final String METADATA_GRAVATAR_ID = "gravatar-id";
 
     /**
-     * Writes plugin init message.
+     * Event broadcaster.
+     */
+    private EventBroadcaster mEventBroadcaster;
+
+    /**
+     * Creates an instance of {@link GravatarPlugin}.
+     */
+    public GravatarPlugin() {
+        mEventBroadcaster = null;
+    }
+
+    /**
+     * Sets the event broadcaster.
+     * @param eventBroadcaster the event broadcaster
+     */
+    public final void setEventBroadcaster(
+            final EventBroadcaster eventBroadcaster) {
+        mEventBroadcaster = eventBroadcaster;
+    }
+
+    /**
+     * Writes plugin init message. Adds this plugin to event broadcaster.
      * @throws PluginException when there's an error in initialising this plugin
      */
     public final void init() throws PluginException {
         LOG.info("Initialising GravatarPlugin.");
+        mEventBroadcaster.addListener(this);
     }
 
     /**
@@ -104,7 +127,8 @@ public class GravatarPlugin implements Plugin, Listener {
             for (Iterator it = comments.iterator(); it.hasNext();) {
                 Comment comment = (Comment) it.next();
                 if (comment.getMetaData().get(METADATA_GRAVATAR_ID) == null) {
-                    addGravatarIdToComment(comment);
+                    addGravatarIdToComment(
+                            comment.getAuthorEmail(), comment.getMetaData());
                 }
             }
         }
@@ -140,23 +164,27 @@ public class GravatarPlugin implements Plugin, Listener {
      * @param event the event to process synchronously
      */
     public final void processEvent(final Event event) {
-        if (event instanceof CommentAddedEvent) {
-            Comment comment = ((CommentEvent) event).getComment();
-            addGravatarIdToComment(comment);
+        if (event instanceof CommentResponseSubmissionEvent) {
+            ResponseSubmissionEvent responseSubmissionEvent =
+                (ResponseSubmissionEvent) event;
+            String email = responseSubmissionEvent.getSubmitterItem1();
+            Map metaData = responseSubmissionEvent.getMetaData();
+            addGravatarIdToComment(email, metaData);
         }
     }
 
     /**
-     * Adds Gravatar ID to comment meta data. This is done only when comment
-     * author's email is not null.
-     * @param comment the comment which the Gravatar ID  will be added to
+     * Adds Gravatar ID to meta data. This is done only when email is not null.
+     * @param email the email to get the Gravatar ID from
+     * @param metaData the meta data map which the Gravatar ID  will be added to
      */
-    private void addGravatarIdToComment(final Comment comment) {
-        String email = comment.getAuthorEmail();
+    private void addGravatarIdToComment(
+            final String email, final Map metaData) {
+
         if (email != null) {
             try {
                 String gravatarId = GravatarHelper.getGravatarId(email);
-                comment.getMetaData().put(METADATA_GRAVATAR_ID, gravatarId);
+                metaData.put(METADATA_GRAVATAR_ID, gravatarId);
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("Setting Gravatar ID: " + gravatarId
                             + " for email: " + email);

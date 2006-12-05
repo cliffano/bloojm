@@ -9,12 +9,13 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.blojsom.blog.Blog;
 import org.blojsom.blog.Entry;
 import org.blojsom.blog.database.DatabaseBlog;
 import org.blojsom.blog.database.DatabaseComment;
 import org.blojsom.blog.database.DatabaseEntry;
-import org.blojsom.plugin.comment.event.CommentAddedEvent;
-import org.blojsom.plugin.comment.event.CommentEvent;
+import org.blojsom.plugin.comment.event.CommentResponseSubmissionEvent;
+import org.blojsom.plugin.response.event.ResponseSubmissionEvent;
 import org.jmock.cglib.MockObjectTestCase;
 
 public class DataFixture extends MockObjectTestCase {
@@ -40,22 +41,36 @@ public class DataFixture extends MockObjectTestCase {
         return entry;
     }
 
-    static CommentAddedEvent createCommentAddedEventWithCommentHavingNoGravatarId() {
+    static CommentResponseSubmissionEvent createCommentResponseSubmissionEventWithCommentHavingNoGravatarId() {
 
-        return new CommentAddedEvent(
+        return new CommentResponseSubmissionEvent(
                 new Object(),
                 new Date(),
-                createCommentWithoutGravatarId(),
-                new DatabaseBlog());
+                new DatabaseBlog(),
+                new DataFixture().createMockHttpServletRequest(),
+                new DataFixture().createMockHttpServletResponse(),
+                "Dummy Submitter",
+                EMAIL,
+                "http://dummyurl.org",
+                "Dummy Comment Description",
+                new DatabaseEntry(),
+                new HashMap());
     }
 
-    static CommentEvent createCommentEvent() {
+    static ResponseSubmissionEvent createResponseSubmissionEvent() {
 
-        return new CommentEvent(
+        return new ResponseSubmissionEvent(
                 new Object(),
                 new Date(),
-                new DatabaseComment(),
-                new DatabaseBlog());
+                new DatabaseBlog(),
+                new DataFixture().createMockHttpServletRequest(),
+                new DataFixture().createMockHttpServletResponse(),
+                "Dummy Submitter",
+                EMAIL,
+                "http://dummyurl.org",
+                "Dummy Comment Description",
+                new DatabaseEntry(),
+                new HashMap());
     }
 
     static DatabaseComment createCommentWithoutGravatarId() {

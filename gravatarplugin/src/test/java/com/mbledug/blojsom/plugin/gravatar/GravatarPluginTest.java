@@ -11,10 +11,11 @@ import org.blojsom.blog.Comment;
 import org.blojsom.blog.Entry;
 import org.blojsom.blog.database.DatabaseBlog;
 import org.blojsom.event.Listener;
+import org.blojsom.event.SimpleEventBroadcaster;
 import org.blojsom.plugin.Plugin;
 import org.blojsom.plugin.PluginException;
-import org.blojsom.plugin.comment.event.CommentAddedEvent;
-import org.blojsom.plugin.comment.event.CommentEvent;
+import org.blojsom.plugin.comment.event.CommentResponseSubmissionEvent;
+import org.blojsom.plugin.response.event.ResponseSubmissionEvent;
 
 public class GravatarPluginTest extends TestCase {
 
@@ -26,10 +27,11 @@ public class GravatarPluginTest extends TestCase {
 
     public void testProcessAddingGravatarIdToComment() {
 
-        Plugin gravatarPlugin = new GravatarPlugin();
+        GravatarPlugin gravatarPlugin = new GravatarPlugin();
         Entry[] entries = new Entry[] {DataFixture.createEntryWithSingleCommentWithoutGravatarId()};
 
         try {
+            gravatarPlugin.setEventBroadcaster(new SimpleEventBroadcaster());
             gravatarPlugin.init();
             entries = gravatarPlugin.process(
                     mDataFixture.createMockHttpServletRequest(),
@@ -55,10 +57,11 @@ public class GravatarPluginTest extends TestCase {
 
     public void testProcessEntryWithCommentHavingEmptyStringGravatarIdLeftAsIs() {
 
-        Plugin gravatarPlugin = new GravatarPlugin();
+        GravatarPlugin gravatarPlugin = new GravatarPlugin();
         Entry[] entries = new Entry[] {DataFixture.createEntryWithSingleCommentWithEmptyStringGravatarId()};
 
         try {
+            gravatarPlugin.setEventBroadcaster(new SimpleEventBroadcaster());
             gravatarPlugin.init();
             entries = gravatarPlugin.process(
                     mDataFixture.createMockHttpServletRequest(),
@@ -81,32 +84,30 @@ public class GravatarPluginTest extends TestCase {
         }
     }
 
-    public void testProcessCommentAddedEventWithGravatarId() {
+    public void testProcessCommentResponseSubmissionEventAddsGravatarIdToMetaData() {
 
         Listener gravatarPlugin = new GravatarPlugin();
-        CommentAddedEvent event = DataFixture.createCommentAddedEventWithCommentHavingNoGravatarId();
+        CommentResponseSubmissionEvent event = DataFixture.createCommentResponseSubmissionEventWithCommentHavingNoGravatarId();
         gravatarPlugin.processEvent(event);
-        Comment comment = event.getComment();
-        Map metaData = comment.getMetaData();
+        Map metaData = event.getMetaData();
+        assertNotNull(metaData.get(GravatarPlugin.METADATA_GRAVATAR_ID));
         String gravatarId = String.valueOf(metaData.get(GravatarPlugin.METADATA_GRAVATAR_ID));
-        assertNotNull(gravatarId);
         assertEquals(DataFixture.EXPECTED_GRAVATAR_ID, gravatarId);
     }
 
-    public void testProcessCommentEventLeftCommentAsIs() {
+    public void testProcessResponseSubmissionEventDoesntAddsGravatarIdToMetaData() {
 
         Listener gravatarPlugin = new GravatarPlugin();
-        CommentEvent event = DataFixture.createCommentEvent();
-        Comment commentBeforeProcessing = event.getComment();
+        ResponseSubmissionEvent event = DataFixture.createResponseSubmissionEvent();
         gravatarPlugin.processEvent(event);
-        Comment commentAfterProcessing = event.getComment();
-        assertEquals(commentAfterProcessing, commentBeforeProcessing);
+        Map metaData = event.getMetaData();
+        assertNull(metaData.get(GravatarPlugin.METADATA_GRAVATAR_ID));
     }
 
     public void testHandleEventLeftEventAsIs() {
 
         Listener gravatarPlugin = new GravatarPlugin();
-        CommentEvent event = DataFixture.createCommentEvent();
+        ResponseSubmissionEvent event = DataFixture.createResponseSubmissionEvent();
         gravatarPlugin.handleEvent(event);
     }
 }
