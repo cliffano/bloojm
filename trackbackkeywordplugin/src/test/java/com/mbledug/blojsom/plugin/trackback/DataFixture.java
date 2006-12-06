@@ -17,6 +17,8 @@ import org.apache.commons.httpclient.URIException;
 import org.blojsom.blog.Blog;
 import org.blojsom.blog.database.DatabaseBlog;
 import org.blojsom.blog.database.DatabaseEntry;
+import org.blojsom.event.Listener;
+import org.blojsom.event.SimpleEventBroadcaster;
 import org.blojsom.plugin.response.event.ResponseSubmissionEvent;
 import org.blojsom.plugin.trackback.TrackbackModerationPlugin;
 import org.blojsom.plugin.trackback.TrackbackPlugin;
@@ -39,6 +41,12 @@ public class DataFixture extends MockObjectTestCase {
     static final int DUMMY_PROXY_PORT = 8080;
     static final String DUMMY_PROXY_USERNAME = "Some Username";
     static final String DUMMY_PROXY_PASSWORD = "Some Password";
+
+    SimpleEventBroadcaster createSimpleEventBroadcaster() {
+        Mock mockSimpleEventBroadcaster = mock(SimpleEventBroadcaster.class);
+        mockSimpleEventBroadcaster.expects(once()).method("addListener");
+        return (SimpleEventBroadcaster) mockSimpleEventBroadcaster.proxy();
+    }
 
     HttpClient createMockHttpClient(boolean withProxy, Exception executeMethodException) {
         Mock mockHttpClient = mock(HttpClient.class);

@@ -32,11 +32,18 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Properties;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.blojsom.blog.Blog;
+import org.blojsom.blog.Entry;
 import org.blojsom.event.Event;
+import org.blojsom.event.EventBroadcaster;
 import org.blojsom.event.Listener;
+import org.blojsom.plugin.Plugin;
+import org.blojsom.plugin.PluginException;
 import org.blojsom.plugin.trackback.TrackbackModerationPlugin;
 import org.blojsom.plugin.trackback.TrackbackPlugin;
 import org.blojsom.plugin.trackback.event.TrackbackResponseSubmissionEvent;
@@ -50,7 +57,7 @@ import org.blojsom.util.BlojsomUtils;
  * deletion/moderation status set up by other priorly executed plugins.
  * @author Cliffano Subagio
  */
-public class TrackbackKeywordPlugin implements Listener {
+public class TrackbackKeywordPlugin implements Plugin, Listener {
 
     /**
      * Logger for {@link TrackbackKeywordPlugin}.
@@ -125,12 +132,18 @@ public class TrackbackKeywordPlugin implements Listener {
     private Properties mProperties;
 
     /**
+     * Event broadcaster.
+     */
+    private EventBroadcaster mEventBroadcaster;
+
+    /**
      * Creates an instance of {@link TrackbackKeywordPlugin} with default
      * {@link UrlTextFetcher}.
      */
     public TrackbackKeywordPlugin() {
         mUrlTextFetcher = new UrlTextFetcher();
         mProperties = new Properties();
+        mEventBroadcaster = null;
     }
 
     /**
@@ -141,6 +154,7 @@ public class TrackbackKeywordPlugin implements Listener {
     public TrackbackKeywordPlugin(final UrlTextFetcher urlTextFetcher) {
         mUrlTextFetcher = urlTextFetcher;
         mProperties = new Properties();
+        mEventBroadcaster = null;
     }
 
     /**
@@ -149,6 +163,61 @@ public class TrackbackKeywordPlugin implements Listener {
      */
     public final void setProperties(final Properties properties) {
         mProperties = properties;
+    }
+
+    /**
+     * Sets the event broadcaster.
+     * @param eventBroadcaster the event broadcaster
+     */
+    public final void setEventBroadcaster(
+            final EventBroadcaster eventBroadcaster) {
+        mEventBroadcaster = eventBroadcaster;
+    }
+
+    /**
+     * Writes plugin init message. Adds this plugin to event broadcaster.
+     * @throws PluginException when there's an error in initialising this plugin
+     */
+    public final void init() throws PluginException {
+        LOG.info("Initialising TrackbackKeywordPlugin.");
+        mEventBroadcaster.addListener(this);
+    }
+
+    /**
+     * Returns unmodified entries.
+     * @param httpServletRequest http servlet request
+     * @param httpServletResponse http servlet response
+     * @param blog blog instance
+     * @param context context
+     * @param entries blog entries retrieved for the particular request
+     * @return unmodified entries
+     * @throws PluginException when there's an error processing the blog entries
+     */
+    public final Entry[] process(
+            final HttpServletRequest httpServletRequest,
+            final HttpServletResponse httpServletResponse,
+            final Blog blog,
+            final Map context,
+            final Entry[] entries)
+            throws PluginException {
+        return entries;
+    }
+
+    /**
+     * cleanup method has an empty implementation in
+     * {@link TrackbackKeywordPlugin}.
+     * @throws PluginException when there's an error performing cleanup of
+     * this plugin
+     */
+    public final void cleanup() throws PluginException {
+    }
+
+    /**
+     * Writes plugin destroy message.
+     * @throws PluginException when there's an error in finalising this plugin
+     */
+    public final void destroy() throws PluginException {
+        LOG.info("Destroying TrackbackKeywordPlugin.");
     }
 
     /**
@@ -165,6 +234,7 @@ public class TrackbackKeywordPlugin implements Listener {
      * @param event the event to process synchronously
      */
     public final void processEvent(final Event event) {
+
         if (event instanceof TrackbackResponseSubmissionEvent) {
             TrackbackResponseSubmissionEvent trackbackEvent =
                     (TrackbackResponseSubmissionEvent) event;
@@ -179,6 +249,7 @@ public class TrackbackKeywordPlugin implements Listener {
             boolean isToBeModerated = (metaData.get(TrackbackModerationPlugin.
                     BLOJSOM_TRACKBACK_MODERATION_PLUGIN_APPROVED)
                     != null);
+
             if (isEnabled && !isToBeDeleted && !isToBeModerated) {
                 String url = trackbackEvent.getSubmitterItem2();
                 setProxy(

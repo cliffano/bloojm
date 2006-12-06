@@ -36,6 +36,7 @@ import org.apache.commons.httpclient.URI;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.httpclient.util.URIUtil;
 
 /**
  * {@link UrlTextFetcher} manages the connection to a url and fetches its text
@@ -111,8 +112,7 @@ class UrlTextFetcher {
      * content
      */
     public final String fetchText(final String url) throws IOException {
-
-        mHttpMethod.setURI(new URI(url, true));
+        mHttpMethod.setURI(new URI(URIUtil.encodePath(url, "UTF-8"), true));
         mHttpMethod.setFollowRedirects(true);
 
         mHttpClient.executeMethod(mHttpMethod);

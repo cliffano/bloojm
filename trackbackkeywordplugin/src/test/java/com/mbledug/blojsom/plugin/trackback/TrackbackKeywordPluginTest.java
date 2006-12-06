@@ -2,12 +2,16 @@ package com.mbledug.blojsom.plugin.trackback;
 
 import java.io.IOException;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
 import junit.framework.TestCase;
 
+import org.blojsom.blog.Entry;
+import org.blojsom.blog.database.DatabaseBlog;
 import org.blojsom.event.Listener;
+import org.blojsom.plugin.PluginException;
 import org.blojsom.plugin.response.event.ResponseSubmissionEvent;
 import org.blojsom.plugin.trackback.TrackbackModerationPlugin;
 import org.blojsom.plugin.trackback.TrackbackPlugin;
@@ -19,6 +23,24 @@ public class TrackbackKeywordPluginTest extends TestCase {
 
     protected void setUp() {
         mDataFixture = new DataFixture();
+    }
+
+    public void testProcessAddsListenerToEventBroadcaster() {
+        TrackbackKeywordPlugin trackbackKeywordPlugin = new TrackbackKeywordPlugin();
+        trackbackKeywordPlugin.setEventBroadcaster(mDataFixture.createSimpleEventBroadcaster());
+        try {
+            trackbackKeywordPlugin.init();
+            trackbackKeywordPlugin.process(
+                    mDataFixture.createMockHttpServletRequest(),
+                    mDataFixture.createMockHttpServletResponse(),
+                    new DatabaseBlog(),
+                    new HashMap(),
+                    new Entry[0]);
+            trackbackKeywordPlugin.cleanup();
+            trackbackKeywordPlugin.destroy();
+        } catch (PluginException pe) {
+            fail("Unexpected exception: " + pe);
+        }
     }
 
     public void testProcessEventTrackbackNotSpamSuspect() {
