@@ -52,7 +52,7 @@ import org.blojsom.plugin.comment.CommentPlugin;
 public class SCodePlugin implements Plugin {
 
     /**
-     * Logger for {@link TrackbackKeywordPlugin}.
+     * Logger for {@link SCodePlugin}.
      */
     private static final Log LOG = LogFactory.getLog(SCodePlugin.class);
 
