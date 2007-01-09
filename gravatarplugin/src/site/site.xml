@@ -26,6 +26,7 @@
       <item name="CPD Report" href="/cpd.html" />
       <item name="Findbugs" href="/findbugs.html" />
       <item name="JavaDocs" href="/apidocs/index.html" />
+      <item name="JavaNCSS" href="/javancss.html" />
       <item name="JDepend" href="/jdepend-report.html" />
       <item name="Maven Surefire Report" href="/surefire-report.html" />
       <item name="PMD Report" href="/pmd.html" />
