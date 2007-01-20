@@ -4,7 +4,7 @@
   <groupId>blojsom</groupId>
   <artifactId>gravatarplugin</artifactId>
   <packaging>jar</packaging>
-  <version>0.2-SNAPSHOT</version>
+  <version>0.2</version>
   <description>
     Blojsom plugin that attaches a Gravatar ID to each blog entry comment,
     which can then be used to display Gravatar (Globally Recognized Avatar)

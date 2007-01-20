@@ -4,7 +4,7 @@
   <groupId>blojsom</groupId>
   <artifactId>param2ctxplugin</artifactId>
   <packaging>jar</packaging>
-  <version>0.2-SNAPSHOT</version>
+  <version>0.2</version>
   <description>
     Blojsom plugin that puts all request parameters to context map.
     Each parameter name will be prefixed with a "param_" string in the context,
