@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<document>
+  <properties>
+    <title>Changes</title>
+  </properties>
+  <body>
+    <release version="0.4" date="24-01-2007">
+      <action type="update" dev="cliffano">
+        Updated plugin implementation to work with Blojsom 3, added unit tests.
+      </action>
+    </release>
+    <release version="0.3" date="22-01-2006">
+      <action type="update" dev="cliffano">
+        SCode checking logic is modified to anticipate comment spam directly attacking Blojsom servlet.
+      </action>
+    </release>
+    <release version="0.2" date="12-01-2005">
+      <action type="update" dev="cliffano">
+        Generates PNG image (much smaller size compared to JPG). Incorrect SCode marks the comment as to be deleted. Allow the ability to add image engines, includes some sample ImageEngine which uses JCaptcha library to generate image.
+      </action>
+    </release>
+    <release version="0.1" date="04-12-2004">
+      <action type="add" dev="cliffano">
+        Initial release.
+      </action>
+    </release>
+  </body>
+</document>

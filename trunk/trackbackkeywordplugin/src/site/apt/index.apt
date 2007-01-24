@@ -1,0 +1,22 @@
+                                    ------------------------------
+                                    About
+                                    ------------------------------
+                                    Cliffano Subagio
+                                    ------------------------------
+
+About
+
+  TrackbackKeywordPlugin is a Blojsom plugin that checks the content of a
+  trackback URL for the existence of all or at least one of the specified
+  keywords which will determine whether the trackback is a spam or not. A
+  trackback spam will then be deleted or moderated.
+  This plugin will not overwrite trackback deletion/moderation
+  status set up by other priorly executed plugins.
+
+*---------------------------*------------*---------------------------------------------------------------------------------------------------*-------------------------------------------------------------------------------------------------------------------*
+|| TrackbackKeyword Plugin  || Blojsom   || Documentation                                                                                    || Downloads                                                                                                       ||
+*---------------------------*------------*---------------------------------------------------------------------------------------------------*-------------------------------------------------------------------------------------------------------------------*
+| 0.2                       | 3.x        | {{{http://wiki.blojsom.com/wiki/display/blojsom3/Trackback+Keyword+Plugin}Installation and usage}}| TBA                                                                                                               |
+*---------------------------*------------*---------------------------------------------------------------------------------------------------*-------------------------------------------------------------------------------------------------------------------*
+| 0.1                       | 2.25 - 2.x | {{{http://wiki.blojsom.com/wiki/display/blojsom/Trackback+Keyword+Plugin}Installation and usage}} | {{{http://sourceforge.net/project/showfiles.php?group_id=72754&package_id=154672&release_id=333616}Source Forge}} |
+*---------------------------*------------*---------------------------------------------------------------------------------------------------*-------------------------------------------------------------------------------------------------------------------*
