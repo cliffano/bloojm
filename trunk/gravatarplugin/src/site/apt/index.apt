@@ -1,0 +1,19 @@
+                                    ------------------------------
+                                    About
+                                    ------------------------------
+                                    Cliffano Subagio
+                                    ------------------------------
+
+About
+
+  GravatarPlugin is a Blojsom plugin that attaches a Gravatar ID to each blog
+  entry comment, which can then be used to display Gravatar (Globally Recognized
+  Avatar) image available from {{{http://gravatar.com}gravatar.com}} .
+
+*------------------*------------*------------------------------------------------------------------------------------------*-------------------------------------------------------------------------------------------------------------------*
+|| Gravatar Plugin || Blojsom   || Documentation                                                                           || Downloads                                                                                                       ||
+*------------------*------------*------------------------------------------------------------------------------------------*-------------------------------------------------------------------------------------------------------------------*
+| 0.2              | 3.x        | {{{http://wiki.blojsom.com/wiki/display/blojsom3/Gravatar+Plugin}Installation and usage}}| {{{http://sourceforge.net/project/showfiles.php?group_id=72754&package_id=154672&release_id=480225}Source Forge}} |
+*------------------*------------*------------------------------------------------------------------------------------------*-------------------------------------------------------------------------------------------------------------------*
+| 0.1              | 2.17 - 2.x | {{{http://wiki.blojsom.com/wiki/display/blojsom/Gravatar+Plugin}Installation and usage}} | {{{http://sourceforge.net/project/showfiles.php?group_id=72754&package_id=154672&release_id=333616}Source Forge}} |
+*------------------*------------*------------------------------------------------------------------------------------------*-------------------------------------------------------------------------------------------------------------------*
