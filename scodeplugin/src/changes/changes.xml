@@ -4,7 +4,7 @@
     <title>Changes</title>
   </properties>
   <body>
-    <release version="0.4-SNAPSHOT" date="current">
+    <release version="0.4" date="24-01-2007">
       <action type="update" dev="cliffano">
         Updated plugin implementation to work with Blojsom 3, added unit tests.
       </action>
