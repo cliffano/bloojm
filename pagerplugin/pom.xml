@@ -1,0 +1,39 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>blojsom</groupId>
+  <artifactId>pagerplugin</artifactId>
+  <packaging>pom</packaging>
+  <version>0.2</version>
+  <description>
+    Blojsom plugin that allows page by page view of blog entries.
+  </description>
+  <inceptionYear>2004</inceptionYear>
+  <name>Pager Plugin</name>
+  <url>http://mbledug.com/projects/blojsom/pagerplugin/</url>
+  <parent>
+    <groupId>blojsom</groupId>
+    <artifactId>bloojm</artifactId>
+    <version>0.1-SNAPSHOT</version>
+  </parent>
+  <licenses>
+    <license>
+      <name>BSD License</name>
+      <url>../LICENSE.txt</url>
+    </license>
+  </licenses>
+  <dependencies>
+  </dependencies>
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-site-plugin</artifactId>
+        <configuration>
+          <templateDirectory>${basedir}/../src/site</templateDirectory>
+          <template>mbledug-site.vm</template>
+        </configuration>
+      </plugin>
+    </plugins>
+  </reporting>
+</project>
