@@ -21,7 +21,6 @@
     </menu>
     <menu name="Project Reports">
       <item name="Changes Report" href="/changes-report.html" />
-      <!--
       <item name="Checkstyle" href="/checkstyle.html" />
       <item name="Cobertura Test Coverage" href="/cobertura/index.html" />
       <item name="CPD Report" href="/cpd.html" />
@@ -33,7 +32,6 @@
       <item name="PMD Report" href="/pmd.html" />
       <item name="Source Xref" href="/xref/index.html" />
       <item name="Test Source Xref" href="/xref-test/index.html" />
-      -->
     </menu>
   </body>
 </project>

@@ -3,8 +3,8 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>blojsom</groupId>
   <artifactId>pagerplugin</artifactId>
-  <packaging>pom</packaging>
-  <version>0.2</version>
+  <packaging>jar</packaging>
+  <version>0.3</version>
   <description>
     Blojsom plugin that allows page by page view of blog entries.
   </description>
@@ -23,6 +23,42 @@
     </license>
   </licenses>
   <dependencies>
+    <dependency>
+      <groupId>blojsom</groupId>
+      <artifactId>blojsom-core</artifactId>
+      <version>2.17</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>commons-lang</groupId>
+      <artifactId>commons-lang</artifactId>
+      <version>2.2</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging</artifactId>
+      <version>1.0.3</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>servlet-api</artifactId>
+      <version>2.3</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>jmock</groupId>
+      <artifactId>jmock-cglib</artifactId>
+      <version>1.1.0</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
   <reporting>
     <plugins>
