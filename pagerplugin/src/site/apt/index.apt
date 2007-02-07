@@ -6,7 +6,7 @@
 
 About
 
-  PagerPlugin is a Blojsom plugin that allows page by page view of blog entries.
+  PagerPlugin is a Blojsom plugin that creates page by page navigation of blog entries.
 
   Note that Pager Plugin is only available for Blojsom 2.x.
   It has been replaced by {{{http://wiki.blojsom.com/wiki/display/blojsom3/Skip+Filter+Helper+Plugin}SkipFilterHelper Plugin}} starting from Blojsom 3.0 .

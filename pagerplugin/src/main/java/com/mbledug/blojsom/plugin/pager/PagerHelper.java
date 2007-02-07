@@ -28,8 +28,6 @@
  */
 package com.mbledug.blojsom.plugin.pager;
 
-import org.apache.commons.lang.StringUtils;
-
 /**
  * {@link PagerHelper} provides helper methods to Pager Plugin.
  * @author Cliffano Subagio
@@ -57,7 +55,7 @@ final class PagerHelper {
     static int getCurrentPage(final String pageNumParamValue) {
 
         if (pageNumParamValue != null
-                && (!StringUtils.isNumeric(pageNumParamValue)
+                && (!isNumeric(pageNumParamValue)
                         || Integer.parseInt(pageNumParamValue) <= 0)) {
             throw new IllegalArgumentException("Invalid page-num param value: "
                     + pageNumParamValue
@@ -98,5 +96,21 @@ final class PagerHelper {
         return new Double(Math.ceil(
                 new Integer(totalEntries).doubleValue() / entriesPerPage))
                 .intValue();
+    }
+
+    /**
+     * Checks whether a String is numeric or not.
+     * @param string the String to check
+     * @return true if String is numeric, false otherwise
+     */
+    private static boolean isNumeric(final String string) {
+        boolean isNumeric;
+        try {
+            Integer.parseInt(string);
+            isNumeric = true;
+        } catch (NumberFormatException nfe) {
+            isNumeric = false;
+        }
+        return isNumeric;
     }
 }
