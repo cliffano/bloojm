@@ -29,9 +29,13 @@
 package com.mbledug.blojsom.plugin.blogtimes;
 
 import java.awt.Color;
+import java.util.Date;
+
+import org.blojsom.blog.Blog;
+import org.blojsom.blog.Entry;
 
 /**
- * Holds constants related to time values.
+ * {@link BlogTimesHelper} provides helper methods to BlogTimes Plugin..
  * @author Cliffano
  */
 final class BlogTimesHelper {
@@ -65,6 +69,12 @@ final class BlogTimesHelper {
      * Number of seconds in a day.
      */
     static final int SECONDS_IN_DAY = MAX_HOUR_IN_DAY * SECONDS_IN_HOUR;
+
+    /**
+     * The default number of latest entries from which the dates will be
+     * retrieved from.
+     */
+    static final int DEFAULT_NUM_OF_LATEST_ENTRIES = 50;
 
     /**
      * Hides default constructor of helper class.
@@ -101,5 +111,35 @@ final class BlogTimesHelper {
                 blueStartIndex, blueStartIndex + hexRgbDigitSize),
                 hexRadix);
         return new Color(red, green, blue);
+    }
+
+    /**
+     * Gets the number of latest entries configuration property from the blog,
+     * if invalid then it will return default value.
+     * @param blog blog which holds configuration properties
+     * @return the number of latest entries
+     */
+    static int getNumOfLatestEntries(final Blog blog) {
+        int numOfLatestEntries;
+        try {
+            numOfLatestEntries = Integer.parseInt(blog.getProperty(
+                    BlogTimesPlugin.PROPERTY_NUM_OF_LATEST_ENTRIES));
+        } catch (NumberFormatException nfe) {
+            numOfLatestEntries = DEFAULT_NUM_OF_LATEST_ENTRIES;
+        }
+        return numOfLatestEntries;
+    }
+
+    /**
+     * Gets the dates from the entries.
+     * @param entries an array of entries to retrieve the date from
+     * @return an array of dates from the entries
+     */
+    static Date[] getDatesFromEntries(final Entry[] entries) {
+        Date[] dates = new Date[entries.length];
+        for (int i = 0; i < entries.length; i++) {
+            dates[i] = entries[i].getDate();
+        }
+        return dates;
     }
 }

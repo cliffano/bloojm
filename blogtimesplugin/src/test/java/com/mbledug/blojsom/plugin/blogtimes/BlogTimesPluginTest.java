@@ -23,7 +23,7 @@ public class BlogTimesPluginTest extends TestCase {
         DatabaseBlog blog = new DatabaseBlog();
         blog.setProperties(new HashMap());
 
-        Plugin blogTimesPlugin = new BlogTimesPlugin();
+        Plugin blogTimesPlugin = new BlogTimesPlugin(mDataFixture.createMockFetcher());
 
         try {
             blogTimesPlugin.init();
@@ -46,7 +46,7 @@ public class BlogTimesPluginTest extends TestCase {
         Entry[] entries = DataFixture.createEntryWithDates(
                 DataFixture.createRandomDates(10));
 
-        BlogTimesPlugin blogTimesPlugin = new BlogTimesPlugin();
+        BlogTimesPlugin blogTimesPlugin = new BlogTimesPlugin(mDataFixture.createMockFetcher());
 
         try {
             blogTimesPlugin.init();
@@ -69,7 +69,29 @@ public class BlogTimesPluginTest extends TestCase {
         Entry[] entries = DataFixture.createEntryWithDates(
                 DataFixture.createRandomDates(10));
 
-        BlogTimesPlugin blogTimesPlugin = new BlogTimesPlugin();
+        BlogTimesPlugin blogTimesPlugin = new BlogTimesPlugin(mDataFixture.createMockFetcher());
+
+        try {
+            blogTimesPlugin.init();
+            entries = blogTimesPlugin.process(
+                    mDataFixture.createMockHttpServletRequestSetSessionAttribute(),
+                    mDataFixture.createMockHttpServletResponse(),
+                    blog,
+                    new HashMap(),
+                    entries);
+            fail("PluginException should've occured.");
+        } catch (PluginException pe) {
+            // expected PluginException
+        }
+    }
+
+    public void testProcessWithFetcherErrorGivesPluginException() {
+        DatabaseBlog blog = new DatabaseBlog();
+        blog.setProperties(DataFixture.createPropertiesWithValidValues());
+        Entry[] entries = DataFixture.createEntryWithDates(
+                DataFixture.createRandomDates(10));
+
+        BlogTimesPlugin blogTimesPlugin = new BlogTimesPlugin(mDataFixture.createMockFetcherWithException());
 
         try {
             blogTimesPlugin.init();

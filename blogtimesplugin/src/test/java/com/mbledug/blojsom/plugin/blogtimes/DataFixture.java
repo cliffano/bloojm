@@ -12,6 +12,8 @@ import javax.servlet.http.HttpSession;
 
 import org.blojsom.blog.Entry;
 import org.blojsom.blog.database.DatabaseEntry;
+import org.blojsom.fetcher.Fetcher;
+import org.blojsom.fetcher.FetcherException;
 import org.jmock.Mock;
 import org.jmock.cglib.MockObjectTestCase;
 
@@ -64,6 +66,18 @@ public class DataFixture extends MockObjectTestCase {
         properties.put(BlogTimesPlugin.PROPERTY_BAR_HEIGHT, "-1");
         properties.put(BlogTimesPlugin.PROPERTY_BAR_WIDTH, "-1");
         return properties;
+    }
+
+    Fetcher createMockFetcher() {
+        Mock mockFetcher = mock(Fetcher.class);
+        mockFetcher.expects(once()).method("loadEntries").will(returnValue(createEntryWithDates(createRandomDates(100))));
+        return (Fetcher) mockFetcher.proxy();
+    }
+
+    Fetcher createMockFetcherWithException() {
+        Mock mockFetcher = mock(Fetcher.class);
+        mockFetcher.expects(once()).method("loadEntries").will(throwException(new FetcherException("")));
+        return (Fetcher) mockFetcher.proxy();
     }
 
     HttpSession createMockHttpSessionSetAttribute() {

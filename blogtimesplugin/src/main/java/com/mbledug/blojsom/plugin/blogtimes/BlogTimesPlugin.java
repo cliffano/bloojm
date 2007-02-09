@@ -39,6 +39,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.blojsom.blog.Blog;
 import org.blojsom.blog.Entry;
+import org.blojsom.fetcher.Fetcher;
+import org.blojsom.fetcher.FetcherException;
 import org.blojsom.plugin.Plugin;
 import org.blojsom.plugin.PluginException;
 import org.blojsom.util.BlojsomUtils;
@@ -117,6 +119,13 @@ public class BlogTimesPlugin implements Plugin {
             "blogtimes-bar-width";
 
     /**
+     * Blog property for the number of latest entries which dates will be drawn
+     * on the graph.
+     */
+    public static final String PROPERTY_NUM_OF_LATEST_ENTRIES =
+            "blogtimes-num-latest-entries";
+
+    /**
      * Flavor String for second-of-minute.
      */
     public static final String FLAVOR_SECOND_OF_MINUTE = "second-of-minute";
@@ -130,6 +139,20 @@ public class BlogTimesPlugin implements Plugin {
      * Flavor String for hour-of-day.
      */
     public static final String FLAVOR_HOUR_OF_DAY = "hour-of-day";
+
+    /**
+     * The {@link Fetcher} used to retrieve the latest entries.
+     */
+    private Fetcher mFetcher;
+
+    /**
+     * Creates an instance of {@link BlogTimesPlugin} with a specified
+     * {@link Fetcher}.
+     * @param fetcher the {@link Fetcher}
+     */
+    public BlogTimesPlugin(final Fetcher fetcher) {
+        mFetcher = fetcher;
+    }
 
     /**
      * Writes plugin init message.
@@ -170,11 +193,17 @@ public class BlogTimesPlugin implements Plugin {
                     + " blog id: " + blog.getBlogId());
         }
 
-        Date[] dates = new Date[entries.length];
-        for (int i = 0; i < entries.length; i++) {
-            dates[i] = entries[i].getDate();
+        try {
+            Date[] dates = BlogTimesHelper.getDatesFromEntries(
+                    mFetcher.loadEntries(
+                    blog, BlogTimesHelper.getNumOfLatestEntries(blog), 1));
+            httpServletRequest.getSession().setAttribute(
+                    SESSION_ATTR_DATES, dates);
+        } catch (FetcherException fe) {
+            throw new PluginException(
+                    "Unable to fetch entries from the database, "
+                    + "exception message: " + fe.getMessage());
         }
-        httpServletRequest.getSession().setAttribute(SESSION_ATTR_DATES, dates);
 
         return entries;
     }

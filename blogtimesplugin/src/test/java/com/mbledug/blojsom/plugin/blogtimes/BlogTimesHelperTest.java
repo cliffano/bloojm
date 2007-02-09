@@ -1,8 +1,14 @@
 package com.mbledug.blojsom.plugin.blogtimes;
 
 import java.awt.Color;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import junit.framework.TestCase;
+
+import org.blojsom.blog.Entry;
+import org.blojsom.blog.database.DatabaseBlog;
 
 public class BlogTimesHelperTest extends TestCase {
 
@@ -36,5 +42,49 @@ public class BlogTimesHelperTest extends TestCase {
         } catch (NumberFormatException nfe) {
             // NumberFormatException is expected to be thrown
         }
+    }
+
+    public void testGetNumOfLatestEntriesGivesBlogPropertyValue() {
+        int numOfLatestEntries = 100;
+
+        Map properties = new HashMap();
+        properties.put(BlogTimesPlugin.PROPERTY_NUM_OF_LATEST_ENTRIES, "" + numOfLatestEntries);
+
+        DatabaseBlog blog = new DatabaseBlog();
+        blog.setProperties(properties);
+
+        assertEquals(numOfLatestEntries, BlogTimesHelper.getNumOfLatestEntries(blog));
+    }
+
+    public void testGetNumOfLatestEntriesWithNullPropertyGivesDefaultValue() {
+        Map properties = new HashMap();
+        properties.put(BlogTimesPlugin.PROPERTY_NUM_OF_LATEST_ENTRIES, null);
+
+        DatabaseBlog blog = new DatabaseBlog();
+        blog.setProperties(properties);
+
+        assertEquals(BlogTimesHelper.DEFAULT_NUM_OF_LATEST_ENTRIES, BlogTimesHelper.getNumOfLatestEntries(blog));
+    }
+
+    public void testGetNumOfLatestEntriesWithInvalidPropertyGivesDefaultValue() {
+        Map properties = new HashMap();
+        properties.put(BlogTimesPlugin.PROPERTY_NUM_OF_LATEST_ENTRIES, "abc");
+
+        DatabaseBlog blog = new DatabaseBlog();
+        blog.setProperties(properties);
+
+        assertEquals(BlogTimesHelper.DEFAULT_NUM_OF_LATEST_ENTRIES, BlogTimesHelper.getNumOfLatestEntries(blog));
+    }
+
+    public void testGetDatesFromEntriesGivesANumberOfDatesAsManyAsTheNumberOfEntries() {
+        int numberOfDates = 5;
+        Entry[] entries = DataFixture.createEntryWithDates(DataFixture.createRandomDates(numberOfDates));
+        Date[] dates = BlogTimesHelper.getDatesFromEntries(entries);
+        assertEquals(entries.length, dates.length);
+    }
+
+    public void testGetDatesFromEntriesWithEmptyArrayGivesEmptyArrayOfDates() {
+        Date[] dates = BlogTimesHelper.getDatesFromEntries(new Entry[]{});
+        assertEquals(0, dates.length);
     }
 }
