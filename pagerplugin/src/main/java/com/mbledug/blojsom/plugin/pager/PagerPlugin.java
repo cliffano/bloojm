@@ -117,6 +117,12 @@ public class PagerPlugin implements BlojsomPlugin {
         int currentPage = PagerHelper.getCurrentPage(
                 httpServletRequest.getParameter(PARAM_PAGE_NUM));
 
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Page size: " + pageSize
+                    + ", total pages: " + totalPages
+                    + ", current page: " + currentPage);
+        }
+
         context.put(CONTEXT_ENTRY_PAGE_SIZE, new Integer(pageSize));
         context.put(CONTEXT_ENTRY_TOTAL_PAGES, new Integer(totalPages));
         context.put(CONTEXT_ENTRY_CURRENT_PAGE, new Integer(currentPage));
