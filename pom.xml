@@ -13,7 +13,7 @@
     <module>scodeplugin</module>
     <module>trackbackkeywordplugin</module>
   </modules>
-  <version>0.1-SNAPSHOT</version>
+  <version>0.1</version>
   <description>A collection of Blojsom plugins maintained by Mbledug.</description>
   <inceptionYear>2006</inceptionYear>
   <name>Bloojm</name>
