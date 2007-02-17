@@ -50,12 +50,12 @@ import org.blojsom.plugin.response.event.ResponseSubmissionEvent;
 import org.springframework.dao.EmptyResultDataAccessException;
 
 /**
- * {@link IpToCountryPlugin} attaches a country code to each blog entry comment.
- * The process of attaching country code is done at 2 places:
- * - when a new comment is added, country code will be added to comments with
- *   IP address, and country code will be persisted as comment meta data.
- * - when blog entries is going to be displayed, comments with IP address
- *   which doesn't yet have a country code will be provided one.
+ * {@link IpToCountryPlugin} adds country metadata to each blog entry comment.
+ * This is done at 2 places:
+ * - when a new comment is added, country data will be added to comments with
+ *   IP address
+ * - when blog entries are processed, comments with IP address which doesn't yet
+ *   have country data will be attached with country data.
  * @author Cliffano Subagio
  */
 public class IpToCountryPlugin implements Plugin, Listener {
@@ -66,9 +66,19 @@ public class IpToCountryPlugin implements Plugin, Listener {
     private static final Log LOG = LogFactory.getLog(IpToCountryPlugin.class);
 
     /**
-     * Meta data key for country code.
+     * Meta data key for two-character country code.
      */
-    public static final String METADATA_COUNTRY_CODE = "country-code";
+    public static final String METADATA_COUNTRY_CODE_2CHAR = "country-code-2";
+
+    /**
+     * Meta data key for three-character country code.
+     */
+    public static final String METADATA_COUNTRY_CODE_3CHAR = "country-code-3";
+
+    /**
+     * Meta data key for country name.
+     */
+    public static final String METADATA_COUNTRY_NAME = "country-name";
 
     /**
      * Event broadcaster.
@@ -132,7 +142,7 @@ public class IpToCountryPlugin implements Plugin, Listener {
     }
 
     /**
-     * Adds country code to comments which don't already have one.
+     * Adds country data to comments which don't already have them.
      *
      * @param httpServletRequest http servlet request
      * @param httpServletResponse http servlet response
@@ -154,8 +164,8 @@ public class IpToCountryPlugin implements Plugin, Listener {
             List comments = entries[i].getComments();
             for (Iterator it = comments.iterator(); it.hasNext();) {
                 Comment comment = (Comment) it.next();
-                if (comment.getMetaData().get(METADATA_COUNTRY_CODE) == null) {
-                    addCountryCodeToComment(
+                if (comment.getMetaData().get(METADATA_COUNTRY_NAME) == null) {
+                    addCountryToComment(
                             comment.getIp(), comment.getMetaData());
                 }
             }
@@ -188,7 +198,7 @@ public class IpToCountryPlugin implements Plugin, Listener {
     }
 
     /**
-     * Adds country code to comment when there's a new added comment.
+     * Adds country data to comment when there's a new added comment.
      * @param event the event to process synchronously
      */
     public final void processEvent(final Event event) {
@@ -196,19 +206,18 @@ public class IpToCountryPlugin implements Plugin, Listener {
             ResponseSubmissionEvent responseSubmissionEvent =
                 (ResponseSubmissionEvent) event;
             Map metaData = responseSubmissionEvent.getMetaData();
-            addCountryCodeToComment(responseSubmissionEvent.
+            addCountryToComment(responseSubmissionEvent.
                     getHttpServletRequest().getRemoteAddr(), metaData);
         }
     }
 
     /**
-     * Adds country code to meta data. This is done only when IP address is not
-     * null and it doesn't exist in the ignored IP addresses array.
+     * Adds country data to comment meta data. This is done only when IP address
+     * is not null and it doesn't exist in the ignored IP addresses array.
      * @param ipAddress the IP address for the country code
-     * @param metaData the meta data map which the country code  will be added
-     * to
+     * @param metaData the meta data map which the country data will be added to
      */
-    private void addCountryCodeToComment(
+    private void addCountryToComment(
             final String ipAddress, final Map metaData) {
 
         if (ipAddress != null
@@ -217,16 +226,25 @@ public class IpToCountryPlugin implements Plugin, Listener {
             long ipNumber = IpToCountryHelper.calculateIpNumber(
                     String.valueOf(ipAddress));
             try {
-                String countryCode = mIpToCountryDao.getCountryCode(ipNumber);
-                metaData.put(METADATA_COUNTRY_CODE, countryCode);
+                Country country = mIpToCountryDao.getCountry(ipNumber);
+
+                metaData.put(METADATA_COUNTRY_CODE_2CHAR,
+                        country.getTwoCharCode());
+                metaData.put(METADATA_COUNTRY_CODE_3CHAR,
+                        country.getThreeCharCode());
+                metaData.put(METADATA_COUNTRY_NAME, country.getName());
+
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug("Setting country code: " + countryCode
+                    LOG.debug("Setting country with "
+                            + " two-char code: " + country.getTwoCharCode()
+                            + ", three-char code: " + country.getThreeCharCode()
+                            + ", name: " + country.getName()
                             + ", for IP address: " + ipAddress
                             + ", with IP number: " + ipNumber);
                 }
             } catch (EmptyResultDataAccessException erdae) {
                 LOG.error("Unable to retrieve country code for IP address: "
-                        + ipAddress + ", IP number: " + ipNumber);
+                        + ipAddress + ", IP number: " + ipNumber, erdae);
             }
         } else if (LOG.isDebugEnabled()) {
             LOG.debug("Ignoring IP address: " + ipAddress);

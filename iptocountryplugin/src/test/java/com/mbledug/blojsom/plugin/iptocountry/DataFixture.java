@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,7 +22,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 public class DataFixture extends MockObjectTestCase {
 
     static final String EMAIL = "foo@bar.com";
-    static final String EXPECTED_COUNTRY_CODE = "AU";
+    static final Country EXPECTED_COUNTRY = new Country("GB", "GBR", "UNITED KINGDOM");
 
     static Entry createEntryWithSingleCommentWithoutCountryCode(String ipAddress) {
 
@@ -73,12 +74,17 @@ public class DataFixture extends MockObjectTestCase {
                 new HashMap());
     }
 
-    JdbcTemplate createMockJdbcTemplate(String ipAddress) {
+    JdbcTemplate createMockJdbcTemplate(Country country) {
+        Map result = new HashMap();
+        result.put(IpToCountryDao.COLUMN_COUNTRY_CODE2, country.getTwoCharCode());
+        result.put(IpToCountryDao.COLUMN_COUNTRY_CODE3, country.getThreeCharCode());
+        result.put(IpToCountryDao.COLUMN_COUNTRY_NAME, country.getName());
+
         Mock mockJdbcTemplate = mock(JdbcTemplate.class);
         mockJdbcTemplate
                 .expects(once())
-                .method("queryForObject")
-                .will(returnValue(ipAddress));
+                .method("queryForMap")
+                .will(returnValue(result));
         return (JdbcTemplate) mockJdbcTemplate.proxy();
     }
 
@@ -86,17 +92,17 @@ public class DataFixture extends MockObjectTestCase {
         Mock mockJdbcTemplate = mock(JdbcTemplate.class);
         mockJdbcTemplate
                 .expects(once())
-                .method("queryForObject")
+                .method("queryForMap")
                 .will(throwException(throwable));
         return (JdbcTemplate) mockJdbcTemplate.proxy();
     }
 
-    IpToCountryDao createMockIpToCountryDao(String countryCode) {
+    IpToCountryDao createMockIpToCountryDao(Country country) {
         Mock mockIpToCountryDao = mock(IpToCountryDao.class);
         mockIpToCountryDao
                 .expects(once())
-                .method("getCountryCode")
-                .will(returnValue(countryCode));
+                .method("getCountry")
+                .will(returnValue(country));
         return (IpToCountryDao) mockIpToCountryDao.proxy();
     }
 

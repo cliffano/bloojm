@@ -24,15 +24,15 @@ public class IpToCountryPluginTest extends TestCase {
         mDataFixture = new DataFixture();
     }
 
-    public void testProcessAddingCountryCodeToComments() {
+    public void testProcessAddingCountryToComments() {
 
         IpToCountryPlugin ipToCountryPlugin = new IpToCountryPlugin();
         Entry[] entries = new Entry[] {DataFixture.createEntryWithSingleCommentWithoutCountryCode("111.111.111.111")};
-        String expectedCountryCode = DataFixture.EXPECTED_COUNTRY_CODE;
+        Country expectedCountry = DataFixture.EXPECTED_COUNTRY;
 
         try {
             ipToCountryPlugin.setEventBroadcaster(new SimpleEventBroadcaster());
-            ipToCountryPlugin.setIpToCountryDao(mDataFixture.createMockIpToCountryDao(expectedCountryCode));
+            ipToCountryPlugin.setIpToCountryDao(mDataFixture.createMockIpToCountryDao(expectedCountry));
             ipToCountryPlugin.init();
             entries = ipToCountryPlugin.process(
                     mDataFixture.createMockHttpServletRequest(),
@@ -45,9 +45,12 @@ public class IpToCountryPluginTest extends TestCase {
             for (Iterator it = comments.iterator(); it.hasNext();) {
                 Comment comment = (Comment) it.next();
                 Map metaData = comment.getMetaData();
-                String countryCode = String.valueOf(metaData.get(IpToCountryPlugin.METADATA_COUNTRY_CODE));
-                assertNotNull(countryCode);
-                assertEquals(expectedCountryCode, countryCode);
+                assertNotNull(metaData.get(IpToCountryPlugin.METADATA_COUNTRY_CODE_2CHAR));
+                assertNotNull(metaData.get(IpToCountryPlugin.METADATA_COUNTRY_CODE_3CHAR));
+                assertNotNull(metaData.get(IpToCountryPlugin.METADATA_COUNTRY_NAME));
+                assertEquals(expectedCountry.getTwoCharCode(), String.valueOf(metaData.get(IpToCountryPlugin.METADATA_COUNTRY_CODE_2CHAR)));
+                assertEquals(expectedCountry.getThreeCharCode(), String.valueOf(metaData.get(IpToCountryPlugin.METADATA_COUNTRY_CODE_3CHAR)));
+                assertEquals(expectedCountry.getName(), String.valueOf(metaData.get(IpToCountryPlugin.METADATA_COUNTRY_NAME)));
             }
             ipToCountryPlugin.cleanup();
             ipToCountryPlugin.destroy();
@@ -56,17 +59,17 @@ public class IpToCountryPluginTest extends TestCase {
         }
     }
 
-    public void testProcessDoesntAddCountryCodeToCommentsWhenIpAddressIsIgnored() {
+    public void testProcessDoesntAddCountryToCommentsWhenIpAddressIsIgnored() {
 
         String ipAddress = "111.111.111.111";
         IpToCountryPlugin ipToCountryPlugin = new IpToCountryPlugin();
         Entry[] entries = new Entry[] {DataFixture.createEntryWithSingleCommentWithoutCountryCode(ipAddress)};
-        String expectedCountryCode = DataFixture.EXPECTED_COUNTRY_CODE;
+        Country expectedCountry = DataFixture.EXPECTED_COUNTRY;
 
         try {
             ipToCountryPlugin.setIgnoredIpAddresses(ipAddress + ",222.222.222.222");
             ipToCountryPlugin.setEventBroadcaster(new SimpleEventBroadcaster());
-            ipToCountryPlugin.setIpToCountryDao(mDataFixture.createMockIpToCountryDao(expectedCountryCode));
+            ipToCountryPlugin.setIpToCountryDao(mDataFixture.createMockIpToCountryDao(expectedCountry));
             ipToCountryPlugin.init();
             entries = ipToCountryPlugin.process(
                     mDataFixture.createMockHttpServletRequest(),
@@ -79,7 +82,9 @@ public class IpToCountryPluginTest extends TestCase {
             for (Iterator it = comments.iterator(); it.hasNext();) {
                 Comment comment = (Comment) it.next();
                 Map metaData = comment.getMetaData();
-                assertNull(metaData.get(IpToCountryPlugin.METADATA_COUNTRY_CODE));
+                assertNull(metaData.get(IpToCountryPlugin.METADATA_COUNTRY_CODE_2CHAR));
+                assertNull(metaData.get(IpToCountryPlugin.METADATA_COUNTRY_CODE_3CHAR));
+                assertNull(metaData.get(IpToCountryPlugin.METADATA_COUNTRY_NAME));
             }
             ipToCountryPlugin.cleanup();
             ipToCountryPlugin.destroy();
@@ -88,15 +93,15 @@ public class IpToCountryPluginTest extends TestCase {
         }
     }
 
-    public void testProcessDoesntAddCountryCodeToCommentWhenCommentIpIsNull() {
+    public void testProcessDoesntAddCountryToCommentWhenCommentIpIsNull() {
 
         IpToCountryPlugin ipToCountryPlugin = new IpToCountryPlugin();
         Entry[] entries = new Entry[] {DataFixture.createEntryWithSingleCommentWithoutCountryCode(null)};
-        String expectedCountryCode = DataFixture.EXPECTED_COUNTRY_CODE;
+        Country expectedCountry = DataFixture.EXPECTED_COUNTRY;
 
         try {
             ipToCountryPlugin.setEventBroadcaster(new SimpleEventBroadcaster());
-            ipToCountryPlugin.setIpToCountryDao(mDataFixture.createMockIpToCountryDao(expectedCountryCode));
+            ipToCountryPlugin.setIpToCountryDao(mDataFixture.createMockIpToCountryDao(expectedCountry));
             ipToCountryPlugin.init();
             entries = ipToCountryPlugin.process(
                     mDataFixture.createMockHttpServletRequest(),
@@ -109,7 +114,9 @@ public class IpToCountryPluginTest extends TestCase {
             for (Iterator it = comments.iterator(); it.hasNext();) {
                 Comment comment = (Comment) it.next();
                 Map metaData = comment.getMetaData();
-                assertNull(metaData.get(IpToCountryPlugin.METADATA_COUNTRY_CODE));
+                assertNull(metaData.get(IpToCountryPlugin.METADATA_COUNTRY_CODE_2CHAR));
+                assertNull(metaData.get(IpToCountryPlugin.METADATA_COUNTRY_CODE_3CHAR));
+                assertNull(metaData.get(IpToCountryPlugin.METADATA_COUNTRY_NAME));
             }
             ipToCountryPlugin.cleanup();
             ipToCountryPlugin.destroy();
@@ -118,26 +125,31 @@ public class IpToCountryPluginTest extends TestCase {
         }
     }
 
-    public void testProcessCommentResponseSubmissionEventAddsCountryCodeToMetaData() {
+    public void testProcessCommentResponseSubmissionEventAddsCountryToMetaData() {
 
         IpToCountryPlugin ipToCountryPlugin = new IpToCountryPlugin();
-        String expectedCountryCode = DataFixture.EXPECTED_COUNTRY_CODE;
-        ipToCountryPlugin.setIpToCountryDao(mDataFixture.createMockIpToCountryDao(expectedCountryCode));
+        Country expectedCountry = DataFixture.EXPECTED_COUNTRY;
+        ipToCountryPlugin.setIpToCountryDao(mDataFixture.createMockIpToCountryDao(expectedCountry));
         CommentResponseSubmissionEvent event = DataFixture.createCommentResponseSubmissionEventWithCommentHavingNoCountryCode();
         ipToCountryPlugin.processEvent(event);
         Map metaData = event.getMetaData();
-        assertNotNull(metaData.get(IpToCountryPlugin.METADATA_COUNTRY_CODE));
-        String countryCode = String.valueOf(metaData.get(IpToCountryPlugin.METADATA_COUNTRY_CODE));
-        assertEquals(expectedCountryCode, countryCode);
+        assertNotNull(metaData.get(IpToCountryPlugin.METADATA_COUNTRY_CODE_2CHAR));
+        assertNotNull(metaData.get(IpToCountryPlugin.METADATA_COUNTRY_CODE_3CHAR));
+        assertNotNull(metaData.get(IpToCountryPlugin.METADATA_COUNTRY_NAME));
+        assertEquals(expectedCountry.getTwoCharCode(), String.valueOf(metaData.get(IpToCountryPlugin.METADATA_COUNTRY_CODE_2CHAR)));
+        assertEquals(expectedCountry.getThreeCharCode(), String.valueOf(metaData.get(IpToCountryPlugin.METADATA_COUNTRY_CODE_3CHAR)));
+        assertEquals(expectedCountry.getName(), String.valueOf(metaData.get(IpToCountryPlugin.METADATA_COUNTRY_NAME)));
     }
 
-    public void testProcessResponseSubmissionEventDoesntAddCountryCodeToMetaData() {
+    public void testProcessResponseSubmissionEventDoesntAddCountryToMetaData() {
 
         Listener ipToCountryPlugin = new IpToCountryPlugin();
         ResponseSubmissionEvent event = DataFixture.createResponseSubmissionEvent();
         ipToCountryPlugin.processEvent(event);
         Map metaData = event.getMetaData();
-        assertNull(metaData.get(IpToCountryPlugin.METADATA_COUNTRY_CODE));
+        assertNull(metaData.get(IpToCountryPlugin.METADATA_COUNTRY_CODE_2CHAR));
+        assertNull(metaData.get(IpToCountryPlugin.METADATA_COUNTRY_CODE_3CHAR));
+        assertNull(metaData.get(IpToCountryPlugin.METADATA_COUNTRY_NAME));
     }
 
     public void testHandleEventLeftEventAsIs() {

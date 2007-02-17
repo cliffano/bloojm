@@ -10,7 +10,7 @@
  *   * Redistributions in binary form must reproduce the above copyright notice,
  *     this list of conditions and the following disclaimer in the documentation
  *     and/or other materials provided with the distribution.
- *   * Neither the name of Mbledug nor the names of its contributors
+ *   * Neither the mName of Mbledug nor the names of its contributors
  *     may be used to endorse or promote products derived from this software
  *     without specific prior written permission.
  *
@@ -28,66 +28,67 @@
  */
 package com.mbledug.blojsom.plugin.iptocountry;
 
-import java.util.Map;
-
-import org.springframework.jdbc.core.JdbcTemplate;
-
 /**
- * DAO for retrieving IpToCountry data.
+ * {@link Country} information to be associated with comment IP address.
+ * It provides:
+ * - two-character country code based on ISO 3166
+ * - three-character country code based on ISO 3166
+ * - country mName based on ISO 3166
  * @author Cliffano
  */
-class IpToCountryDao {
+class Country {
 
     /**
-     * Column name for two-character country code.
+     * Two-character country code based on ISO 3166.
      */
-    static final String COLUMN_COUNTRY_CODE2 = "country_code2";
+    private String mTwoCharCode;
 
     /**
-     * Column name for three-character country code.
+     * Three-character country code based on ISO 3166.
      */
-    static final String COLUMN_COUNTRY_CODE3 = "country_code3";
+    private String mThreeCharCode;
 
     /**
-     * Column name for country name.
+     * Country mName based on ISO 3166.
      */
-    static final String COLUMN_COUNTRY_NAME = "country_name";
+    private String mName;
 
     /**
-     * JdbcTemplate used to execute the SQL query.
+     * Creates a {@link Country} instance.
+     * @param twoCharCode the two-character country code
+     * @param threeCharCode the three-character country code
+     * @param name the country name
      */
-    private JdbcTemplate mJdbcTemplate;
-
-    /**
-     * Constructs {@link IpToCountryDao}.
-     */
-    IpToCountryDao() {
-        mJdbcTemplate = null;
+    Country(
+            final String twoCharCode,
+            final String threeCharCode,
+            final String name) {
+        mTwoCharCode = twoCharCode;
+        mThreeCharCode = threeCharCode;
+        mName = name;
     }
 
     /**
-     * Constructs {@link IpToCountryDao} with specified JdbcTemplate.
-     * @param jdbcTemplate the JdbcTemplate
+     * Gets the two-character country code.
+     * @return the two-character country code
      */
-    IpToCountryDao(final JdbcTemplate jdbcTemplate) {
-        mJdbcTemplate = jdbcTemplate;
+    final String getTwoCharCode() {
+        return mTwoCharCode;
     }
 
     /**
-     * Gets the country code based on the specified IP number.
-     * @param ipNumber the IP Number used to retrieve the country from
-     * @return the country code
+     * Gets the three-character country code.
+     * @return the three-character country code
      */
-    public Country getCountry(final long ipNumber) {
+    final String getThreeCharCode() {
+        return mThreeCharCode;
+    }
 
-        String sql = "select * from iptocountry where ip_from < "
-                + ipNumber + " and ip_to > " + ipNumber;
-
-        Map result = mJdbcTemplate.queryForMap(sql);
-
-        return new Country(
-                String.valueOf(result.get(COLUMN_COUNTRY_CODE2)),
-                String.valueOf(result.get(COLUMN_COUNTRY_CODE3)),
-                String.valueOf(result.get(COLUMN_COUNTRY_NAME)));
+    /**
+     * Gets the country name.
+     * @return the country name
+     */
+    final String getName() {
+        return mName;
     }
 }
