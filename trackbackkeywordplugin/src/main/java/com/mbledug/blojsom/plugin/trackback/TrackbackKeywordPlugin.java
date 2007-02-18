@@ -331,6 +331,12 @@ public class TrackbackKeywordPlugin implements Plugin, Listener {
                 isSpamSuspect = !keywordChecker.hasAtLeastOneKeyword(text);
             }
         }
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("is spam suspect: " + isSpamSuspect
+                    + ", check type: " + checkType
+                    + ", keywords: " + keywordsCsv
+                    + ", text: " + text);
+        }
         return isSpamSuspect;
     }
 
