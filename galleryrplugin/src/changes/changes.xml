@@ -4,13 +4,7 @@
     <title>Changes</title>
   </properties>
   <body>
-    <release version="0.2-SNAPSHOT" date="current">
-      <action type="update" dev="cliffano">
-        Upgraded flickrj from 1.0a8 to 1.0a9 .
-      </action>
-      <action type="update" dev="cliffano">
-        Entry meta data now holds Flickrj's Photo objects (was GalleryrPhoto in GalleryrPlugin 0.1).
-      </action>
+    <release version="0.2" date="25-02-2007">
       <action type="update" dev="cliffano">
         Updated plugin implementation to work with Blojsom 3.
         Refactored implementation from GalleryrPlugin 0.1, added unit tests.

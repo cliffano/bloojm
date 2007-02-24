@@ -5,8 +5,6 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import com.aetrion.flickr.photos.Photo;
-
 public class FlickrFacadeTest extends TestCase {
 
     public void testGetPhotos() {
@@ -14,10 +12,8 @@ public class FlickrFacadeTest extends TestCase {
         List photos = flickrFacade.getPhotos(DataFixture.PHOTO_IDS_CSV);
         assertNotNull(photos);
         for (Iterator it = photos.iterator(); it.hasNext();) {
-            Photo photo = (Photo) it.next();
-            assertNotNull(photo.getId());
-            assertNotNull(photo.getThumbnailUrl());
-            assertNotNull(photo.getOriginalUrl());
+            GalleryrPhoto photo = (GalleryrPhoto) it.next();
+            assertPhoto(photo);
         }
     }
 
@@ -26,10 +22,8 @@ public class FlickrFacadeTest extends TestCase {
         List photos = flickrFacade.getPhotosFromPhotosets(DataFixture.PHOTOSET_IDS_CSV);
         assertNotNull(photos);
         for (Iterator it = photos.iterator(); it.hasNext();) {
-            Photo photo = (Photo) it.next();
-            assertNotNull(photo.getId());
-            assertNotNull(photo.getThumbnailUrl());
-            assertNotNull(photo.getOriginalUrl());
+            GalleryrPhoto photo = (GalleryrPhoto) it.next();
+            assertPhoto(photo);
         }
     }
 
@@ -51,5 +45,17 @@ public class FlickrFacadeTest extends TestCase {
         } catch (Exception e) {
             fail("Thrown exception should've been handled by FlickrFacade: " + e);
         }
+    }
+
+    private void assertPhoto(GalleryrPhoto photo) {
+        assertNotNull(photo.getFlickrPhoto());
+        assertNotNull(photo.getId());
+        assertNull(photo.getDescription());
+        assertNotNull(photo.getLargeUrl());
+        assertNotNull(photo.getMediumUrl());
+        assertNull(photo.getOriginalUrl());
+        assertNotNull(photo.getSmallUrl());
+        assertNotNull(photo.getSquareUrl());
+        assertNotNull(photo.getThumbnailUrl());
     }
 }

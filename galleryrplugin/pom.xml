@@ -4,7 +4,7 @@
   <groupId>blojsom</groupId>
   <artifactId>galleryrplugin</artifactId>
   <packaging>jar</packaging>
-  <version>0.2-SNAPSHOT</version>
+  <version>0.2</version>
   <description>
     Blojsom plugin that retrieves information of photos/photosets stored in Flickr.
     This plugin is useful for creating a simple a photo gallery.
@@ -45,7 +45,7 @@
     <dependency>
       <groupId>flickrj</groupId>
       <artifactId>flickrapi</artifactId>
-      <version>1.0a9</version>
+      <version>1.0a8</version>
       <scope>compile</scope>
     </dependency>
     <dependency>

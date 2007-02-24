@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import junit.framework.TestCase;
 
@@ -13,8 +12,6 @@ import org.blojsom.blog.Entry;
 import org.blojsom.blog.database.DatabaseBlog;
 import org.blojsom.blog.database.DatabaseEntry;
 import org.blojsom.plugin.PluginException;
-
-import com.aetrion.flickr.photos.Photo;
 
 public class GalleryrPluginTest extends TestCase {
 
@@ -74,10 +71,8 @@ public class GalleryrPluginTest extends TestCase {
             assertNotNull(photos);
             assertTrue(photos.size() > 0);
             for (Iterator it = photos.iterator(); it.hasNext();) {
-                Photo photo = (Photo) it.next();
-                assertNotNull(photo.getId());
-                assertNotNull(photo.getThumbnailUrl());
-                assertNotNull(photo.getOriginalUrl());
+                GalleryrPhoto photo = (GalleryrPhoto) it.next();
+                assertNotNull(photo);
             }
 
             galleryrPlugin.cleanup();

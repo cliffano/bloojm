@@ -75,7 +75,7 @@ class FlickrFacade {
     }
 
     /**
-     * Retrieves a list of Flickr photos whichs IDs specified in the comma
+     * Retrieves a list of photos whichs IDs specified in the comma
      * separated photo IDs.
      * @param photoIdsCsv comma separated photo IDs
      * @return a list of Flickr photos
@@ -88,7 +88,10 @@ class FlickrFacade {
         String[] photoIds = photoIdsCsv.split(IDS_SEPARATOR);
         for (int i = 0; i < photoIds.length; i++) {
             try {
-                photos.add(photosInterface.getPhoto(photoIds[i]));
+                Photo photo = photosInterface.getInfo(photoIds[i], null);
+                Collection sizes = photosInterface.getSizes(photo.getId());
+                GalleryrPhoto galleryrPhoto = new GalleryrPhoto(photo, sizes);
+                photos.add(galleryrPhoto);
             } catch (FlickrException fe) {
                 LOG.error("Unable to retrieve photo with ID: " + photoIds[i],
                         fe);
@@ -105,7 +108,7 @@ class FlickrFacade {
     }
 
     /**
-     * Retrieves a list of Flickr photos containing the photos within photosets
+     * Retrieves a list of photos containing the photos within photosets
      * which IDs specified in the comma separated photoset IDs.
      * @param photosetIdsCsv comma separated photoset IDs
      * @return a list of Flickr photos
@@ -113,6 +116,7 @@ class FlickrFacade {
     List getPhotosFromPhotosets(final String photosetIdsCsv) {
 
         PhotosetsInterface photosetsInterface = mFlickr.getPhotosetsInterface();
+        PhotosInterface photosInterface = mFlickr.getPhotosInterface();
         List photos = new ArrayList();
 
         String[] photosetIds = photosetIdsCsv.split(IDS_SEPARATOR);
@@ -122,7 +126,10 @@ class FlickrFacade {
                         photosetIds[i]);
                 for (Iterator it = photoset.iterator(); it.hasNext();) {
                     Photo photo = (Photo) it.next();
-                    photos.add(photo);
+                    Collection sizes = photosInterface.getSizes(photo.getId());
+                    GalleryrPhoto galleryrPhoto = new GalleryrPhoto(
+                            photo, sizes);
+                    photos.add(galleryrPhoto);
                 }
             } catch (FlickrException fe) {
                 LOG.error("Unable to retrieve photoset with ID: "
