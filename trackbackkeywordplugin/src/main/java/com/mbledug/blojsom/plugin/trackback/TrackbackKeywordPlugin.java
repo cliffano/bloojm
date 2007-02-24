@@ -29,6 +29,7 @@
 package com.mbledug.blojsom.plugin.trackback;
 
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.Map;
 import java.util.Properties;
 
@@ -258,14 +259,19 @@ public class TrackbackKeywordPlugin implements Plugin, Listener {
                         mProperties.getProperty(PROPERTY_PROXY_PORT),
                         mProperties.getProperty(PROPERTY_PROXY_USERNAME),
                         mProperties.getProperty(PROPERTY_PROXY_PASSWORD));
+
+                String action = blog.getProperty(PROPERTY_ACTION);
                 try {
                     if (isSpamSuspect(
                             blog.getProperty(PROPERTY_CHECK_TYPE),
                             mUrlTextFetcher.fetchText(url),
                             blog.getProperty(PROPERTY_KEYWORDS))) {
-                        addTrackbackAction(blog
-                                .getProperty(PROPERTY_ACTION), metaData);
+                        addTrackbackAction(action, metaData);
                     }
+                } catch (UnknownHostException uhe) {
+                    LOG.error("Unable to retrieve text for trackback with url: "
+                            + url + ", due to exception: " + uhe);
+                    addTrackbackAction(action, metaData);
                 } catch (IOException ioe) {
                     LOG.error("Unable to retrieve text for trackback with url: "
                             + url + ", due to exception: " + ioe);

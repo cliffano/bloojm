@@ -4,7 +4,7 @@
   <groupId>blojsom</groupId>
   <artifactId>trackbackkeywordplugin</artifactId>
   <packaging>jar</packaging>
-  <version>0.2</version>
+  <version>0.3-SNAPSHOT</version>
   <description>
     Blojsom plugin that checks the content of trackback URL for the existence
     of all or at least one of the specified keywords which will determine

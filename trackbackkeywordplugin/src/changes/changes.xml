@@ -4,6 +4,12 @@
     <title>Changes</title>
   </properties>
   <body>
+    <release version="0.3-SNAPSHOT" date="current">
+      <action type="update" dev="cliffano">
+        Added UnknownHostException handling so that URLs with invalid host/protocol
+        will automatically be considered spams.
+      </action>
+    </release>
     <release version="0.2" date="18-02-2007">
       <action type="update" dev="cliffano">
         Updated plugin implementation to work with Blojsom 3.
