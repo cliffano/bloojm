@@ -2,8 +2,6 @@ package com.mbledug.blojsom.plugin.trackback;
 
 import java.io.IOException;
 
-import java.net.UnknownHostException;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -57,19 +55,7 @@ public class TrackbackKeywordPluginTest extends TestCase {
         assertNull(metaData.get(TrackbackModerationPlugin.BLOJSOM_TRACKBACK_MODERATION_PLUGIN_APPROVED));
     }
 
-    public void testProcessEventTrackbackWithUnknownHostException() {
-        UrlTextFetcher urlTextFetcher = mDataFixture.createMockUrlTextFetcher(DataFixture.TEXT_ALL_KEYWORDS, false, new UnknownHostException());
-        Listener trackbackKeywordPlugin = new TrackbackKeywordPlugin(urlTextFetcher);
-        TrackbackResponseSubmissionEvent event = mDataFixture.createTrackbackResponseSubmissionEventWithEnabledPlugin();
-        Map metaData = event.getMetaData();
-        assertNull(metaData.get(TrackbackPlugin.BLOJSOM_PLUGIN_TRACKBACK_METADATA_DESTROY));
-        assertNull(metaData.get(TrackbackModerationPlugin.BLOJSOM_TRACKBACK_MODERATION_PLUGIN_APPROVED));
-        trackbackKeywordPlugin.processEvent(event);
-        assertNull(metaData.get(TrackbackPlugin.BLOJSOM_PLUGIN_TRACKBACK_METADATA_DESTROY));
-        assertNotNull(metaData.get(TrackbackModerationPlugin.BLOJSOM_TRACKBACK_MODERATION_PLUGIN_APPROVED));
-    }
-
-    public void testProcessEventTrackbackWithIoException() {
+    public void testProcessEventTrackbackWithIoExceptionAddsTrackbackAction() {
         UrlTextFetcher urlTextFetcher = mDataFixture.createMockUrlTextFetcher(DataFixture.TEXT_ALL_KEYWORDS, false, new IOException());
         Listener trackbackKeywordPlugin = new TrackbackKeywordPlugin(urlTextFetcher);
         TrackbackResponseSubmissionEvent event = mDataFixture.createTrackbackResponseSubmissionEventWithEnabledPlugin();
@@ -78,7 +64,7 @@ public class TrackbackKeywordPluginTest extends TestCase {
         assertNull(metaData.get(TrackbackModerationPlugin.BLOJSOM_TRACKBACK_MODERATION_PLUGIN_APPROVED));
         trackbackKeywordPlugin.processEvent(event);
         assertNull(metaData.get(TrackbackPlugin.BLOJSOM_PLUGIN_TRACKBACK_METADATA_DESTROY));
-        assertNull(metaData.get(TrackbackModerationPlugin.BLOJSOM_TRACKBACK_MODERATION_PLUGIN_APPROVED));
+        assertNotNull(metaData.get(TrackbackModerationPlugin.BLOJSOM_TRACKBACK_MODERATION_PLUGIN_APPROVED));
     }
 
     public void testProcessEventTrackbackNotSpamSuspectBehindProxy() {

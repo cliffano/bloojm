@@ -29,7 +29,6 @@
 package com.mbledug.blojsom.plugin.trackback;
 
 import java.io.IOException;
-import java.net.UnknownHostException;
 import java.util.Map;
 import java.util.Properties;
 
@@ -268,13 +267,10 @@ public class TrackbackKeywordPlugin implements Plugin, Listener {
                             blog.getProperty(PROPERTY_KEYWORDS))) {
                         addTrackbackAction(action, metaData);
                     }
-                } catch (UnknownHostException uhe) {
-                    LOG.error("Unable to retrieve text for trackback with url: "
-                            + url + ", due to exception: " + uhe);
-                    addTrackbackAction(action, metaData);
                 } catch (IOException ioe) {
                     LOG.error("Unable to retrieve text for trackback with url: "
                             + url + ", due to exception: " + ioe);
+                    addTrackbackAction(action, metaData);
                 }
             }
         }

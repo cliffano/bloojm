@@ -6,8 +6,8 @@
   <body>
     <release version="0.3-SNAPSHOT" date="current">
       <action type="update" dev="cliffano">
-        Added UnknownHostException handling so that URLs with invalid host/protocol
-        will automatically be considered spams.
+        Modified IOException handling on spam suspect checking, trackback is now
+        moderated/deleted accordingly.
       </action>
     </release>
     <release version="0.2" date="18-02-2007">
