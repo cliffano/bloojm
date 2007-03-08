@@ -75,6 +75,15 @@ class FlickrFacade {
     }
 
     /**
+     * Creates an instance of {@link FlickrFacade} with specified
+     * {@link Flickr} object.
+     * @param flickr {@link Flickr} object
+     */
+    FlickrFacade(final Flickr flickr) {
+        mFlickr = flickr;
+    }
+
+    /**
      * Retrieves a list of photos whichs IDs specified in the comma
      * separated photo IDs.
      * @param photoIdsCsv comma separated photo IDs
