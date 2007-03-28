@@ -190,11 +190,11 @@ public class GravatarPlugin implements Plugin, Listener {
                             + " for email: " + email);
                 }
             } catch (NoSuchAlgorithmException nae) {
-                LOG.error("Unable to get Gravatar ID for email: " + email
-                        + ", due to exception: " + nae);
+                LOG.error("Unable to get Gravatar ID for email: " + email,
+                        nae);
             } catch (UnsupportedEncodingException uee) {
-                LOG.error("Unable to get Gravatar ID for email: " + email
-                        + ", due to exception: " + uee);
+                LOG.error("Unable to get Gravatar ID for email: " + email,
+                        uee);
             }
         }
     }
