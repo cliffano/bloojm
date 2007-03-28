@@ -269,7 +269,7 @@ public class TrackbackKeywordPlugin implements Plugin, Listener {
                     }
                 } catch (IOException ioe) {
                     LOG.error("Unable to retrieve text for trackback with url: "
-                            + url + ", due to exception: " + ioe);
+                            + url, ioe);
                     addTrackbackAction(action, metaData);
                 }
             }
