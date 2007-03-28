@@ -4,7 +4,7 @@
   <groupId>blojsom</groupId>
   <artifactId>scodeplugin</artifactId>
   <packaging>jar</packaging>
-  <version>0.4</version>
+  <version>0.5-SNAPSHOT</version>
   <description>
     Blojsom plugin that creates a CAPTCHA image of a random security code numbers which would be used to prevent comment spam.
   </description>

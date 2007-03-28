@@ -85,20 +85,23 @@ public class ImageFactory {
         } catch (ClassNotFoundException cnfe) {
             LOG.error("SCode image engine with flavor '"
                     + flavor
-                    + "' is not found. Using the default image engine instead."
-                    + cnfe);
+                    + "' is not found. "
+                    + "Using the default image engine instead.",
+                    cnfe);
             engine = new SimpleImageEngine();
         } catch (IllegalAccessException iae) {
             LOG.error("Cannot access image engine class with flavor '"
                     + flavor
-                    + "'. Using the default image engine instead."
-                    + iae);
+                    + "'. "
+                    + "Using the default image engine instead.",
+                    iae);
             engine = new SimpleImageEngine();
         } catch (InstantiationException ie) {
             LOG.error("Cannot instantiate image engine class with flavor '"
                     + flavor
-                    + "'. Using the default image engine instead."
-                    + ie);
+                    + "'. "
+                    + "Using the default image engine instead.",
+                    ie);
             engine = new SimpleImageEngine();
         }
 

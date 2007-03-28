@@ -104,7 +104,7 @@ public class SCodeServlet extends HttpServlet {
             out.flush();
             out.close();
         } catch (IOException ioe) {
-            LOG.error("Unable to write SCode image.");
+            LOG.error("Unable to write SCode image.", ioe);
         }
     }
 }
