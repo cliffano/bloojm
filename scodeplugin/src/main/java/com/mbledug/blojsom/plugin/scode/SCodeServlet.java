@@ -64,6 +64,13 @@ public class SCodeServlet extends HttpServlet {
      * Number of characters used as SCode.
      */
     private static final int SCODE_LENGTH = 6;
+    
+    /**
+     * Turns ImageIO caching off once off during servlet initialisation. 
+     */
+    public final void init() {
+        ImageIO.setUseCache(false);
+    }
 
     /**
      * Creates an image with SCode drawn on it, sets the SCode value as

@@ -4,6 +4,11 @@
     <title>Changes</title>
   </properties>
   <body>
+    <release version="0.5-SNAPSHOT" date="current">
+      <action type="update" dev="cliffano">
+        Set ImageIO caching off during SCodeServlet initialisation. This improves performance and prevents any temporary disk-based image creation.
+      </action>
+    </release>
     <release version="0.4" date="24-01-2007">
       <action type="update" dev="cliffano">
         Updated plugin implementation to work with Blojsom 3, added unit tests.
