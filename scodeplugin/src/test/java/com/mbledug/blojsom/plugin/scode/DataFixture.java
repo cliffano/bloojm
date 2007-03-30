@@ -11,15 +11,19 @@ import org.blojsom.plugin.comment.CommentPlugin;
 import org.jmock.Mock;
 import org.jmock.cglib.MockObjectTestCase;
 
+import com.mbledug.blojsom.plugin.scode.engine.FunkyImageEngine;
+import com.mbledug.blojsom.plugin.scode.engine.GradientImageEngine;
+import com.mbledug.blojsom.plugin.scode.engine.SimpleImageEngine;
+
 public class DataFixture extends MockObjectTestCase {
 
     static final String SCODE_TEXT = "898989";
 
     static Map createEngines() {
         Map engines = new HashMap();
-        engines.put("simple", "com.mbledug.blojsom.plugin.scode.engine.SimpleImageEngine");
-        engines.put("gradient", "com.mbledug.blojsom.plugin.scode.engine.GradientImageEngine");
-        engines.put("funky", "com.mbledug.blojsom.plugin.scode.engine.FunkyImageEngine");
+        engines.put("simple", new SimpleImageEngine());
+        engines.put("gradient", new GradientImageEngine());
+        engines.put("funky", new FunkyImageEngine());
         return engines;
     }
 
@@ -28,8 +32,11 @@ public class DataFixture extends MockObjectTestCase {
         mockHttpSession
                 .expects(once())
                 .method("getAttribute")
-                .with(eq(SCodePlugin.SESSION_ATTR_ENGINES))
-                .will(returnValue(createEngines()));
+                .with(eq(SCodePlugin.SESSION_ATTR_IMAGE_FACTORY))
+                .will(returnValue(null));
+        mockHttpSession
+                .expects(once())
+                .method("setAttribute");
         return (HttpSession) mockHttpSession.proxy();
     }
 
@@ -39,8 +46,8 @@ public class DataFixture extends MockObjectTestCase {
         mockHttpSession
                 .expects(once())
                 .method("getAttribute")
-                .with(eq(SCodePlugin.SESSION_ATTR_ENGINES))
-                .will(returnValue(createEngines()));
+                .with(eq(SCodePlugin.SESSION_ATTR_IMAGE_FACTORY))
+                .will(returnValue(new ImageFactory(createEngines())));
         mockHttpSession
                 .expects(once())
                 .method("getAttribute")

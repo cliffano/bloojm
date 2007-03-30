@@ -29,6 +29,7 @@
 package com.mbledug.blojsom.plugin.scode;
 
 import java.awt.image.BufferedImage;
+import java.io.Serializable;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
@@ -42,7 +43,12 @@ import com.mbledug.blojsom.plugin.scode.engine.SimpleImageEngine;
  * The image is based on the specified flavor.
  * @author Cliffano Subagio
  */
-public class ImageFactory {
+public class ImageFactory implements Serializable {
+
+    /**
+     * Serial version UID.
+     */
+    private static final long serialVersionUID = 5349875348734357443L;
 
     /**
      * Log for {@link ImageFactory}.
@@ -55,11 +61,16 @@ public class ImageFactory {
     private Map mEngines;
 
     /**
-     * Constructor with specified image mEngines.
+     * Constructor with non-null image engines.
      * @param engines Map of image engines
      */
     public ImageFactory(final Map engines) {
-        mEngines = engines;
+        if (engines == null) {
+            throw new IllegalArgumentException(
+                    "Image engines must be provided.");
+        } else {
+            mEngines = engines;
+        }
     }
 
     /**
@@ -76,32 +87,12 @@ public class ImageFactory {
             throw new IllegalArgumentException("Text must be provided.");
         }
 
-        ImageEngine engine;
-
-        try {
-            Class engineClass = Thread.currentThread().getContextClassLoader()
-                    .loadClass(String.valueOf(mEngines.get(flavor)));
-            engine = (ImageEngine) engineClass.newInstance();
-        } catch (ClassNotFoundException cnfe) {
-            LOG.error("SCode image engine with flavor '"
+        ImageEngine engine = (ImageEngine) mEngines.get(flavor);
+        if (engine == null) {
+            LOG.error("Image engine with flavor '"
                     + flavor
-                    + "' is not found. "
-                    + "Using the default image engine instead.",
-                    cnfe);
-            engine = new SimpleImageEngine();
-        } catch (IllegalAccessException iae) {
-            LOG.error("Cannot access image engine class with flavor '"
-                    + flavor
-                    + "'. "
-                    + "Using the default image engine instead.",
-                    iae);
-            engine = new SimpleImageEngine();
-        } catch (InstantiationException ie) {
-            LOG.error("Cannot instantiate image engine class with flavor '"
-                    + flavor
-                    + "'. "
-                    + "Using the default image engine instead.",
-                    ie);
+                    + "' is not available. "
+                    + "Using the default image engine instead.");
             engine = new SimpleImageEngine();
         }
 

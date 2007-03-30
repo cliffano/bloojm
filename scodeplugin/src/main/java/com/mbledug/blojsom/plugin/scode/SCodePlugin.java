@@ -57,9 +57,10 @@ public class SCodePlugin implements Plugin {
     private static final Log LOG = LogFactory.getLog(SCodePlugin.class);
 
     /**
-     * Session attribute name for storing Map of {@link ImageEngine}s.
+     * Session attribute name for storing {@link ImageFactory}.
      */
-    public static final String SESSION_ATTR_ENGINES = "scode-engines";
+    public static final String SESSION_ATTR_IMAGE_FACTORY =
+        "scode-image-factory";
 
     /**
      * Paramater name of SCode input.
@@ -72,20 +73,21 @@ public class SCodePlugin implements Plugin {
     public static final String PROPERTY_ENABLED = "scode-enabled";
 
     /**
-     * Plugin properties.
+     * {@link ImageFactory} to pass to SCode servlet.
      */
-    private Map mEngines;
+    private ImageFactory mImageFactory;
 
     /**
      * Creates an instance of {@link SCodePlugin} with non-null
-     * {@link ImageEngine}s.
-     * @param engines the Map of {@link ImageEngine}s
+     * {@link ImageFactory}.
+     * @param imageFactory the {@link ImageFactory}
      */
-    public SCodePlugin(final Map engines) {
-        if (engines == null) {
-            throw new IllegalArgumentException("SCode Engines cannot be null.");
+    public SCodePlugin(final ImageFactory imageFactory) {
+        if (imageFactory == null) {
+            throw new IllegalArgumentException(
+                    "Image factory must be provided.");
         }
-        mEngines = engines;
+        mImageFactory = imageFactory;
     }
 
     /**
@@ -118,8 +120,8 @@ public class SCodePlugin implements Plugin {
             throws PluginException {
 
         HttpSession httpSession = httpServletRequest.getSession();
-        if (httpSession.getAttribute(SESSION_ATTR_ENGINES) == null) {
-            httpSession.setAttribute(SESSION_ATTR_ENGINES, mEngines);
+        if (httpSession.getAttribute(SESSION_ATTR_IMAGE_FACTORY) == null) {
+            httpSession.setAttribute(SESSION_ATTR_IMAGE_FACTORY, mImageFactory);
         }
 
         boolean isPluginEnabled = "true".equalsIgnoreCase(

@@ -10,6 +10,15 @@ import junit.framework.TestCase;
 
 public class ImageFactoryTest extends TestCase {
 
+    public void testCreatingNewImageFactoryWithNullImageEnginesGivesIllegalArgumentException() {
+        try {
+            ImageFactory imageFactory = new ImageFactory(null);
+            fail("Image factory construction with null image engines should've thrown IllegalArgumentException. ImageFactory: " + imageFactory);
+        } catch (IllegalArgumentException iae) {
+            // expected IllegalArgumentException
+        }
+    }
+
     public void testGetImageAllFlavors() throws IOException {
         ImageFactory imageFactory = new ImageFactory(DataFixture.createEngines());
         String text = DataFixture.SCODE_TEXT;

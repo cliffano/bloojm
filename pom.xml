@@ -11,6 +11,7 @@
     <module>iptocountryplugin</module>
     <module>pagerplugin</module>
     <module>param2ctxplugin</module>
+    <module>previousentriesplugin</module>
     <module>scodeplugin</module>
     <module>trackbackkeywordplugin</module>
   </modules>

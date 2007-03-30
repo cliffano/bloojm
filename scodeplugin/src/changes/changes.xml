@@ -6,6 +6,10 @@
   <body>
     <release version="0.5-SNAPSHOT" date="current">
       <action type="update" dev="cliffano">
+        Replaced image engine class loading in image factory with constructor injection.
+        SCodePlugin passes the image factory to SCodeServlet, instead of passing the image engines.
+      </action>
+      <action type="update" dev="cliffano">
         Set ImageIO caching off during SCodeServlet initialisation. This improves performance and prevents any temporary disk-based image creation.
       </action>
     </release>

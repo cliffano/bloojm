@@ -30,7 +30,6 @@ package com.mbledug.blojsom.plugin.scode;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.Map;
 
 import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
@@ -64,9 +63,9 @@ public class SCodeServlet extends HttpServlet {
      * Number of characters used as SCode.
      */
     private static final int SCODE_LENGTH = 6;
-    
+
     /**
-     * Turns ImageIO caching off once off during servlet initialisation. 
+     * Turns ImageIO caching off once off during servlet initialisation.
      */
     public final void init() {
         ImageIO.setUseCache(false);
@@ -97,12 +96,12 @@ public class SCodeServlet extends HttpServlet {
         httpServletResponse.setHeader("Pragma", "no-cache");
 
         // retrieve the engines configuration
-        Map engines = (Map) httpServletRequest.getSession().getAttribute(
-                SCodePlugin.SESSION_ATTR_ENGINES);
+        ImageFactory imageFactory = (ImageFactory) httpServletRequest
+                .getSession().getAttribute(
+                        SCodePlugin.SESSION_ATTR_IMAGE_FACTORY);
         String flavor = httpServletRequest.getParameter("flavor");
 
         // create a PNG image of the SCode
-        ImageFactory imageFactory = new ImageFactory(engines);
         BufferedImage image = imageFactory.getImage(sCode, flavor);
 
         try {

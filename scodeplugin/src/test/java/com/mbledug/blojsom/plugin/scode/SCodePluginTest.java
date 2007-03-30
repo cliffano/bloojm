@@ -19,17 +19,17 @@ public class SCodePluginTest extends TestCase {
         mDataFixture = new DataFixture();
     }
 
-    public void testCreatingNewSCodePluginWithNullEngineGivesIllegalArgumentException() {
+    public void testCreatingNewSCodePluginWithNullImageFactoryIllegalArgumentException() {
         try {
             SCodePlugin sCodePlugin = new SCodePlugin(null);
-            fail("Shouldn't have been able to construct SCodePlugin with null engines. SCodePlugin: " + sCodePlugin);
+            fail("Shouldn't have been able to construct SCodePlugin with null image factory. SCodePlugin: " + sCodePlugin);
         } catch (IllegalArgumentException iae) {
             // expected IllegalArgumentException
         }
     }
 
     public void testProcessWithPluginDisabledDoesntMarkCommentForDeletion() {
-        SCodePlugin sCodePlugin = new SCodePlugin(DataFixture.createEngines());
+        SCodePlugin sCodePlugin = new SCodePlugin(new ImageFactory(DataFixture.createEngines()));
         try {
             Map properties = new HashMap();
             properties.put(SCodePlugin.PROPERTY_ENABLED, Boolean.FALSE.toString());
@@ -54,7 +54,7 @@ public class SCodePluginTest extends TestCase {
     }
 
     public void testProcessWithBlogCommentDisabledDoesntMarkCommentForDeletion() {
-        SCodePlugin sCodePlugin = new SCodePlugin(DataFixture.createEngines());
+        SCodePlugin sCodePlugin = new SCodePlugin(new ImageFactory(DataFixture.createEngines()));
         try {
             Map properties = new HashMap();
             properties.put(SCodePlugin.PROPERTY_ENABLED, Boolean.TRUE.toString());
@@ -79,7 +79,7 @@ public class SCodePluginTest extends TestCase {
     }
 
     public void testProcessWithNonCommentFormSubmissionDoesntMarkCommentForDeletion() {
-        SCodePlugin sCodePlugin = new SCodePlugin(DataFixture.createEngines());
+        SCodePlugin sCodePlugin = new SCodePlugin(new ImageFactory(DataFixture.createEngines()));
         try {
             Map properties = new HashMap();
             properties.put(SCodePlugin.PROPERTY_ENABLED, Boolean.TRUE.toString());
@@ -104,7 +104,7 @@ public class SCodePluginTest extends TestCase {
     }
 
     public void testProcessWithNullSCodeInputMarksCommentForDeletion() {
-        SCodePlugin sCodePlugin = new SCodePlugin(DataFixture.createEngines());
+        SCodePlugin sCodePlugin = new SCodePlugin(new ImageFactory(DataFixture.createEngines()));
         try {
             Map properties = new HashMap();
             properties.put(SCodePlugin.PROPERTY_ENABLED, Boolean.TRUE.toString());
@@ -129,8 +129,35 @@ public class SCodePluginTest extends TestCase {
         }
     }
 
+    public void testProcessWithNullSCodeInputMarksCommentForDeletionForContextAlreadyContainingCommentMetaData() {
+        SCodePlugin sCodePlugin = new SCodePlugin(new ImageFactory(DataFixture.createEngines()));
+        try {
+            Map properties = new HashMap();
+            properties.put(SCodePlugin.PROPERTY_ENABLED, Boolean.TRUE.toString());
+            Blog blog = new DatabaseBlog();
+            blog.setProperties(properties);
+            blog.setBlogCommentsEnabled(Boolean.TRUE);
+            Map context = new HashMap();
+            context.put(CommentPlugin.BLOJSOM_PLUGIN_COMMENT_METADATA, new HashMap());
+            sCodePlugin.init();
+            sCodePlugin.process(
+                            mDataFixture.createMockHttpServletRequestWithSCodeCheck("y", null, "888888"),
+                            mDataFixture.createMockHttpServletResponse(),
+                            blog,
+                            context,
+                            new Entry[]{});
+            if (!isMarkedForDeletion(context)) {
+                fail("Process with null SCode input should've marked comment for deletion.");
+            }
+            sCodePlugin.cleanup();
+            sCodePlugin.destroy();
+        } catch (PluginException pe) {
+            fail("Unexpected PluginException thrown: " + pe);
+        }
+    }
+
     public void testProcessWithNullSCodeAnswerMarksCommentForDeletion() {
-        SCodePlugin sCodePlugin = new SCodePlugin(DataFixture.createEngines());
+        SCodePlugin sCodePlugin = new SCodePlugin(new ImageFactory(DataFixture.createEngines()));
         try {
             Map properties = new HashMap();
             properties.put(SCodePlugin.PROPERTY_ENABLED, Boolean.TRUE.toString());
@@ -156,7 +183,7 @@ public class SCodePluginTest extends TestCase {
     }
 
     public void testProcessWithSCodeInputNotMatchingSCodeAnswerMarksCommentForDeletion() {
-        SCodePlugin sCodePlugin = new SCodePlugin(DataFixture.createEngines());
+        SCodePlugin sCodePlugin = new SCodePlugin(new ImageFactory(DataFixture.createEngines()));
         try {
             Map properties = new HashMap();
             properties.put(SCodePlugin.PROPERTY_ENABLED, Boolean.TRUE.toString());
@@ -182,7 +209,7 @@ public class SCodePluginTest extends TestCase {
     }
 
     public void testProcessWithSCodeInputMatchingSCodeAnswerDoesntMarkCommentForDeletion() {
-        SCodePlugin sCodePlugin = new SCodePlugin(DataFixture.createEngines());
+        SCodePlugin sCodePlugin = new SCodePlugin(new ImageFactory(DataFixture.createEngines()));
         try {
             Map properties = new HashMap();
             properties.put(SCodePlugin.PROPERTY_ENABLED, Boolean.TRUE.toString());
