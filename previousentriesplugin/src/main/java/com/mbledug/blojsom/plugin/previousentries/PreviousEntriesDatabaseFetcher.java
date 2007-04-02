@@ -77,7 +77,7 @@ public class PreviousEntriesDatabaseFetcher {
      * @throws FetcherException when there's a problem with retrieving the
      *         previous entries from the database
      */
-    public final DatabaseEntry[] loadPreviousEntries(
+    public final Entry[] loadPreviousEntries(
             final Blog blog,
             final Entry entry,
             final int numPreviousEntries) throws FetcherException {
@@ -96,7 +96,7 @@ public class PreviousEntriesDatabaseFetcher {
             tx.commit();
             session.close();
 
-            return (DatabaseEntry[]) previousEntries.toArray(
+            return (Entry[]) previousEntries.toArray(
                     new DatabaseEntry[previousEntries.size()]);
 
         } catch (HibernateException he) {
