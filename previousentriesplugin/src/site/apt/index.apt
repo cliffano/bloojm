@@ -8,4 +8,4 @@ About
 
   PreviousEntriesPlugin is a Blojsom plugin that retrieves previous entries on a permalink view of an entry.
 
-  This plugin has been included in core Blojsom since version 3.2 .
+  This plugin has been included in core Blojsom since version 3.2 (issue {{{http://jira.blojsom.com/jira/browse/BLOJSOM-212}BLOJSOM-212}}).
