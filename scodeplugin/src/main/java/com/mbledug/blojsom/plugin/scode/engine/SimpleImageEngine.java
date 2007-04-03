@@ -35,6 +35,7 @@ import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.Raster;
+import java.io.Serializable;
 
 /**
  * {@link SimpleImageEngine} generates an image with light gray background with
@@ -42,7 +43,12 @@ import java.awt.image.Raster;
  * The image is the original image of WordPress' SCode plugin.
  * @author Cliffano Subagio
  */
-public final class SimpleImageEngine implements ImageEngine {
+public final class SimpleImageEngine implements ImageEngine, Serializable {
+
+    /**
+     * Serial version UID.
+     */
+    private static final long serialVersionUID = 5948765874689745674L;
 
     /**
      * Background color.
