@@ -29,6 +29,7 @@
 package com.mbledug.blojsom.plugin.scode.engine;
 
 import java.awt.Color;
+import java.io.Serializable;
 
 import com.octo.captcha.component.image.backgroundgenerator.
         BackgroundGenerator;
@@ -52,7 +53,12 @@ import com.octo.captcha.image.gimpy.GimpyFactory;
  * shear font, and at random position.
  * @author Cliffano Subagio
  */
-public final class GradientImageEngine extends JCaptchaImageEngine {
+public final class GradientImageEngine extends JCaptchaImageEngine implements Serializable {
+
+    /**
+     * Serial version UID.
+     */
+    private static final long serialVersionUID = 5234274928742397423L;
 
     /**
      * Minimum font size.
