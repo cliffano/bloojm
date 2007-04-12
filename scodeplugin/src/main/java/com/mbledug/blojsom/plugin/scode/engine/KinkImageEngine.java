@@ -28,46 +28,46 @@
  */
 package com.mbledug.blojsom.plugin.scode.engine;
 
-import java.util.Properties;
+import java.awt.image.BufferedImage;
+import java.io.Serializable;
+
+import com.google.code.kaptcha.BackgroundProducer;
+import com.google.code.kaptcha.GimpyEngine;
+import com.google.code.kaptcha.impl.DefaultBackground;
+import com.google.code.kaptcha.impl.WaterRiple;
+import com.google.code.kaptcha.text.WordRenederer;
+import com.google.code.kaptcha.text.impl.DefaultWordRenderer;
 
 /**
- * {@link KaptchaImageEngine} generates image using
- * <a href="http://code.google.com/p/kaptcha/">Kaptcha</a>.
- * Font size and image dimension are optimized for Kaptcha which renders the
- * text on a fixed coordinate (25, 35).
+ * {@link KaptchaImageEngine} generates an image with grey white gradient
+ * background, a rippled black text, with a line in front of the text.
+ * The image will look very similar to the ones on
+ * <a href=https://edit.yahoo.com/config/eval_register?.intl=us&new=1">
+ *   Yahoo!
+ * </a>.
  * @author Cliffano Subagio
  */
-public abstract class KaptchaImageEngine implements ImageEngine {
+public class KinkImageEngine extends KaptchaImageEngine
+        implements Serializable {
 
     /**
-     * Height for Kaptcha-generated image.
+     * Serial version UID.
      */
-    protected static final int IMAGE_HEIGHT = 60;
+    private static final long serialVersionUID = 5349875353537454355L;
 
     /**
-     * Width for Kaptcha-generated image.
+     * {@inheritDoc}
      */
-    protected static final int IMAGE_WIDTH = 130;
+    public final BufferedImage getImage(final String text) {
+        WordRenederer wordRenderer = new DefaultWordRenderer(getProperties());
+        BackgroundProducer backgroundProducer = new DefaultBackground(
+                getProperties());
+        GimpyEngine gimpyEngine = new WaterRiple(getProperties());
 
-    /**
-     * Kaptcha configuration properties.
-     */
-    private Properties mProperties;
-
-    /**
-     * Initialises Kaptcha configuration properties.
-     */
-    public KaptchaImageEngine() {
-        mProperties = new Properties();
-        mProperties.put("cap.font.arr", "Arial,Helvetica,Courier,TimesRoman");
-        mProperties.put("cap.font.size", "32");
-    }
-
-    /**
-     * Gets Kaptcha configuration properties.
-     * @return the configuration properties
-     */
-    protected final Properties getProperties() {
-        return mProperties;
+        BufferedImage image = wordRenderer.renderWord(
+                text, IMAGE_WIDTH, IMAGE_HEIGHT);
+        image = backgroundProducer.addBackground(image);
+        image = gimpyEngine.getDistortedImage(image);
+        return image;
     }
 }
