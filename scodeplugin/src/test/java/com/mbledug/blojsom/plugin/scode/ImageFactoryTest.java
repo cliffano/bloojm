@@ -22,6 +22,8 @@ public class ImageFactoryTest extends TestCase {
     public void testGetImageAllFlavors() throws IOException {
         ImageFactory imageFactory = new ImageFactory(DataFixture.createEngines());
         String text = DataFixture.SCODE_TEXT;
+        writePngImageFile("kink.png",
+                imageFactory.getImage(text, "kink"));
         writePngImageFile("simple.png",
                 imageFactory.getImage(text, "simple"));
         writePngImageFile("gradient.png",

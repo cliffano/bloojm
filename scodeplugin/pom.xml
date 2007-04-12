@@ -71,6 +71,12 @@
       <version>3.8.1</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>kaptcha</groupId>
+      <artifactId>kaptcha</artifactId>
+      <version>1.1</version>
+      <scope>compile</scope>
+    </dependency>
   </dependencies>
   <reporting>
     <plugins>

@@ -13,17 +13,19 @@ import org.jmock.cglib.MockObjectTestCase;
 
 import com.mbledug.blojsom.plugin.scode.engine.FunkyImageEngine;
 import com.mbledug.blojsom.plugin.scode.engine.GradientImageEngine;
+import com.mbledug.blojsom.plugin.scode.engine.KaptchaImageEngine;
 import com.mbledug.blojsom.plugin.scode.engine.SimpleImageEngine;
 
 public class DataFixture extends MockObjectTestCase {
 
-    static final String SCODE_TEXT = "898989";
+    static final String SCODE_TEXT = "456789";
 
     static Map createEngines() {
         Map engines = new HashMap();
         engines.put("simple", new SimpleImageEngine());
         engines.put("gradient", new GradientImageEngine());
         engines.put("funky", new FunkyImageEngine());
+        engines.put("kink", new KaptchaImageEngine());
         return engines;
     }
 

@@ -53,7 +53,8 @@ import com.octo.captcha.image.gimpy.GimpyFactory;
  * and shear font, and at random position.
  * @author Cliffano Subagio
  */
-public final class FunkyImageEngine extends JCaptchaImageEngine implements Serializable {
+public final class FunkyImageEngine extends JCaptchaImageEngine
+        implements Serializable {
 
     /**
      * Serial version UID.

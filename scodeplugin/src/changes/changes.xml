@@ -5,6 +5,9 @@
   </properties>
   <body>
     <release version="0.5-SNAPSHOT" date="current">
+      <action type="add" dev="cliffano">
+        Introduced KaptchaImageEngine using Kaptcha (was Simple Captcha).
+      </action>
       <action type="update" dev="cliffano">
         Replaced image engine class loading in image factory with constructor injection.
         SCodePlugin passes the image factory to SCodeServlet, instead of passing the image engines.

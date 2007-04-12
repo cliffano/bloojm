@@ -53,7 +53,8 @@ import com.octo.captcha.image.gimpy.GimpyFactory;
  * shear font, and at random position.
  * @author Cliffano Subagio
  */
-public final class GradientImageEngine extends JCaptchaImageEngine implements Serializable {
+public final class GradientImageEngine extends JCaptchaImageEngine
+        implements Serializable {
 
     /**
      * Serial version UID.
