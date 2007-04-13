@@ -22,14 +22,18 @@ public class ImageFactoryTest extends TestCase {
     public void testGetImageAllFlavors() throws IOException {
         ImageFactory imageFactory = new ImageFactory(DataFixture.createEngines());
         String text = DataFixture.SCODE_TEXT;
-        writePngImageFile("kink.png",
-                imageFactory.getImage(text, "kink"));
         writePngImageFile("simple.png",
                 imageFactory.getImage(text, "simple"));
         writePngImageFile("gradient.png",
                 imageFactory.getImage(text, "gradient"));
         writePngImageFile("funky.png",
                 imageFactory.getImage(text, "funky"));
+        writePngImageFile("kink.png",
+                imageFactory.getImage(text, "kink"));
+        writePngImageFile("fisheye.png",
+                imageFactory.getImage(text, "fisheye"));
+        writePngImageFile("shadow.png",
+                imageFactory.getImage(text, "shadow"));
         writePngImageFile("default.png",
                 imageFactory.getImage(text, null));
     }

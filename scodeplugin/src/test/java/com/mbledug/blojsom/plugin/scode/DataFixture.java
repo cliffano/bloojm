@@ -11,9 +11,11 @@ import org.blojsom.plugin.comment.CommentPlugin;
 import org.jmock.Mock;
 import org.jmock.cglib.MockObjectTestCase;
 
+import com.mbledug.blojsom.plugin.scode.engine.FishEyeImageEngine;
 import com.mbledug.blojsom.plugin.scode.engine.FunkyImageEngine;
 import com.mbledug.blojsom.plugin.scode.engine.GradientImageEngine;
 import com.mbledug.blojsom.plugin.scode.engine.KinkImageEngine;
+import com.mbledug.blojsom.plugin.scode.engine.ShadowImageEngine;
 import com.mbledug.blojsom.plugin.scode.engine.SimpleImageEngine;
 
 public class DataFixture extends MockObjectTestCase {
@@ -26,6 +28,8 @@ public class DataFixture extends MockObjectTestCase {
         engines.put("gradient", new GradientImageEngine());
         engines.put("funky", new FunkyImageEngine());
         engines.put("kink", new KinkImageEngine());
+        engines.put("fisheye", new FishEyeImageEngine());
+        engines.put("shadow", new ShadowImageEngine());
         return engines;
     }
 

@@ -28,7 +28,14 @@
  */
 package com.mbledug.blojsom.plugin.scode.engine;
 
+import java.awt.image.BufferedImage;
 import java.util.Properties;
+
+import com.google.code.kaptcha.BackgroundProducer;
+import com.google.code.kaptcha.GimpyEngine;
+import com.google.code.kaptcha.impl.DefaultBackground;
+import com.google.code.kaptcha.text.WordRenederer;
+import com.google.code.kaptcha.text.impl.DefaultWordRenderer;
 
 /**
  * {@link KaptchaImageEngine} generates image using
@@ -61,6 +68,28 @@ public abstract class KaptchaImageEngine implements ImageEngine {
         mProperties = new Properties();
         mProperties.put("cap.font.arr", "Arial,Helvetica,Courier,TimesRoman");
         mProperties.put("cap.font.size", "32");
+    }
+
+    /**
+     * Provides GimpyEngine implementation.
+     * @return the gimpy engine
+     */
+    protected abstract GimpyEngine getGimpyEngine();
+
+    /**
+     * {@inheritDoc}
+     */
+    public final BufferedImage getImage(final String text) {
+        WordRenederer wordRenderer = new DefaultWordRenderer(getProperties());
+        BackgroundProducer backgroundProducer = new DefaultBackground(
+                getProperties());
+        GimpyEngine gimpyEngine = getGimpyEngine();
+
+        BufferedImage image = wordRenderer.renderWord(
+                text, IMAGE_WIDTH, IMAGE_HEIGHT);
+        image = gimpyEngine.getDistortedImage(image);
+        image = backgroundProducer.addBackground(image);
+        return image;
     }
 
     /**

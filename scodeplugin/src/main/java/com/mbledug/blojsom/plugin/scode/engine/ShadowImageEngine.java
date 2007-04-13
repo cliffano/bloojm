@@ -31,18 +31,14 @@ package com.mbledug.blojsom.plugin.scode.engine;
 import java.io.Serializable;
 
 import com.google.code.kaptcha.GimpyEngine;
-import com.google.code.kaptcha.impl.WaterRiple;
+import com.google.code.kaptcha.impl.ShadowGimpy;
 
 /**
- * {@link KinkImageEngine} generates an image with grey white gradient
- * background, a rippled black text, with a line in front of the text.
- * The image will look very similar to the ones on
- * <a href=https://edit.yahoo.com/config/eval_register?.intl=us&new=1">
- *   Yahoo!
- * </a>.
+ * {@link ShadowImageEngine} generates an image similar to
+ * {@link KinkImageEngine} but with a drop shadow below the text.
  * @author Cliffano Subagio
  */
-public class KinkImageEngine extends KaptchaImageEngine
+public class ShadowImageEngine extends KaptchaImageEngine
         implements Serializable {
 
     /**
@@ -54,6 +50,8 @@ public class KinkImageEngine extends KaptchaImageEngine
      * {@inheritDoc}
      */
     public final GimpyEngine getGimpyEngine() {
-        return new WaterRiple(getProperties());
+        GimpyEngine gimpyEngine = new ShadowGimpy();
+        gimpyEngine.setProperties(getProperties());
+        return gimpyEngine;
     }
 }

@@ -53,7 +53,7 @@ import com.octo.captcha.image.gimpy.GimpyFactory;
  * shear font, and at random position.
  * @author Cliffano Subagio
  */
-public final class GradientImageEngine extends JCaptchaImageEngine
+public class GradientImageEngine extends JCaptchaImageEngine
         implements Serializable {
 
     /**
@@ -86,7 +86,7 @@ public final class GradientImageEngine extends JCaptchaImageEngine
     /**
      * {@inheritDoc}
      */
-    public ImageCaptchaFactory getFactory(final String text) {
+    public final ImageCaptchaFactory getFactory(final String text) {
 
         WordGenerator wordGenerator = new DummyWordGenerator(text);
         TextPaster textPaster = new RandomTextPaster(

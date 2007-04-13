@@ -6,7 +6,7 @@
   <body>
     <release version="0.5-SNAPSHOT" date="current">
       <action type="add" dev="cliffano">
-        Introduced KaptchaImageEngine using Kaptcha (was Simple Captcha) library, and KinkImageEngine.
+        Introduced KaptchaImageEngine using Kaptcha (was Simple Captcha) library, with 3 new flavours from KinkImageEngine, FishEyeImageEngine, and ShadowImageEngine.
       </action>
       <action type="update" dev="cliffano">
         Replaced image engine class loading in image factory with constructor injection.

@@ -43,7 +43,7 @@ import java.io.Serializable;
  * The image is the original image of WordPress' SCode plugin.
  * @author Cliffano Subagio
  */
-public final class SimpleImageEngine implements ImageEngine, Serializable {
+public class SimpleImageEngine implements ImageEngine, Serializable {
 
     /**
      * Serial version UID.
@@ -91,7 +91,7 @@ public final class SimpleImageEngine implements ImageEngine, Serializable {
     /**
      * {@inheritDoc}
      */
-    public BufferedImage getImage(final String text) {
+    public final BufferedImage getImage(final String text) {
 
         BufferedImage image = new BufferedImage(
                 IMAGE_WIDTH, IMAGE_HEIGHT, BufferedImage.TYPE_INT_RGB);
