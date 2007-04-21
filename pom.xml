@@ -7,6 +7,7 @@
   <modules>
     <module>blogtimesplugin</module>
     <module>galleryrplugin</module>
+    <module>gatekeeperplugin</module>
     <module>gravatarplugin</module>
     <module>iptocountryplugin</module>
     <module>pagerplugin</module>
@@ -31,6 +32,12 @@
       </notifier>
     </notifiers>
   </ciManagement>
+  <distributionManagement>
+    <site>
+      <id>localhost</id>
+      <url>file:///E:\tazmania\tomcat\webapps\mbledug\projects\blojsom</url>
+    </site>
+  </distributionManagement>
   <scm>
     <connection>
       scm:svn:http://bloojm.googlecode.com/svn/trunk/
