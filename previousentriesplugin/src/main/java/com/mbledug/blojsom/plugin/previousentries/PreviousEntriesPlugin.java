@@ -99,7 +99,8 @@ public class PreviousEntriesPlugin implements Plugin {
      * @param blog blog instance
      * @param context context
      * @param entries blog entries retrieved for the particular request
-     * @return entries with Gravatar ID added to the comments
+     * @return original entries when there are more than one entry, and an entry
+     * 	with previous entries when there's only one entry
      * @throws PluginException when there's an error processing the blog entries
      */
     public final Entry[] process(
