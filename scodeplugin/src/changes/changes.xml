@@ -4,7 +4,7 @@
     <title>Changes</title>
   </properties>
   <body>
-    <release version="0.5-SNAPSHOT" date="current">
+    <release version="0.5" date="02-05-2007">
       <action type="add" dev="cliffano">
         Introduced KaptchaImageEngine using Kaptcha (was Simple Captcha) library, with 3 new flavours from KinkImageEngine, FishEyeImageEngine, and ShadowImageEngine.
       </action>
