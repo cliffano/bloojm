@@ -59,10 +59,10 @@ public class BlogTimesServlet extends HttpServlet {
     private static final Log LOG = LogFactory.getLog(BlogTimesServlet.class);
 
     /**
-     * Writes servlet init message.
+     * Turns ImageIO caching off once off during servlet initialisation.
      */
     public final void init() {
-        LOG.info("Initialising BlogTimesServlet.");
+        ImageIO.setUseCache(false);
     }
 
     /**
