@@ -8,6 +8,7 @@
     <module>blogtimesplugin</module>
     <module>galleryrplugin</module>
     <module>gravatarplugin</module>
+    <module>imnotificationplugin</module>
     <module>iptocountryplugin</module>
     <module>pagerplugin</module>
     <module>param2ctxplugin</module>
