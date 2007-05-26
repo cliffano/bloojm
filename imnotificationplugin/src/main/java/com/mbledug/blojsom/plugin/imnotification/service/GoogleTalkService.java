@@ -28,6 +28,9 @@
  */
 package com.mbledug.blojsom.plugin.imnotification.service;
 
+import java.util.Iterator;
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jivesoftware.smack.GoogleTalkConnection;
@@ -83,24 +86,24 @@ public class GoogleTalkService implements IMService {
     /**
      * {@inheritDoc}
      */
-    public final void send(final String[] recipients, final String text) {
+    public final void send(final List recipients, final String text) {
 
-        for (int i = 0; i < recipients.length; i++) {
-            LOG.info("recipients[i]:" + recipients[i]);
-            try {
+        try {
+            for (Iterator it = recipients.iterator(); it.hasNext();) {
+                String recipient = (String) it.next();
+
                 openConnection();
-
                 mConnection.login(mUsername, mPassword);
-                mConnection.createChat(recipients[i]).sendMessage(text);
+                mConnection.createChat(recipient).sendMessage(text);
 
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("Message with text: " + text + ", has been sent "
-                            + "to recipient: " + recipients[i]);
+                            + "to recipient: " + recipient);
                 }
-            } catch (XMPPException xmppe) {
-                LOG.error("Unable to send GoogleTalk message to recipient: "
-                        + recipients[i], xmppe);
             }
+        } catch (XMPPException xmppe) {
+            LOG.error("Unable to send GoogleTalk message to recipients: "
+                    + recipients, xmppe);
         }
     }
 

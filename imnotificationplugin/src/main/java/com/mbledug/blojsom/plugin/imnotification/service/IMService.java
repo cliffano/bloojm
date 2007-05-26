@@ -28,6 +28,8 @@
  */
 package com.mbledug.blojsom.plugin.imnotification.service;
 
+import java.util.List;
+
 
 /**
  * Instant Messaging service used to send notification message.
@@ -40,5 +42,5 @@ public interface IMService {
      * @param recipients the recipients
      * @param text the text message
      */
-    void send(final String[] recipients, final String text);
+    void send(final List recipients, final String text);
 }

@@ -1,5 +1,8 @@
 package com.mbledug.blojsom.plugin.imnotification.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import junit.framework.TestCase;
 
 public class GoogleTalkServiceTest extends TestCase {
@@ -15,8 +18,10 @@ public class GoogleTalkServiceTest extends TestCase {
 
     public void testSendViaLiveService() {
         GoogleTalkService service = new GoogleTalkService("bloojm", "p4ssw0rd");
+        List recipients = new ArrayList();
+        recipients.add("bloojm@gmail.com");
         try {
-            service.send(new String[]{"bloojm@gmail.com"}, "unit test message");
+            service.send(recipients, "unit test message");
         } catch (Exception e) {
             fail("Exception shouldn't have been thrown.");
         }

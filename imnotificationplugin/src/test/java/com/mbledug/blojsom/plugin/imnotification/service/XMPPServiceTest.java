@@ -1,5 +1,8 @@
 package com.mbledug.blojsom.plugin.imnotification.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import junit.framework.TestCase;
 
 public class XMPPServiceTest extends TestCase {
@@ -24,8 +27,10 @@ public class XMPPServiceTest extends TestCase {
 
     public void testSendViaLiveService() {
         XMPPService service = new XMPPService("jabber.org", new Integer("5222"), "bloojm", "password");
+        List recipients = new ArrayList();
+        recipients.add("bloojm@jabber.org");
         try {
-            service.send(new String[]{"bloojm@jabber.org"}, "unit test message");
+            service.send(recipients, "unit test message");
         } catch (Exception e) {
             fail("Exception shouldn't have been thrown.");
         }
@@ -33,8 +38,10 @@ public class XMPPServiceTest extends TestCase {
 
     public void testSendViaLiveServiceWithDefaultPort() {
         XMPPService service = new XMPPService("jabber.org", null, "bloojm", "password");
+        List recipients = new ArrayList();
+        recipients.add("bloojm@jabber.org");
         try {
-            service.send(new String[]{"bloojm@jabber.org"}, "unit test message");
+            service.send(recipients, "unit test message");
         } catch (Exception e) {
             fail("Exception shouldn't have been thrown.");
         }

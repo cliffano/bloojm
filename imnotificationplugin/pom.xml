@@ -58,7 +58,7 @@
       <groupId>jivesoftware</groupId>
       <artifactId>smackx</artifactId>
       <version>2.2.1</version>
-      <scope>runtime</scope>
+      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>jmock</groupId>

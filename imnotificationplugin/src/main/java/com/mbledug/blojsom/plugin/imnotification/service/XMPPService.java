@@ -28,11 +28,14 @@
  */
 package com.mbledug.blojsom.plugin.imnotification.service;
 
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Message;
+import org.jivesoftware.smackx.MultipleRecipientManager;
 
 /**
  * {@link XMPPService} sends notification message via
@@ -105,29 +108,26 @@ public class XMPPService implements IMService {
     /**
      * {@inheritDoc}
      */
-    public final void send(final String[] recipients, final String text) {
+    public final void send(final List recipients, final String text) {
 
         Message message = new Message();
         message.setType(Message.Type.CHAT);
         message.setBody(text);
         message.setThread(MESSAGE_THREAD);
 
-        for (int i = 0; i < recipients.length; i++) {
-            LOG.info("recipients[i]:" + recipients[i]);
-            try {
-                message.setTo(recipients[i]);
-                openConnection();
-                mConnection.login(mUsername, mPassword);
-                mConnection.sendPacket(message);
+        try {
+            openConnection();
+            mConnection.login(mUsername, mPassword);
+            MultipleRecipientManager.send(
+                    mConnection, message, recipients, null, null);
 
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Message with text: " + text + ", has been sent "
-                            + "to recipient: " + recipients[i]);
-                }
-            } catch (XMPPException xmppe) {
-                LOG.error("Unable to send XMPP message to recipient: "
-                        + recipients[i], xmppe);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Message with text: " + text + ", has been sent "
+                        + "to recipients: " + recipients);
             }
+        } catch (XMPPException xmppe) {
+            LOG.error("Unable to send XMPP message to recipients: "
+                    + recipients, xmppe);
         }
     }
 

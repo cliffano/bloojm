@@ -29,6 +29,7 @@
 package com.mbledug.blojsom.plugin.imnotification;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -164,11 +165,10 @@ public class IMNotificationPlugin implements Plugin, Listener {
             for (Iterator it = mServices.keySet().iterator(); it.hasNext();) {
                 String id = (String) it.next();
                 IMService service = (IMService) mServices.get(id);
-                String[] recipients = BlojsomUtils.parseCommaList(
+                List recipients = BlojsomUtils.csvToList(
                         blog.getProperty(
                         PROPERTY_RECIPIENTS_PREFIX + id));
                 if (recipients != null) {
-                    LOG.info("recipients:" + recipients);
                     String message = new MessageFactory().getMessage(event);
                     service.send(recipients, message);
                 }
