@@ -4,7 +4,7 @@
   <groupId>blojsom</groupId>
   <artifactId>imnotificationplugin</artifactId>
   <packaging>jar</packaging>
-  <version>0.1</version>
+  <version>0.1-SNAPSHOT</version>
   <description>
     Blojsom plugin that sends notification messages to Instant Messaging
     application upon the creation of new entry, comment, trackback, and pingback.
