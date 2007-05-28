@@ -10,6 +10,7 @@
     <module>gravatarplugin</module>
     <module>imnotificationplugin</module>
     <module>iptocountryplugin</module>
+    <module>markdownjplugin</module>
     <module>pagerplugin</module>
     <module>param2ctxplugin</module>
     <module>previousentriesplugin</module>
