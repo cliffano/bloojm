@@ -44,11 +44,7 @@ import org.blojsom.event.EventBroadcaster;
 import org.blojsom.event.Listener;
 import org.blojsom.plugin.Plugin;
 import org.blojsom.plugin.PluginException;
-import org.blojsom.plugin.admin.event.EntryAddedEvent;
 import org.blojsom.plugin.admin.event.EntryEvent;
-import org.blojsom.plugin.comment.event.CommentAddedEvent;
-import org.blojsom.plugin.pingback.event.PingbackAddedEvent;
-import org.blojsom.plugin.trackback.event.TrackbackAddedEvent;
 import org.blojsom.util.BlojsomUtils;
 
 import com.mbledug.blojsom.plugin.imnotification.message.MessageFactory;
@@ -74,6 +70,11 @@ public class IMNotificationPlugin implements Plugin, Listener {
         "imnotification-recipients-";
 
     /**
+     * Message factory.
+     */
+    private MessageFactory mMessageFactory;
+
+    /**
      * Event broadcaster.
      */
     private EventBroadcaster mEventBroadcaster;
@@ -91,6 +92,7 @@ public class IMNotificationPlugin implements Plugin, Listener {
     public IMNotificationPlugin(final Map services) {
         mServices = services;
         mEventBroadcaster = null;
+        mMessageFactory = new MessageFactory();
     }
 
     /**
@@ -155,10 +157,7 @@ public class IMNotificationPlugin implements Plugin, Listener {
      */
     public final void handleEvent(final Event event) {
 
-        if (event instanceof EntryAddedEvent
-                || event instanceof CommentAddedEvent
-                || event instanceof TrackbackAddedEvent
-                || event instanceof PingbackAddedEvent) {
+        if (mMessageFactory.isSupported(event) && event instanceof EntryEvent) {
 
             Blog blog = ((EntryEvent) event).getBlog();
 

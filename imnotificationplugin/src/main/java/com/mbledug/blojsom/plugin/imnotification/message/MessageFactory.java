@@ -28,11 +28,13 @@
  */
 package com.mbledug.blojsom.plugin.imnotification.message;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.blojsom.event.Event;
-import org.blojsom.plugin.admin.event.EntryAddedEvent;
-import org.blojsom.plugin.comment.event.CommentAddedEvent;
-import org.blojsom.plugin.pingback.event.PingbackAddedEvent;
-import org.blojsom.plugin.trackback.event.TrackbackAddedEvent;
 
 
 /**
@@ -43,6 +45,83 @@ import org.blojsom.plugin.trackback.event.TrackbackAddedEvent;
 public class MessageFactory {
 
     /**
+     * Logger for {@link MessageFactory}.
+     */
+    private static final Log LOG = LogFactory.getLog(MessageFactory.class);
+
+    /**
+     * A map of supported events where the key-value pair consists of
+     * a String value of the supported event class name
+     * and
+     * its corresponding message creator instance.
+     */
+    private Map mSupportedEvents;
+
+    /**
+     * Creates an instance of {@link MessageFactory}, initialises supported
+     * events.
+     */
+    public MessageFactory() {
+        mSupportedEvents = new HashMap();
+        mSupportedEvents.put(
+                "org.blojsom.plugin.comment.event.CommentAddedEvent",
+                new CommentMessageCreator());
+        mSupportedEvents.put(
+                "org.blojsom.plugin.admin.event.EntryAddedEvent",
+                new EntryMessageCreator());
+        mSupportedEvents.put(
+                "org.blojsom.plugin.trackback.event.TrackbackAddedEvent",
+                new TrackbackMessageCreator());
+        mSupportedEvents.put(
+                "org.blojsom.plugin.pingback.event.PingbackAddedEvent",
+                new PingbackMessageCreator());
+    }
+
+    /**
+     * Checks whether the event is supported by this factory.
+     * @param event the event to check
+     * @return true if event is supported, false otherwise
+     */
+    public final boolean isSupported(final Event event) {
+        boolean isSupportedEvent = false;
+        for (Iterator it = mSupportedEvents.keySet().iterator();
+                it.hasNext();) {
+            String className = (String) it.next();
+            try {
+                if (Class.forName(className).isInstance(event)) {
+                    isSupportedEvent = true;
+                    break;
+                }
+            } catch (ClassNotFoundException cnfe) {
+                LOG.error("Class: " + className + ", does not exist.", cnfe);
+            }
+        }
+        return isSupportedEvent;
+    }
+
+    /**
+     * Gets the {@link MessageCreator} for a specified event.
+     * @param event the event
+     * @return the message creator for the event
+     */
+    private MessageCreator getMessageCreator(final Event event) {
+        MessageCreator creator = null;
+        for (Iterator it = mSupportedEvents.keySet().iterator();
+                it.hasNext();) {
+            String className = (String) it.next();
+            try {
+                if (Class.forName(className).isInstance(event)) {
+                    creator = (MessageCreator) mSupportedEvents.get(className);
+                    break;
+                }
+            } catch (ClassNotFoundException cnfe) {
+                LOG.error("Class: " + className + ", does not exist.", cnfe);
+            }
+        }
+        return creator;
+    }
+
+    /**
      * Gets the message based on the event. An {@link IllegalArgumentException}
      * will be thrown for unsupported event.
      * @param event the event to base the message on
@@ -51,17 +130,11 @@ public class MessageFactory {
     public final String getMessage(final Event event) {
 
         MessageCreator creator;
-        if (event instanceof EntryAddedEvent) {
-            creator = new EntryMessageCreator();
-        } else if (event instanceof CommentAddedEvent) {
-            creator = new CommentMessageCreator();
-        } else if (event instanceof TrackbackAddedEvent) {
-            creator = new TrackbackMessageCreator();
-        } else if (event instanceof PingbackAddedEvent) {
-            creator = new PingbackMessageCreator();
-        } else {
+        if (!isSupported(event)) {
             throw new IllegalArgumentException("Unable to create message "
-                    + "for unsupported event: " + event);
+            + "for unsupported event: " + event);
+        } else {
+            creator = getMessageCreator(event);
         }
         return creator.getMessage(event);
     }
