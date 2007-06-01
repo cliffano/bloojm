@@ -4,7 +4,7 @@
     <title>Changes</title>
   </properties>
   <body>
-    <release version="0.1-SNAPSHOT" date="current">
+    <release version="0.1" date="current">
       <action type="add" dev="cliffano">
         Initial release.
       </action>
