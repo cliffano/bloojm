@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<document>
+  <properties>
+    <title>Changes</title>
+  </properties>
+  <body>
+    <release version="0.3-SNAPSHOT" date="current">
+      <action type="update" dev="cliffano">
+        Set ImageIO caching off during BlogTimesServlet initialisation. This improves performance and prevents any temporary disk-based image creation.
+      </action>
+    </release>
+    <release version="0.2" date="10-02-2007">
+      <action type="update" dev="cliffano">
+        Updated plugin implementation to work with Blojsom 3.
+        Refactored implementation from BlogTimesPlugin 0.1, added unit tests.
+      </action>
+    </release>
+    <release version="0.1" date="19-06-2005">
+      <action type="add" dev="cliffano">
+        Initial release.
+      </action>
+    </release>
+  </body>
+</document>

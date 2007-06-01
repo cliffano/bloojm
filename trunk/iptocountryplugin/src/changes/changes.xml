@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<document>
+  <properties>
+    <title>Changes</title>
+  </properties>
+  <body>
+    <release version="0.3" date="17-02-2007">
+      <action type="update" dev="cliffano">
+        Updated plugin implementation to work with Blojsom 3, added unit tests.
+        Changed country data storage to use the database. Added configurable
+        ignored IP addresses.
+      </action>
+    </release>
+    <release version="0.2" date="03-09-2005">
+      <action type="update" dev="cliffano">
+        Improved country information retrieval by checking only unique IP
+        addresses. Improved file access by reading the file once per request,
+        instead of per comment.
+      </action>
+    </release>
+    <release version="0.1" date="13-06-2005">
+      <action type="add" dev="cliffano">
+        Initial release.
+      </action>
+    </release>
+  </body>
+</document>

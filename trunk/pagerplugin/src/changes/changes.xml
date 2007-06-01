@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<document>
+  <properties>
+    <title>Changes</title>
+  </properties>
+  <body>
+    <release version="0.3" date="07-02-2007">
+      <action type="update" dev="cliffano">
+        Updated plugin implementation to work with Blojsom 3.
+        Moved current page and total pages calculation from Velocity template
+        to Plugin class. Renamed FilterPlugin to PagerPlugin. Added unit tests.
+      </action>
+    </release>
+    <release version="0.2" date="28-02-2005">
+      <action type="update" dev="cliffano">
+        Added support for Velocity template.
+      </action>
+    </release>
+    <release version="0.1" date="22-09-2004">
+      <action type="add" dev="cliffano">
+        Initial release.
+      </action>
+    </release>
+  </body>
+</document>
