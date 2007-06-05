@@ -4,9 +4,11 @@
   <groupId>blojsom</groupId>
   <artifactId>gatekeeperplugin</artifactId>
   <packaging>jar</packaging>
-  <version>0.1-SNAPSHOT</version>
+  <version>0.1</version>
   <description>
-    Blojsom plugin that provides a set of question and answer used as TBA
+    Blojsom plugin that fights comment spam by displaying a random question on the
+    form which should be answered by the commenter. Questions can be configured
+    from Blojsom context file, from the database, and from blog properties.
   </description>
   <inceptionYear>2007</inceptionYear>
   <name>GateKeeper Plugin</name>

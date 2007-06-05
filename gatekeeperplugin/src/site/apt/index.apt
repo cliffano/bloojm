@@ -6,7 +6,10 @@
 
 About
 
-  GateKeeperPlugin is a Blojsom plugin that TBA.
+  GateKeeperPlugin is a Blojsom plugin that fights comment spam by displaying a
+  random question on the form which should be answered by the commenter.
+  Questions can be configured from Blojsom context file, from the database, and
+  from blog properties.
 
 *--------------------*------------*------------------------------------------------------------------------------------------------------*-------------------------------------------------------------------------------------------------------------------*
 || GateKeeper Plugin || Blojsom   || Documentation                                                                                       || Downloads                                                                                                       ||

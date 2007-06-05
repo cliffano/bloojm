@@ -43,7 +43,10 @@ import org.blojsom.plugin.PluginException;
 import org.blojsom.plugin.comment.CommentPlugin;
 
 /**
- * {@link GateKeeperPlugin} TBA.
+ * {@link GateKeeperPlugin} fights comment spam by displaying a random question
+ * on the form which should be answered by the commenter. Questions can be
+ * configured from Blojsom context file, from the database, and from blog
+ * properties.
  * @author Cliffano Subagio
  */
 public class GateKeeperPlugin implements Plugin {
