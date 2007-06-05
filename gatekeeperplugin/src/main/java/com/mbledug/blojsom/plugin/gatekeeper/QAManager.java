@@ -50,12 +50,12 @@ public class QAManager {
     private static final int RANDOM_MULTIPLIER = 10000;
 
     /**
-     * An array of {@link BlojsomQAProvider}s.
+     * A list of {@link BlojsomQAProvider}s.
      */
     private List mBlojsomQAProviders;
 
     /**
-     * An array of {@link BlogQAProvider}s.
+     * A list of {@link BlogQAProvider}s.
      */
     private List mBlogQAProviders;
 

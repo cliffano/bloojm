@@ -1,7 +1,9 @@
 package com.mbledug.blojsom.plugin.gatekeeper;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -10,11 +12,29 @@ import javax.servlet.http.HttpSession;
 import org.blojsom.plugin.comment.CommentPlugin;
 import org.jmock.Mock;
 import org.jmock.cglib.MockObjectTestCase;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import com.mbledug.blojsom.plugin.gatekeeper.provider.BlogQAProvider;
 import com.mbledug.blojsom.plugin.gatekeeper.provider.BlojsomQAProvider;
+import com.mbledug.blojsom.plugin.gatekeeper.provider.DatabaseBlojsomQAProvider;
 
 public class DataFixture extends MockObjectTestCase {
+
+    public JdbcTemplate createMockJdbcTemplate(QA questionAnswer) {
+        Map row = new HashMap();
+        row.put(DatabaseBlojsomQAProvider.COLUMN_QUESTION, questionAnswer.getQuestion());
+        row.put(DatabaseBlojsomQAProvider.COLUMN_ANSWER, questionAnswer.getAnswer());
+
+        List result = new ArrayList();
+        result.add(row);
+
+        Mock mockJdbcTemplate = mock(JdbcTemplate.class);
+        mockJdbcTemplate
+                .expects(once())
+                .method("queryForList")
+                .will(returnValue(result));
+        return (JdbcTemplate) mockJdbcTemplate.proxy();
+    }
 
     HttpSession createMockHttpSessionWithSetAttribute() {
         Mock mockHttpSession = mock(HttpSession.class);
