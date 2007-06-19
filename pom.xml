@@ -24,7 +24,7 @@
   <name>Bloojm</name>
   <ciManagement>
     <system>continuum</system>
-    <url>http://discostu:8888/continuum</url>
+    <url>http://disco-stu:8888/continuum</url>
     <notifiers>
       <notifier>
         <type>mail</type>
@@ -37,7 +37,7 @@
   <distributionManagement>
     <site>
       <id>localhost</id>
-      <url>file:///E:\tazmania\tomcat\webapps\mbledug\projects\blojsom</url>
+      <url>file:///home/cliffano/dev/apache-tomcat-6.0.13/webapps/mbledug/projects/blojsom</url>
     </site>
   </distributionManagement>
   <scm>
