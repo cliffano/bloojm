@@ -126,9 +126,12 @@
 #macro ( mainMenu $menus )
   #foreach( $menu in $menus )
     #if ( $menu.name )
-    <h5>$menu.name</h5>
+    <h5>
+      <img src="/images/maven${menu.name.replace(" ", "")}.png" height="16" width="16" alt="$menu.name Icon"/>
+      $menu.name
+    </h5>
     #end
-    <ul>
+    <ul class="listbar">
       #foreach( $item in $menu.items )
         #menuItem( $item )
       #end
@@ -304,17 +307,19 @@
         </ul>
       </div>
       <div id="body">
+        <div id="content">
+          $bodyContent
+        </div>
         <div id="menu">
           #mainMenu( $decoration.body.menus )
+        </div>
+        <div id="asides">
           <p>
             <a href="http://maven.apache.org/" title="Built by Maven" id="poweredBy">
               <img alt="Built by Maven" src="$mbledugSite/images/projects/maven-feather.png"></img>
             </a>
           </p>
           #publishDate( "left" $decoration.publishDate $decoration.version )
-        </div>
-        <div id="content">
-          $bodyContent
         </div>
       </div>
       <div id="footer">

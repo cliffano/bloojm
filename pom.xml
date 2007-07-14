@@ -22,6 +22,32 @@
   <description>A collection of Blojsom plugins maintained by Mbledug.</description>
   <inceptionYear>2006</inceptionYear>
   <name>Bloojm</name>
+  <issueManagement>
+    <system>JIRA</system>
+    <url>http://jira.blojsom.com</url>
+  </issueManagement>
+  <mailingLists>
+    <mailingList>
+      <name>blojsom-users</name>
+      <subscribe>https://lists.sourceforge.net/lists/listinfo/blojsom-users</subscribe>
+      <unsubscribe>https://lists.sourceforge.net/lists/listinfo/blojsom-users</unsubscribe>
+      <post>blojsom-users@lists.sourceforge.net</post>
+      <archive>http://sourceforge.net/mailarchive/forum.php?forum_name=blojsom-users</archive>
+      <otherArchives>
+        <otherArchive>http://www.nabble.com/Blojsom---User-f2401.html</otherArchive>
+      </otherArchives>
+    </mailingList>
+    <mailingList>
+      <name>blojsom-developers</name>
+      <subscribe>https://lists.sourceforge.net/lists/listinfo/blojsom-developers</subscribe>
+      <unsubscribe>https://lists.sourceforge.net/lists/listinfo/blojsom-developers</unsubscribe>
+      <post>blojsom-developers@lists.sourceforge.net</post>
+      <archive>http://sourceforge.net/mailarchive/forum.php?forum_name=blojsom-developers</archive>
+      <otherArchives>
+        <otherArchive>http://www.nabble.com/Blojsom---Dev-f2402.html</otherArchive>
+      </otherArchives>
+    </mailingList>
+  </mailingLists>
   <ciManagement>
     <system>continuum</system>
     <url>http://disco-stu:8888/continuum</url>
