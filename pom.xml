@@ -19,7 +19,7 @@
     <module>trackbackkeywordplugin</module>
   </modules>
   <version>0.1</version>
-  <description>A collection of Blojsom plugins maintained by Mbledug.</description>
+  <description>A collection of Blojsom plugins contributed by Qoqoa.</description>
   <inceptionYear>2006</inceptionYear>
   <name>Bloojm</name>
   <issueManagement>
@@ -49,13 +49,13 @@
     </mailingList>
   </mailingLists>
   <ciManagement>
-    <system>continuum</system>
-    <url>http://disco-stu:8888/continuum</url>
+    <system>hudson</system>
+    <url>http://code.qoqoa.com/hudson/job/bloojm/</url>
     <notifiers>
       <notifier>
         <type>mail</type>
         <configuration>
-          <address>cliffano@mbledug.com</address>
+          <address>cliffano@qoqoa.com</address>
         </configuration>
       </notifier>
     </notifiers>
@@ -63,7 +63,7 @@
   <distributionManagement>
     <site>
       <id>localhost</id>
-      <url>file:///home/cliffano/dev/apache-tomcat-6.0.13/webapps/mbledug/projects/blojsom</url>
+      <url>file:///var/www/qoqoa/htdocs/code/reports/blojsom</url>
     </site>
   </distributionManagement>
   <scm>
@@ -75,10 +75,8 @@
     <developer>
       <id>cliffano</id>
       <name>Cliffano Subagio</name>
-      <email>cliffano@mbledug.com</email>
-      <url>http://mbledug.com/blog</url>
-      <organization>Mbledug</organization>
-      <organizationUrl>http://mbledug.com</organizationUrl>
+      <email>cliffano@qoqoa.com</email>
+      <url>http://blog.qoqoa.com</url>
       <roles>
         <role>Developer</role>
       </roles>
@@ -92,8 +90,8 @@
     </license>
   </licenses>
   <organization>
-    <name>Mbledug</name>
-    <url>http://mbledug.com</url>
+    <name>Qoqoa</name>
+    <url>http://qoqoa.com</url>
   </organization>
   <dependencies>
   </dependencies>
