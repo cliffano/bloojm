@@ -123,11 +123,9 @@
   </li>
 #end
 
-#macro ( mainMenu $menus )
-  #foreach( $menu in $menus )
+#macro ( mainMenu $menu )
     #if ( $menu.name )
     <h5>
-      <img src="/images/maven${menu.name.replace(" ", "")}.png" height="16" width="16" alt="$menu.name Icon"/>
       $menu.name
     </h5>
     #end
@@ -136,7 +134,6 @@
         #menuItem( $item )
       #end
     </ul>
-  #end
 #end
 
 #macro ( copyright )
@@ -271,15 +268,15 @@
     #end
 #end
 
-#set ( $mbledugSite = "http://mbledug.com" )
+#set ( $staticHost = "http://static.qoqoa.com" )
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <title>$title</title>
     <style type="text/css" media="all">
-      @import url("$mbledugSite/styles/global.css");
+      @import url("$staticHost/styles/global.css");
     </style>
-    <link rel="shortcut icon" href="$mbledugSite/images/favicon.ico"/>
+    <link rel="shortcut icon" href="$staticHost/images/favicon.ico"/>
     #foreach( $author in $authors )
       <meta name="author" content="$author" />
     #end
@@ -295,36 +292,46 @@
     #end
   </head>
   <body>
-    <div class="container">
-      <div id="headertop"></div>
+    <div id="container">
       <div id="header">
-        <a href="$mbledugSite/"><img src="$mbledugSite/images/logo.jpg" height="50" width="130" alt="Mbledug Logo"/></a>
+	  	<div id="logo"></div>
+	  	<div id="title">
+	  	  $project.name
+	  	</div>
       </div>
-      <div id="headerbar">
+      <div id="nav">
         <ul>
-          <li><a href="$mbledugSite/blog">Blog</a></li>
-          <li><a href="$mbledugSite/projects">Projects</a></li>
+          <li><a href="http://qoqoa.com">Home</a></li>
+          <li><a href="http://blog.qoqoa.com">Blog</a></li>
+          <li><a href="http://code.qoqoa.com">Code</a></li>
         </ul>
       </div>
       <div id="body">
-        <div id="content">
+        <div id="left" class="content">
           $bodyContent
         </div>
-        <div id="menu">
-          #mainMenu( $decoration.body.menus )
+        <div id="center" class="bar">
+          #mainMenu( $decoration.body.menus.get(1) )
         </div>
-        <div id="asides">
+        <div id="right" class="bar">
+          #mainMenu( $decoration.body.menus.get(0) )
+          #publishDate( "left" $decoration.publishDate $decoration.version )
           <p>
-            <a href="http://maven.apache.org/" title="Built by Maven" id="poweredBy">
-              <img alt="Built by Maven" src="$mbledugSite/images/projects/maven-feather.png"></img>
+            <a href="http://maven.apache.org">
+              <img src="$staticHost/images/projects/maven-feather.png" height="30" width="90" alt="Built by Maven"/>
             </a>
           </p>
-          #publishDate( "left" $decoration.publishDate $decoration.version )
         </div>
       </div>
       <div id="footer">
-        Copyright &copy; #copyright()#publishDate( "bottom" $decoration.publishDate $decoration.version ). Some Rights Reserved.
+        Copyright &copy; #copyright()#publishDate( "bottom" $decoration.publishDate $decoration.version). Some Rights Reserved.
       </div>
     </div>
+    <script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+	</script>
+	<script type="text/javascript">
+	_uacct = "UA-247374-3";
+	urchinTracker();
+	</script>
   </body>
 </html>

@@ -148,7 +148,7 @@
         <artifactId>maven-site-plugin</artifactId>
         <configuration>
           <templateDirectory>${basedir}/src/site</templateDirectory>
-          <template>mbledug-site.vm</template>
+          <template>custom-site.vm</template>
         </configuration>
       </plugin>
       <plugin>

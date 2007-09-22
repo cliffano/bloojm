@@ -1,12 +1,6 @@
 <project name="MarkdownJ Plugin">
   <publishDate position="left" format="dd-MM-yyyy HH:mm:ss"/>
   <body>
-    <links>
-      <item name="Mbledug Projects" href="http://www.mbledug.com/projects/" />
-    </links>
-    <menu name="Reference">
-      <item name="About" href="/index.html" />
-    </menu>
     <menu name="Project Info">
       <item name="Continuous Integration" href="/integration.html" />
       <item name="Dependencies" href="/dependencies.html" />
