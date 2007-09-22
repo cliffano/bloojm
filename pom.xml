@@ -22,6 +22,7 @@
   <description>A collection of Blojsom plugins contributed by Qoqoa.</description>
   <inceptionYear>2006</inceptionYear>
   <name>Bloojm</name>
+  <url>http://code.google.com/p/bloojm/</url>
   <issueManagement>
     <system>JIRA</system>
     <url>http://jira.blojsom.com/jira/browse/BLOJSOM</url>

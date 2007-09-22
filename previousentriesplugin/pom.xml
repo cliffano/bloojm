@@ -11,7 +11,7 @@
   </description>
   <inceptionYear>2007</inceptionYear>
   <name>PreviousEntries Plugin</name>
-  <url>http://mbledug.com/projects/blojsom/previousentriesplugin/</url>
+  <url>http://wiki.blojsom.com/wiki/display/blojsom3/Previous+Entries+Plugin</url>
   <parent>
     <groupId>blojsom</groupId>
     <artifactId>bloojm</artifactId>
@@ -74,7 +74,7 @@
         <artifactId>maven-site-plugin</artifactId>
         <configuration>
           <templateDirectory>${basedir}/../src/site</templateDirectory>
-          <template>mbledug-site.vm</template>
+          <template>custom-site.vm</template>
         </configuration>
       </plugin>
     </plugins>

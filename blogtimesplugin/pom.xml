@@ -11,7 +11,7 @@
   </description>
   <inceptionYear>2005</inceptionYear>
   <name>BlogTimes Plugin</name>
-  <url>http://wiki.blojsom.com/wiki/display/blojsom/Blog+Times+Plugin</url>
+  <url>http://wiki.blojsom.com/wiki/display/blojsom3/Blog+Times+Plugin</url>
   <parent>
     <groupId>blojsom</groupId>
     <artifactId>bloojm</artifactId>
@@ -68,7 +68,7 @@
         <artifactId>maven-site-plugin</artifactId>
         <configuration>
           <templateDirectory>${basedir}/../src/site</templateDirectory>
-          <template>mbledug-site.vm</template>
+          <template>custom-site.vm</template>
         </configuration>
       </plugin>
     </plugins>

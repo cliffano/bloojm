@@ -10,7 +10,7 @@
   </description>
   <inceptionYear>2004</inceptionYear>
   <name>Pager Plugin</name>
-  <url>http://mbledug.com/projects/blojsom/pagerplugin/</url>
+  <url>http://wiki.blojsom.com/wiki/display/blojsom/Pager+Plugin</url>
   <parent>
     <groupId>blojsom</groupId>
     <artifactId>bloojm</artifactId>
@@ -61,7 +61,7 @@
         <artifactId>maven-site-plugin</artifactId>
         <configuration>
           <templateDirectory>${basedir}/../src/site</templateDirectory>
-          <template>mbledug-site.vm</template>
+          <template>custom-site.vm</template>
         </configuration>
       </plugin>
     </plugins>
