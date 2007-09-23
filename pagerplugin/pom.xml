@@ -10,7 +10,6 @@
   </description>
   <inceptionYear>2004</inceptionYear>
   <name>Pager Plugin</name>
-  <url>http://wiki.blojsom.com/wiki/display/blojsom/Pager+Plugin</url>
   <parent>
     <groupId>blojsom</groupId>
     <artifactId>bloojm</artifactId>

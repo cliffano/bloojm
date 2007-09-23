@@ -11,7 +11,6 @@
   </description>
   <inceptionYear>2007</inceptionYear>
   <name>PreviousEntries Plugin</name>
-  <url>http://wiki.blojsom.com/wiki/display/blojsom3/Previous+Entries+Plugin</url>
   <parent>
     <groupId>blojsom</groupId>
     <artifactId>bloojm</artifactId>

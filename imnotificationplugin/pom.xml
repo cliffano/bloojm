@@ -11,7 +11,6 @@
   </description>
   <inceptionYear>2004</inceptionYear>
   <name>IMNotification Plugin</name>
-  <url>http://wiki.blojsom.com/wiki/display/blojsom3/IM+Notification+Plugin</url>
   <parent>
     <groupId>blojsom</groupId>
     <artifactId>bloojm</artifactId>

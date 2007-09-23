@@ -11,7 +11,6 @@
   </description>
   <inceptionYear>2005</inceptionYear>
   <name>IpToCountry Plugin</name>
-  <url>http://wiki.blojsom.com/wiki/display/blojsom3/Ip+To+Country+Plugin</url>
   <parent>
     <groupId>blojsom</groupId>
     <artifactId>bloojm</artifactId>

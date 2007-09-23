@@ -10,7 +10,6 @@
   </description>
   <inceptionYear>2004</inceptionYear>
   <name>SCode Plugin</name>
-  <url>http://wiki.blojsom.com/wiki/display/blojsom3/SCode+Plugin</url>
   <parent>
     <groupId>blojsom</groupId>
     <artifactId>bloojm</artifactId>
