@@ -318,7 +318,7 @@
           #publishDate( "left" $decoration.publishDate $decoration.version )
           <p>
             <a href="http://maven.apache.org">
-              <img src="$staticHost/images/projects/maven-feather.png" height="30" width="90" alt="Built by Maven"/>
+              <img src="$staticHost/images/code/maven-feather.png" height="30" width="90" alt="Built by Maven"/>
             </a>
           </p>
         </div>
