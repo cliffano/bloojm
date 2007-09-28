@@ -129,7 +129,7 @@
       $menu.name
     </h5>
     #end
-    <ul class="listbar">
+    <ul>
       #foreach( $item in $menu.items )
         #menuItem( $item )
       #end
