@@ -51,7 +51,7 @@
   </mailingLists>
   <ciManagement>
     <system>hudson</system>
-    <url>http://code.qoqoa.com/hudson/job/bloojm/</url>
+    <url>http://localhost/hudson/job/bloojm/</url>
     <notifiers>
       <notifier>
         <type>mail</type>
@@ -145,12 +145,7 @@
         <artifactId>maven-pmd-plugin</artifactId>
       </plugin>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-site-plugin</artifactId>
-        <configuration>
-          <templateDirectory>${basedir}/src/site</templateDirectory>
-          <template>custom-site.vm</template>
-        </configuration>
       </plugin>
       <plugin>
         <artifactId>maven-surefire-report-plugin</artifactId>
