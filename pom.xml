@@ -24,7 +24,7 @@
   <name>Bloojm</name>
   <url>http://code.google.com/p/bloojm/</url>
   <issueManagement>
-    <system>JIRA</system>
+    <system>JIRA_</system>
     <url>http://jira.blojsom.com/jira/browse/BLOJSOM</url>
   </issueManagement>
   <mailingLists>
