@@ -51,7 +51,7 @@
   </mailingLists>
   <ciManagement>
     <system>hudson</system>
-    <url>http://localhost/hudson/job/bloojm/</url>
+    <url>http://dobby/hudson/job/bloojm/</url>
     <notifiers>
       <notifier>
         <type>mail</type>
@@ -63,8 +63,8 @@
   </ciManagement>
   <distributionManagement>
     <site>
-      <id>localhost</id>
-      <url>file:///var/www/qoqoa/htdocs/code/reports/blojsom</url>
+      <id>qoqoa</id>
+      <url>sftp://qoqoa.com:2218//var/www/qoqoa/htdocs/code/reports/blojsom</url>
     </site>
   </distributionManagement>
   <scm>
