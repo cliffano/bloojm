@@ -19,9 +19,6 @@ public class MarkdownJPluginTest extends TestCase {
 
     public void testProcessConvertsEntriesDescWithMarkdownExtension() {
 
-        HttpServletRequest request = (HttpServletRequest) EasyMock.createStrictMock(HttpServletRequest.class);
-        HttpServletResponse response = (HttpServletResponse) EasyMock.createStrictMock(HttpServletResponse.class);
-
         Plugin markdownJPlugin = new MarkdownJPlugin();
 
         String originalDesc = "![alt text](/path/img.jpg \"Title\")";
@@ -35,14 +32,12 @@ public class MarkdownJPluginTest extends TestCase {
         try {
             markdownJPlugin.init();
 
-            EasyMock.replay(new Object[]{request, response});
             entries = markdownJPlugin.process(
-                    request,
-                    response,
+                    (HttpServletRequest) EasyMock.createStrictMock(HttpServletRequest.class),
+                    (HttpServletResponse) EasyMock.createStrictMock(HttpServletResponse.class),
                     new DatabaseBlog(),
                     new HashMap(),
                     entries);
-            EasyMock.verify(new Object[]{request, response});
 
             markdownJPlugin.cleanup();
             markdownJPlugin.destroy();
@@ -54,9 +49,6 @@ public class MarkdownJPluginTest extends TestCase {
     }
 
     public void testProcessConvertsEntriesDescWithMarkdownMetaData() {
-
-        HttpServletRequest request = (HttpServletRequest) EasyMock.createStrictMock(HttpServletRequest.class);
-        HttpServletResponse response = (HttpServletResponse) EasyMock.createStrictMock(HttpServletResponse.class);
 
         Plugin markdownJPlugin = new MarkdownJPlugin();
 
@@ -73,16 +65,12 @@ public class MarkdownJPluginTest extends TestCase {
 
         try {
             markdownJPlugin.init();
-
-            EasyMock.replay(new Object[]{request, response});
             entries = markdownJPlugin.process(
-                    request,
-                    response,
+                    (HttpServletRequest) EasyMock.createStrictMock(HttpServletRequest.class),
+                    (HttpServletResponse) EasyMock.createStrictMock(HttpServletResponse.class),
                     new DatabaseBlog(),
                     new HashMap(),
                     entries);
-            EasyMock.verify(new Object[]{request, response});
-
             markdownJPlugin.cleanup();
             markdownJPlugin.destroy();
         } catch (PluginException pe) {
