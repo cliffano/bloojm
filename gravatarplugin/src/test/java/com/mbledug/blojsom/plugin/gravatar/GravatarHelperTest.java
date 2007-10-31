@@ -1,7 +1,5 @@
 package com.mbledug.blojsom.plugin.gravatar;
 
-import com.mbledug.blojsom.plugin.gravatar.GravatarHelper;
-
 import junit.framework.TestCase;
 
 public class GravatarHelperTest extends TestCase {
@@ -9,11 +7,11 @@ public class GravatarHelperTest extends TestCase {
     public void testGetGravatarIdSuccess() {
 
         try {
-            String gravatarId = GravatarHelper.getGravatarId(DataFixture.EMAIL);
+            String gravatarId = GravatarHelper.getGravatarId("foo@bar.com");
             assertNotNull(gravatarId);
-            assertEquals(DataFixture.EXPECTED_GRAVATAR_ID, gravatarId);
+            assertEquals("f3ada405ce890b6f8204094deb12d8a8", gravatarId);
         } catch(Exception e) {
-            fail("Email: " + DataFixture.EMAIL + ", should generate Gravatar ID: " + DataFixture.EXPECTED_GRAVATAR_ID);
+            fail("Email: " + "foo@bar.com" + ", should generate Gravatar ID: " + "f3ada405ce890b6f8204094deb12d8a8");
         }
     }
 
