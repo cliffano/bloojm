@@ -1,6 +1,10 @@
 package com.mbledug.blojsom.plugin.markdownj;
 
 import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import junit.framework.TestCase;
 
@@ -9,32 +13,37 @@ import org.blojsom.blog.database.DatabaseBlog;
 import org.blojsom.blog.database.DatabaseEntry;
 import org.blojsom.plugin.Plugin;
 import org.blojsom.plugin.PluginException;
+import org.easymock.classextension.EasyMock;
 
 public class MarkdownJPluginTest extends TestCase {
 
-    private DataFixture mDataFixture;
-
-    protected void setUp() {
-        mDataFixture = new DataFixture();
-    }
-
     public void testProcessConvertsEntriesDescWithMarkdownExtension() {
+
+        HttpServletRequest request = (HttpServletRequest) EasyMock.createStrictMock(HttpServletRequest.class);
+        HttpServletResponse response = (HttpServletResponse) EasyMock.createStrictMock(HttpServletResponse.class);
+
         Plugin markdownJPlugin = new MarkdownJPlugin();
 
         String originalDesc = "![alt text](/path/img.jpg \"Title\")";
         String convertedDesc = "<p><img src=\"/path/img.jpg\" alt=\"alt text\" title=\"Title\" /></p>\n";
 
-        Entry entry = mDataFixture.createEntryWithMarkdownExtension(originalDesc);
+        Entry entry = new DatabaseEntry();
+        entry.setPostSlug(MarkdownJPlugin.MARKDOWN_EXTENSION);
+        entry.setDescription(originalDesc);
         Entry[] entries = new Entry[]{entry};
 
         try {
             markdownJPlugin.init();
+
+            EasyMock.replay(new Object[]{request, response});
             entries = markdownJPlugin.process(
-                    mDataFixture.createMockHttpServletRequest(),
-                    mDataFixture.createMockHttpServletResponse(),
+                    request,
+                    response,
                     new DatabaseBlog(),
                     new HashMap(),
                     entries);
+            EasyMock.verify(new Object[]{request, response});
+
             markdownJPlugin.cleanup();
             markdownJPlugin.destroy();
         } catch (PluginException pe) {
@@ -45,22 +54,35 @@ public class MarkdownJPluginTest extends TestCase {
     }
 
     public void testProcessConvertsEntriesDescWithMarkdownMetaData() {
+
+        HttpServletRequest request = (HttpServletRequest) EasyMock.createStrictMock(HttpServletRequest.class);
+        HttpServletResponse response = (HttpServletResponse) EasyMock.createStrictMock(HttpServletResponse.class);
+
         Plugin markdownJPlugin = new MarkdownJPlugin();
 
         String originalDesc = "An [example](http://url.com/ \"Title\")";
         String convertedDesc = "<p>An <a href=\"http://url.com/\" title=\"Title\">example</a></p>\n";
 
-        Entry entry = mDataFixture.createEntryWithMarkdownMetaData(originalDesc);
+        Map metaData = new HashMap();
+        metaData.put(MarkdownJPlugin.METADATA_RUN_MARKDOWN, "true");
+        Entry entry = new DatabaseEntry();
+        entry.setMetaData(metaData);
+        entry.setDescription(originalDesc);
+        entry.setPostSlug("");
         Entry[] entries = new Entry[]{entry};
 
         try {
             markdownJPlugin.init();
+
+            EasyMock.replay(new Object[]{request, response});
             entries = markdownJPlugin.process(
-                    mDataFixture.createMockHttpServletRequest(),
-                    mDataFixture.createMockHttpServletResponse(),
+                    request,
+                    response,
                     new DatabaseBlog(),
                     new HashMap(),
                     entries);
+            EasyMock.verify(new Object[]{request, response});
+
             markdownJPlugin.cleanup();
             markdownJPlugin.destroy();
         } catch (PluginException pe) {
@@ -71,6 +93,10 @@ public class MarkdownJPluginTest extends TestCase {
     }
 
     public void testProcessDoesNotConvertEntriesDescWithoutMarkdownConfiguration() {
+
+        HttpServletRequest request = (HttpServletRequest) EasyMock.createStrictMock(HttpServletRequest.class);
+        HttpServletResponse response = (HttpServletResponse) EasyMock.createStrictMock(HttpServletResponse.class);
+
         Plugin markdownJPlugin = new MarkdownJPlugin();
 
         String originalDesc = "An [example](http://url.com/ \"Title\")";
@@ -83,12 +109,16 @@ public class MarkdownJPluginTest extends TestCase {
 
         try {
             markdownJPlugin.init();
+
+            EasyMock.replay(new Object[]{request, response});
             entries = markdownJPlugin.process(
-                    mDataFixture.createMockHttpServletRequest(),
-                    mDataFixture.createMockHttpServletResponse(),
+                    request,
+                    response,
                     new DatabaseBlog(),
                     new HashMap(),
                     entries);
+            EasyMock.verify(new Object[]{request, response});
+
             markdownJPlugin.cleanup();
             markdownJPlugin.destroy();
         } catch (PluginException pe) {
