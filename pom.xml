@@ -51,7 +51,7 @@
   </mailingLists>
   <ciManagement>
     <system>hudson</system>
-    <url>http://dobby/hudson/job/bloojm/</url>
+    <url>http://dobby:8080/hudson/job/bloojm/</url>
     <notifiers>
       <notifier>
         <type>mail</type>
