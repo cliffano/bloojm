@@ -1,21 +1,26 @@
 package com.mbledug.blojsom.plugin.blogtimes;
 
+import java.util.Calendar;
+
 import junit.framework.TestCase;
 
 public class BarGraphFactoryTest extends TestCase {
 
     public void testGetBarGraphWithSupportedFlavors() {
         BarGraph barGraphSecondOfMinute = BarGraphFactory.getBarGraph(BlogTimesPlugin.FLAVOR_SECOND_OF_MINUTE);
-        assertNotNull(barGraphSecondOfMinute);
+        assertEquals(Calendar.SECOND, barGraphSecondOfMinute.getCalendarUnit());
         BarGraph barGraphMinuteOfHour = BarGraphFactory.getBarGraph(BlogTimesPlugin.FLAVOR_MINUTE_OF_HOUR);
-        assertNotNull(barGraphMinuteOfHour);
+        assertEquals(Calendar.MINUTE, barGraphMinuteOfHour.getCalendarUnit());
         BarGraph barGraphHourOfDay = BarGraphFactory.getBarGraph(BlogTimesPlugin.FLAVOR_HOUR_OF_DAY);
-        assertNotNull(barGraphHourOfDay);
+        assertEquals(Calendar.HOUR_OF_DAY, barGraphHourOfDay.getCalendarUnit());
     }
 
     public void testGetBarGraphWithNullFlavorGivesDefaultBarGraph() {
-        BarGraph defaultBarGraph = BarGraphFactory.getBarGraph(null);
-        assertNotNull(defaultBarGraph);
+        BarGraph barGraph = BarGraphFactory.getBarGraph(null);
+        assertEquals(Calendar.HOUR_OF_DAY, barGraph.getCalendarUnit());
+        assertEquals(BlogTimesHelper.SECONDS_IN_DAY, barGraph.getScaler());
+        assertEquals(2, barGraph.getInterval());
+        assertEquals(BlogTimesHelper.MAX_HOUR_IN_DAY, barGraph.getMaxValue());
     }
 
     public void testGetBarGraphWithUnsupportedFlavorGivesIllegalArgumentException() {

@@ -1,35 +1,54 @@
 package com.mbledug.blojsom.plugin.blogtimes;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import junit.framework.TestCase;
 
 import org.blojsom.blog.Entry;
 import org.blojsom.blog.database.DatabaseBlog;
+import org.blojsom.blog.database.DatabaseEntry;
+import org.blojsom.fetcher.Fetcher;
+import org.blojsom.fetcher.FetcherException;
 import org.blojsom.plugin.Plugin;
 import org.blojsom.plugin.PluginException;
+import org.easymock.classextension.EasyMock;
 
 public class BlogTimesPluginTest extends TestCase {
 
-    private DataFixture mDataFixture;
-
-    protected void setUp() {
-        mDataFixture = new DataFixture();
-    }
-
-    public void testProcessStoresBarGraphImageCreatorAndDatesAsSessionAttribute() {
-        Entry[] entries = DataFixture.createEntryWithDates(
-            DataFixture.createRandomDates(10));
+    public void testProcessStoresBarGraphImageCreatorAndDatesAsSessionAttribute() throws Exception {
+        Date[] dates = createDates(10);
+        Entry[] entries = createEntryWithDates(dates);
         DatabaseBlog blog = new DatabaseBlog();
         blog.setProperties(new HashMap());
 
-        Plugin blogTimesPlugin = new BlogTimesPlugin(mDataFixture.createMockFetcher());
+        Fetcher fetcher = (Fetcher) EasyMock.createStrictMock(Fetcher.class);
+        EasyMock.expect(fetcher.loadEntries(blog, BlogTimesHelper.getNumOfLatestEntries(blog), 1)).andReturn(entries);
+        Plugin blogTimesPlugin = new BlogTimesPlugin(fetcher);
+
+        HttpSession session = (HttpSession) EasyMock.createStrictMock(HttpSession.class);
+        HttpServletRequest request = (HttpServletRequest) EasyMock.createStrictMock(HttpServletRequest.class);
+
+        EasyMock.expect(request.getSession()).andReturn(session);
+        session.setAttribute((String) EasyMock.isA(String.class), EasyMock.isA(BarGraphImageCreator.class));
+        EasyMock.expect(request.getSession()).andReturn(session);
+        session.setAttribute((String) EasyMock.isA(String.class), EasyMock.aryEq(dates));
+
+        HttpServletResponse response = (HttpServletResponse) EasyMock.createStrictMock(HttpServletResponse.class);
+
+        EasyMock.replay(new Object[]{session, request, response, fetcher});
 
         try {
             blogTimesPlugin.init();
             entries = blogTimesPlugin.process(
-                    mDataFixture.createMockHttpServletRequestSetSessionAttribute(),
-                    mDataFixture.createMockHttpServletResponse(),
+                    request,
+                    response,
                     blog,
                     new HashMap(),
                     entries);
@@ -38,21 +57,47 @@ public class BlogTimesPluginTest extends TestCase {
         } catch (PluginException pe) {
             fail("PluginException should not occur: " + pe);
         }
+
+        EasyMock.verify(new Object[]{session, request, response, fetcher});
     }
 
-    public void testProcessWithValidBlogProperties() {
-        DatabaseBlog blog = new DatabaseBlog();
-        blog.setProperties(DataFixture.createPropertiesWithValidValues());
-        Entry[] entries = DataFixture.createEntryWithDates(
-                DataFixture.createRandomDates(10));
+    public void testProcessWithValidBlogProperties() throws Exception {
+        Map properties = new HashMap();
+        properties.put(BlogTimesPlugin.PROPERTY_BACKGROUND_COLOR, "ff00ff");
+        properties.put(BlogTimesPlugin.PROPERTY_BORDER_COLOR, "ff00ff");
+        properties.put(BlogTimesPlugin.PROPERTY_BAR_BACKGROUND_COLOR, "ff00ff");
+        properties.put(BlogTimesPlugin.PROPERTY_TIMELINE_COLOR, "ff00ff");
+        properties.put(BlogTimesPlugin.PROPERTY_TIME_INTERVAL_COLOR, "ff00ff");
+        properties.put(BlogTimesPlugin.PROPERTY_FONT_COLOR, "ff00ff");
+        properties.put(BlogTimesPlugin.PROPERTY_BAR_HEIGHT, "20");
+        properties.put(BlogTimesPlugin.PROPERTY_BAR_WIDTH, "10");
 
-        BlogTimesPlugin blogTimesPlugin = new BlogTimesPlugin(mDataFixture.createMockFetcher());
+        DatabaseBlog blog = new DatabaseBlog();
+        blog.setProperties(properties);
+        Date[] dates = createDates(10);
+        Entry[] entries = createEntryWithDates(dates);
+
+        Fetcher fetcher = (Fetcher) EasyMock.createStrictMock(Fetcher.class);
+        EasyMock.expect(fetcher.loadEntries(blog, BlogTimesHelper.getNumOfLatestEntries(blog), 1)).andReturn(entries);
+        BlogTimesPlugin blogTimesPlugin = new BlogTimesPlugin(fetcher);
+
+        HttpSession session = (HttpSession) EasyMock.createStrictMock(HttpSession.class);
+        HttpServletRequest request = (HttpServletRequest) EasyMock.createStrictMock(HttpServletRequest.class);
+
+        EasyMock.expect(request.getSession()).andReturn(session);
+        session.setAttribute((String) EasyMock.isA(String.class), EasyMock.isA(BarGraphImageCreator.class));
+        EasyMock.expect(request.getSession()).andReturn(session);
+        session.setAttribute((String) EasyMock.isA(String.class), EasyMock.aryEq(dates));
+
+        HttpServletResponse response = (HttpServletResponse) EasyMock.createStrictMock(HttpServletResponse.class);
+
+        EasyMock.replay(new Object[]{session, request, response, fetcher});
 
         try {
             blogTimesPlugin.init();
             entries = blogTimesPlugin.process(
-                    mDataFixture.createMockHttpServletRequestSetSessionAttribute(),
-                    mDataFixture.createMockHttpServletResponse(),
+                    request,
+                    response,
                     blog,
                     new HashMap(),
                     entries);
@@ -61,21 +106,41 @@ public class BlogTimesPluginTest extends TestCase {
         } catch (PluginException pe) {
             fail("PluginException should not occur: " + pe);
         }
+
+        EasyMock.verify(new Object[]{session, request, response, fetcher});
     }
 
-    public void testProcessWithInvalidPropertiesGivesPluginException() {
-        DatabaseBlog blog = new DatabaseBlog();
-        blog.setProperties(DataFixture.createPropertiesWithInvalidValues());
-        Entry[] entries = DataFixture.createEntryWithDates(
-                DataFixture.createRandomDates(10));
+    public void testProcessWithInvalidPropertiesGivesPluginException() throws Exception {
+        Map properties = new HashMap();
+        properties.put(BlogTimesPlugin.PROPERTY_BACKGROUND_COLOR, "ff00ffaa");
+        properties.put(BlogTimesPlugin.PROPERTY_BORDER_COLOR, "ff00ffaa");
+        properties.put(BlogTimesPlugin.PROPERTY_BAR_BACKGROUND_COLOR, "ff00ffaa");
+        properties.put(BlogTimesPlugin.PROPERTY_TIMELINE_COLOR, "ff00ffaa");
+        properties.put(BlogTimesPlugin.PROPERTY_TIME_INTERVAL_COLOR, "ff00ffaa");
+        properties.put(BlogTimesPlugin.PROPERTY_FONT_COLOR, "ff00ffaa");
+        properties.put(BlogTimesPlugin.PROPERTY_BAR_HEIGHT, "-1");
+        properties.put(BlogTimesPlugin.PROPERTY_BAR_WIDTH, "-1");
 
-        BlogTimesPlugin blogTimesPlugin = new BlogTimesPlugin(mDataFixture.createMockFetcher());
+        DatabaseBlog blog = new DatabaseBlog();
+        blog.setProperties(properties);
+        Date[] dates = createDates(10);
+        Entry[] entries = createEntryWithDates(dates);
+
+        Fetcher fetcher = (Fetcher) EasyMock.createStrictMock(Fetcher.class);
+        BlogTimesPlugin blogTimesPlugin = new BlogTimesPlugin(fetcher);
+
+        HttpSession session = (HttpSession) EasyMock.createStrictMock(HttpSession.class);
+        HttpServletRequest request = (HttpServletRequest) EasyMock.createStrictMock(HttpServletRequest.class);
+
+        HttpServletResponse response = (HttpServletResponse) EasyMock.createStrictMock(HttpServletResponse.class);
+
+        EasyMock.replay(new Object[]{session, request, response, fetcher});
 
         try {
             blogTimesPlugin.init();
             entries = blogTimesPlugin.process(
-                    mDataFixture.createMockHttpServletRequestSetSessionAttribute(),
-                    mDataFixture.createMockHttpServletResponse(),
+                    request,
+                    response,
                     blog,
                     new HashMap(),
                     entries);
@@ -83,21 +148,45 @@ public class BlogTimesPluginTest extends TestCase {
         } catch (PluginException pe) {
             // expected PluginException
         }
+
+        EasyMock.verify(new Object[]{session, request, response, fetcher});
     }
 
-    public void testProcessWithFetcherErrorGivesPluginException() {
-        DatabaseBlog blog = new DatabaseBlog();
-        blog.setProperties(DataFixture.createPropertiesWithValidValues());
-        Entry[] entries = DataFixture.createEntryWithDates(
-                DataFixture.createRandomDates(10));
+    public void testProcessWithFetcherErrorGivesPluginException() throws Exception {
+        Map properties = new HashMap();
+        properties.put(BlogTimesPlugin.PROPERTY_BACKGROUND_COLOR, "ff00ff");
+        properties.put(BlogTimesPlugin.PROPERTY_BORDER_COLOR, "ff00ff");
+        properties.put(BlogTimesPlugin.PROPERTY_BAR_BACKGROUND_COLOR, "ff00ff");
+        properties.put(BlogTimesPlugin.PROPERTY_TIMELINE_COLOR, "ff00ff");
+        properties.put(BlogTimesPlugin.PROPERTY_TIME_INTERVAL_COLOR, "ff00ff");
+        properties.put(BlogTimesPlugin.PROPERTY_FONT_COLOR, "ff00ff");
+        properties.put(BlogTimesPlugin.PROPERTY_BAR_HEIGHT, "20");
+        properties.put(BlogTimesPlugin.PROPERTY_BAR_WIDTH, "10");
 
-        BlogTimesPlugin blogTimesPlugin = new BlogTimesPlugin(mDataFixture.createMockFetcherWithException());
+        DatabaseBlog blog = new DatabaseBlog();
+        blog.setProperties(properties);
+        Date[] dates = createDates(10);
+        Entry[] entries = createEntryWithDates(dates);
+
+        Fetcher fetcher = (Fetcher) EasyMock.createStrictMock(Fetcher.class);
+        EasyMock.expect(fetcher.loadEntries(blog, BlogTimesHelper.getNumOfLatestEntries(blog), 1)).andThrow(new FetcherException("dummy error"));
+        BlogTimesPlugin blogTimesPlugin = new BlogTimesPlugin(fetcher);
+
+        HttpSession session = (HttpSession) EasyMock.createStrictMock(HttpSession.class);
+        HttpServletRequest request = (HttpServletRequest) EasyMock.createStrictMock(HttpServletRequest.class);
+
+        EasyMock.expect(request.getSession()).andReturn(session);
+        session.setAttribute((String) EasyMock.isA(String.class), EasyMock.isA(BarGraphImageCreator.class));
+
+        HttpServletResponse response = (HttpServletResponse) EasyMock.createStrictMock(HttpServletResponse.class);
+
+        EasyMock.replay(new Object[]{session, request, response, fetcher});
 
         try {
             blogTimesPlugin.init();
             entries = blogTimesPlugin.process(
-                    mDataFixture.createMockHttpServletRequestSetSessionAttribute(),
-                    mDataFixture.createMockHttpServletResponse(),
+                    request,
+                    response,
                     blog,
                     new HashMap(),
                     entries);
@@ -105,5 +194,26 @@ public class BlogTimesPluginTest extends TestCase {
         } catch (PluginException pe) {
             // expected PluginException
         }
+
+        EasyMock.verify(new Object[]{session, request, response, fetcher});
+    }
+
+    Date[] createDates(int numberOfDates) {
+        Calendar cal = Calendar.getInstance();
+        Date[] dates = new Date[numberOfDates];
+        for (int i = 0; i < dates.length; i++) {
+            cal.set(2007, 8, i);
+            dates[i] = cal.getTime();
+        }
+        return dates;
+    }
+
+    Entry[] createEntryWithDates(Date[] dates) {
+        Entry[] entries = new Entry[dates.length];
+        for (int i = 0; i < dates.length; i++) {
+            entries[i] = new DatabaseEntry();
+            entries[i].setDate(dates[i]);
+        }
+        return entries;
     }
 }

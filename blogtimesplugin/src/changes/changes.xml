@@ -6,6 +6,9 @@
   <body>
     <release version="0.3-SNAPSHOT" date="current">
       <action type="update" dev="cliffano">
+        Refactored unit tests, replaced JMock with EasyMock 2.
+      </action>
+      <action type="update" dev="cliffano">
         Set ImageIO caching off during BlogTimesServlet initialisation. This improves performance and prevents any temporary disk-based image creation.
       </action>
     </release>

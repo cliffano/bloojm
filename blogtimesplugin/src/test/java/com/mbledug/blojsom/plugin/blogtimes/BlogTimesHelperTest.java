@@ -76,13 +76,6 @@ public class BlogTimesHelperTest extends TestCase {
         assertEquals(BlogTimesHelper.DEFAULT_NUM_OF_LATEST_ENTRIES, BlogTimesHelper.getNumOfLatestEntries(blog));
     }
 
-    public void testGetDatesFromEntriesGivesANumberOfDatesAsManyAsTheNumberOfEntries() {
-        int numberOfDates = 5;
-        Entry[] entries = DataFixture.createEntryWithDates(DataFixture.createRandomDates(numberOfDates));
-        Date[] dates = BlogTimesHelper.getDatesFromEntries(entries);
-        assertEquals(entries.length, dates.length);
-    }
-
     public void testGetDatesFromEntriesWithEmptyArrayGivesEmptyArrayOfDates() {
         Date[] dates = BlogTimesHelper.getDatesFromEntries(new Entry[]{});
         assertEquals(0, dates.length);

@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.imageio.ImageIO;
@@ -14,7 +15,14 @@ public class BarGraphImageCreatorTest extends TestCase {
 
     public void testCreateImageAllFlavors() throws IOException {
         BarGraphImageCreator creator = new BarGraphImageCreator();
-        Date[] dates = DataFixture.createRandomDates(25);
+        Calendar cal = Calendar.getInstance();
+        cal.set(2007, 10, 5, 8, 7);
+        Date date1 = cal.getTime();
+        cal.set(2007, 2, 5, 9, 1);
+        Date date2 = cal.getTime();
+        cal.set(2007, 6, 5, 3, 10);
+        Date date3 = cal.getTime();
+        Date[] dates = new Date[]{date1, date2, date3};
         writePngImageFile("secondOfMinute.png",
                 creator.createImage(BlogTimesPlugin.FLAVOR_SECOND_OF_MINUTE, dates));
         writePngImageFile("minuteOfHour.png",
@@ -26,6 +34,15 @@ public class BarGraphImageCreatorTest extends TestCase {
     }
 
     public void testCreateImageOverrideConfigurations() throws IOException {
+        Calendar cal = Calendar.getInstance();
+        cal.set(2007, 10, 5, 8, 7);
+        Date date1 = cal.getTime();
+        cal.set(2007, 2, 5, 9, 1);
+        Date date2 = cal.getTime();
+        cal.set(2007, 6, 5, 3, 10);
+        Date date3 = cal.getTime();
+        Date[] dates = new Date[]{date1, date2, date3};
+
         BarGraphImageCreator creator = new BarGraphImageCreator();
         creator.setBackgroundColor(Color.YELLOW);
         creator.setBarBackgroundColor(Color.CYAN);
@@ -35,7 +52,7 @@ public class BarGraphImageCreatorTest extends TestCase {
         creator.setFontColor(Color.RED);
         creator.setTimelineColor(Color.ORANGE);
         writePngImageFile("override.png",
-                creator.createImage(null, DataFixture.createRandomDates(25)));
+                creator.createImage(null, dates));
     }
 
     public void testCreateImageOverrideConfigurationsWithInvalidBoxDimensionGivesIllegalArgumentException() throws IOException {
