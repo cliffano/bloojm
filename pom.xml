@@ -64,7 +64,7 @@
   <distributionManagement>
     <site>
       <id>qoqoa</id>
-      <url>sftp://qoqoa.com:2218//var/www/qoqoa/htdocs/projects/blojsom/bloojm/report</url>
+      <url>sftp://qoqoa.com:2218//var/www/qoqoa/htdocs/code/blojsom/bloojm/report</url>
     </site>
   </distributionManagement>
   <scm>
