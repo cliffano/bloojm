@@ -6,6 +6,9 @@
   <body>
     <release version="0.3-SNAPSHOT" date="current">
       <action type="update" dev="cliffano">
+        Refactored unit tests, replaced JMock with EasyMock 2.
+      </action>
+      <action type="update" dev="cliffano">
         Modified IOException handling on spam suspect checking, trackback is now
         moderated/deleted accordingly.
       </action>

@@ -1,38 +1,41 @@
 package com.mbledug.blojsom.plugin.trackback;
 
 import java.io.IOException;
-
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import junit.framework.TestCase;
 
+import org.blojsom.blog.Blog;
 import org.blojsom.blog.Entry;
 import org.blojsom.blog.database.DatabaseBlog;
+import org.blojsom.blog.database.DatabaseEntry;
+import org.blojsom.event.EventBroadcaster;
 import org.blojsom.event.Listener;
 import org.blojsom.plugin.PluginException;
 import org.blojsom.plugin.response.event.ResponseSubmissionEvent;
 import org.blojsom.plugin.trackback.TrackbackModerationPlugin;
 import org.blojsom.plugin.trackback.TrackbackPlugin;
 import org.blojsom.plugin.trackback.event.TrackbackResponseSubmissionEvent;
+import org.easymock.EasyMock;
 
 public class TrackbackKeywordPluginTest extends TestCase {
 
-    private DataFixture mDataFixture;
-
-    protected void setUp() {
-        mDataFixture = new DataFixture();
-    }
-
     public void testProcessAddsListenerToEventBroadcaster() {
         TrackbackKeywordPlugin trackbackKeywordPlugin = new TrackbackKeywordPlugin();
-        trackbackKeywordPlugin.setEventBroadcaster(mDataFixture.createSimpleEventBroadcaster());
+        EventBroadcaster eventBroadcaster = (EventBroadcaster) EasyMock.createStrictMock(EventBroadcaster.class);
+        eventBroadcaster.addListener(trackbackKeywordPlugin);
+        trackbackKeywordPlugin.setEventBroadcaster(eventBroadcaster);
         try {
             trackbackKeywordPlugin.init();
             trackbackKeywordPlugin.process(
-                    mDataFixture.createMockHttpServletRequest(),
-                    mDataFixture.createMockHttpServletResponse(),
+                    (HttpServletRequest) EasyMock.createStrictMock(HttpServletRequest.class),
+                    (HttpServletResponse) EasyMock.createStrictMock(HttpServletResponse.class),
                     new DatabaseBlog(),
                     new HashMap(),
                     new Entry[0]);
@@ -43,97 +46,158 @@ public class TrackbackKeywordPluginTest extends TestCase {
         }
     }
 
-    public void testProcessEventTrackbackNotSpamSuspect() {
-        UrlTextFetcher urlTextFetcher = mDataFixture.createMockUrlTextFetcher(DataFixture.TEXT_ALL_KEYWORDS, false, null);
+    public void testProcessEventTrackbackNotSpamSuspect() throws Exception {
+        IUrlTextFetcher urlTextFetcher = (IUrlTextFetcher) EasyMock.createStrictMock(IUrlTextFetcher.class);
+        EasyMock.expect(urlTextFetcher.fetchText("http://thisisavalidurl")).andReturn("This has foo bar");
+
         Listener trackbackKeywordPlugin = new TrackbackKeywordPlugin(urlTextFetcher);
-        TrackbackResponseSubmissionEvent event = mDataFixture.createTrackbackResponseSubmissionEventWithEnabledPlugin();
+
+        TrackbackResponseSubmissionEvent event = createTrackbackResponseSubmissionEvent();
+        Blog blog = event.getBlog();
+        blog.setProperty(TrackbackKeywordPlugin.PROPERTY_ENABLED, "true");
+
         Map metaData = event.getMetaData();
         assertNull(metaData.get(TrackbackPlugin.BLOJSOM_PLUGIN_TRACKBACK_METADATA_DESTROY));
         assertNull(metaData.get(TrackbackModerationPlugin.BLOJSOM_TRACKBACK_MODERATION_PLUGIN_APPROVED));
+
+        EasyMock.replay(new Object[]{urlTextFetcher});
         trackbackKeywordPlugin.processEvent(event);
+        EasyMock.verify(new Object[]{urlTextFetcher});
+
         assertNull(metaData.get(TrackbackPlugin.BLOJSOM_PLUGIN_TRACKBACK_METADATA_DESTROY));
         assertNull(metaData.get(TrackbackModerationPlugin.BLOJSOM_TRACKBACK_MODERATION_PLUGIN_APPROVED));
     }
 
-    public void testProcessEventTrackbackWithIoExceptionAddsTrackbackAction() {
-        UrlTextFetcher urlTextFetcher = mDataFixture.createMockUrlTextFetcher(DataFixture.TEXT_ALL_KEYWORDS, false, new IOException());
+    public void testProcessEventTrackbackWithIoExceptionAddsTrackbackAction() throws Exception {
+        IUrlTextFetcher urlTextFetcher = (IUrlTextFetcher) EasyMock.createStrictMock(IUrlTextFetcher.class);
+        EasyMock.expect(urlTextFetcher.fetchText("http://thisisavalidurl")).andThrow(new IOException());
         Listener trackbackKeywordPlugin = new TrackbackKeywordPlugin(urlTextFetcher);
-        TrackbackResponseSubmissionEvent event = mDataFixture.createTrackbackResponseSubmissionEventWithEnabledPlugin();
+
+        TrackbackResponseSubmissionEvent event = createTrackbackResponseSubmissionEvent();
+        Blog blog = event.getBlog();
+        blog.setProperty(TrackbackKeywordPlugin.PROPERTY_ENABLED, "true");
+
         Map metaData = event.getMetaData();
         assertNull(metaData.get(TrackbackPlugin.BLOJSOM_PLUGIN_TRACKBACK_METADATA_DESTROY));
         assertNull(metaData.get(TrackbackModerationPlugin.BLOJSOM_TRACKBACK_MODERATION_PLUGIN_APPROVED));
+
+        EasyMock.replay(new Object[]{urlTextFetcher});
         trackbackKeywordPlugin.processEvent(event);
+        EasyMock.verify(new Object[]{urlTextFetcher});
+
         assertNull(metaData.get(TrackbackPlugin.BLOJSOM_PLUGIN_TRACKBACK_METADATA_DESTROY));
         assertNotNull(metaData.get(TrackbackModerationPlugin.BLOJSOM_TRACKBACK_MODERATION_PLUGIN_APPROVED));
     }
 
-    public void testProcessEventTrackbackNotSpamSuspectBehindProxy() {
-        UrlTextFetcher urlTextFetcher = mDataFixture.createMockUrlTextFetcher(DataFixture.TEXT_ALL_KEYWORDS, true, null);
+    public void testProcessEventTrackbackNotSpamSuspectBehindProxy() throws Exception {
+        IUrlTextFetcher urlTextFetcher = (IUrlTextFetcher) EasyMock.createStrictMock(IUrlTextFetcher.class);
+        urlTextFetcher.setProxy("http://@#&$(@$&@$&#@&", 8080);
+        EasyMock.expect(urlTextFetcher.fetchText("http://thisisavalidurl")).andReturn("This has foo bar");
+
         TrackbackKeywordPlugin trackbackKeywordPlugin = new TrackbackKeywordPlugin(urlTextFetcher);
+
         Properties properties = new Properties();
-        properties.setProperty(TrackbackKeywordPlugin.PROPERTY_PROXY_HOST, DataFixture.DUMMY_PROXY_HOST);
-        properties.setProperty(TrackbackKeywordPlugin.PROPERTY_PROXY_PORT, String.valueOf(DataFixture.DUMMY_PROXY_PORT));
+        properties.setProperty(TrackbackKeywordPlugin.PROPERTY_PROXY_HOST, "http://@#&$(@$&@$&#@&");
+        properties.setProperty(TrackbackKeywordPlugin.PROPERTY_PROXY_PORT, String.valueOf(8080));
         trackbackKeywordPlugin.setProperties(properties);
-        TrackbackResponseSubmissionEvent event = mDataFixture.createTrackbackResponseSubmissionEventWithEnabledPlugin();
+
+        TrackbackResponseSubmissionEvent event = createTrackbackResponseSubmissionEvent();
+        Blog blog = event.getBlog();
+        blog.setProperty(TrackbackKeywordPlugin.PROPERTY_ENABLED, "true");
+
         Map metaData = event.getMetaData();
         assertNull(metaData.get(TrackbackPlugin.BLOJSOM_PLUGIN_TRACKBACK_METADATA_DESTROY));
         assertNull(metaData.get(TrackbackModerationPlugin.BLOJSOM_TRACKBACK_MODERATION_PLUGIN_APPROVED));
+
+        EasyMock.replay(new Object[]{urlTextFetcher});
         trackbackKeywordPlugin.processEvent(event);
+        EasyMock.verify(new Object[]{urlTextFetcher});
+
         assertNull(metaData.get(TrackbackPlugin.BLOJSOM_PLUGIN_TRACKBACK_METADATA_DESTROY));
         assertNull(metaData.get(TrackbackModerationPlugin.BLOJSOM_TRACKBACK_MODERATION_PLUGIN_APPROVED));
     }
 
-    public void testProcessEventTrackbackNotSpamSuspectBehindAuthenticatedProxy() {
-        UrlTextFetcher urlTextFetcher = mDataFixture.createMockUrlTextFetcher(DataFixture.TEXT_ALL_KEYWORDS, true, null);
+    public void testProcessEventTrackbackNotSpamSuspectBehindAuthenticatedProxy() throws Exception {
+        IUrlTextFetcher urlTextFetcher = (IUrlTextFetcher) EasyMock.createStrictMock(IUrlTextFetcher.class);
+        urlTextFetcher.setProxy("http://@#&$(@$&@$&#@&", 8080, "Some Username", "Some Password");
+        EasyMock.expect(urlTextFetcher.fetchText("http://thisisavalidurl")).andReturn("This has foo bar");
+
         TrackbackKeywordPlugin trackbackKeywordPlugin = new TrackbackKeywordPlugin(urlTextFetcher);
         Properties properties = new Properties();
-        properties.setProperty(TrackbackKeywordPlugin.PROPERTY_PROXY_HOST, DataFixture.DUMMY_PROXY_HOST);
-        properties.setProperty(TrackbackKeywordPlugin.PROPERTY_PROXY_PORT, String.valueOf(DataFixture.DUMMY_PROXY_PORT));
-        properties.setProperty(TrackbackKeywordPlugin.PROPERTY_PROXY_USERNAME, DataFixture.DUMMY_PROXY_USERNAME);
-        properties.setProperty(TrackbackKeywordPlugin.PROPERTY_PROXY_PASSWORD, DataFixture.DUMMY_PROXY_PASSWORD);
+        properties.setProperty(TrackbackKeywordPlugin.PROPERTY_PROXY_HOST, "http://@#&$(@$&@$&#@&");
+        properties.setProperty(TrackbackKeywordPlugin.PROPERTY_PROXY_PORT, String.valueOf(8080));
+        properties.setProperty(TrackbackKeywordPlugin.PROPERTY_PROXY_USERNAME, "Some Username");
+        properties.setProperty(TrackbackKeywordPlugin.PROPERTY_PROXY_PASSWORD, "Some Password");
         trackbackKeywordPlugin.setProperties(properties);
-        TrackbackResponseSubmissionEvent event = mDataFixture.createTrackbackResponseSubmissionEventWithEnabledPlugin();
+
+        TrackbackResponseSubmissionEvent event = createTrackbackResponseSubmissionEvent();
+        Blog blog = event.getBlog();
+        blog.setProperty(TrackbackKeywordPlugin.PROPERTY_ENABLED, "true");
         Map metaData = event.getMetaData();
         assertNull(metaData.get(TrackbackPlugin.BLOJSOM_PLUGIN_TRACKBACK_METADATA_DESTROY));
         assertNull(metaData.get(TrackbackModerationPlugin.BLOJSOM_TRACKBACK_MODERATION_PLUGIN_APPROVED));
+
+        EasyMock.replay(new Object[]{urlTextFetcher});
         trackbackKeywordPlugin.processEvent(event);
+        EasyMock.verify(new Object[]{urlTextFetcher});
+
         assertNull(metaData.get(TrackbackPlugin.BLOJSOM_PLUGIN_TRACKBACK_METADATA_DESTROY));
         assertNull(metaData.get(TrackbackModerationPlugin.BLOJSOM_TRACKBACK_MODERATION_PLUGIN_APPROVED));
     }
 
-    public void testProcessEventTrackbackSpamSuspectToBeDeleted() {
-        UrlTextFetcher urlTextFetcher = mDataFixture.createMockUrlTextFetcher(DataFixture.TEXT_NO_KEYWORD, false, null);
+    public void testProcessEventTrackbackSpamSuspectToBeDeleted() throws Exception {
+        IUrlTextFetcher urlTextFetcher = (IUrlTextFetcher) EasyMock.createStrictMock(IUrlTextFetcher.class);
+        EasyMock.expect(urlTextFetcher.fetchText("http://thisisavalidurl")).andReturn("This has nothing");
+
         TrackbackKeywordPlugin trackbackKeywordPlugin = new TrackbackKeywordPlugin(urlTextFetcher);
-        TrackbackResponseSubmissionEvent event = mDataFixture.createTrackbackResponseSubmissionEventWithEnabledPlugin();
+
+        TrackbackResponseSubmissionEvent event = createTrackbackResponseSubmissionEvent();
+        Blog blog = event.getBlog();
+        blog.setProperty(TrackbackKeywordPlugin.PROPERTY_ENABLED, "true");
         Map properties = event.getBlog().getProperties();
-        properties.put(TrackbackKeywordPlugin.PROPERTY_KEYWORDS, DataFixture.CSV_MORE_THAN_ONE_KEYWORDS);
+        properties.put(TrackbackKeywordPlugin.PROPERTY_KEYWORDS, "foo,bar");
         properties.put(TrackbackKeywordPlugin.PROPERTY_ACTION, TrackbackKeywordPlugin.ACTION_DELETE);
         properties.put(TrackbackKeywordPlugin.PROPERTY_CHECK_TYPE, TrackbackKeywordPlugin.CHECK_TYPE_ALL);
         Map metaData = event.getMetaData();
         assertNull(metaData.get(TrackbackPlugin.BLOJSOM_PLUGIN_TRACKBACK_METADATA_DESTROY));
         assertNull(metaData.get(TrackbackModerationPlugin.BLOJSOM_TRACKBACK_MODERATION_PLUGIN_APPROVED));
+
+        EasyMock.replay(new Object[]{urlTextFetcher});
         trackbackKeywordPlugin.processEvent(event);
+        EasyMock.verify(new Object[]{urlTextFetcher});
+
         assertNotNull(metaData.get(TrackbackPlugin.BLOJSOM_PLUGIN_TRACKBACK_METADATA_DESTROY));
         assertNull(metaData.get(TrackbackModerationPlugin.BLOJSOM_TRACKBACK_MODERATION_PLUGIN_APPROVED));
     }
 
-    public void testProcessEventTrackbackSpamSuspectToBeModerated() {
-        UrlTextFetcher urlTextFetcher = mDataFixture.createMockUrlTextFetcher(DataFixture.TEXT_NO_KEYWORD, false, null);
+    public void testProcessEventTrackbackSpamSuspectToBeModerated() throws Exception {
+        IUrlTextFetcher urlTextFetcher = (IUrlTextFetcher) EasyMock.createStrictMock(IUrlTextFetcher.class);
+        EasyMock.expect(urlTextFetcher.fetchText("http://thisisavalidurl")).andReturn("This has nothing");
+
         TrackbackKeywordPlugin trackbackKeywordPlugin = new TrackbackKeywordPlugin(urlTextFetcher);
-        TrackbackResponseSubmissionEvent event = mDataFixture.createTrackbackResponseSubmissionEventWithEnabledPlugin();
+
+        TrackbackResponseSubmissionEvent event = createTrackbackResponseSubmissionEvent();
+        Blog blog = event.getBlog();
+        blog.setProperty(TrackbackKeywordPlugin.PROPERTY_ENABLED, "true");
         Map properties = event.getBlog().getProperties();
-        properties.put(TrackbackKeywordPlugin.PROPERTY_KEYWORDS, DataFixture.CSV_ONE_KEYWORD);
+        properties.put(TrackbackKeywordPlugin.PROPERTY_KEYWORDS, "foo");
         Map metaData = event.getMetaData();
         assertNull(metaData.get(TrackbackPlugin.BLOJSOM_PLUGIN_TRACKBACK_METADATA_DESTROY));
         assertNull(metaData.get(TrackbackModerationPlugin.BLOJSOM_TRACKBACK_MODERATION_PLUGIN_APPROVED));
+
+        EasyMock.replay(new Object[]{urlTextFetcher});
         trackbackKeywordPlugin.processEvent(event);
+        EasyMock.verify(new Object[]{urlTextFetcher});
+
         assertNull(metaData.get(TrackbackPlugin.BLOJSOM_PLUGIN_TRACKBACK_METADATA_DESTROY));
         assertNotNull(metaData.get(TrackbackModerationPlugin.BLOJSOM_TRACKBACK_MODERATION_PLUGIN_APPROVED));
     }
 
     public void testProcessEventWithDisabledPlugin() {
         Listener trackbackKeywordPlugin = new TrackbackKeywordPlugin();
-        TrackbackResponseSubmissionEvent event = mDataFixture.createTrackbackResponseSubmissionEventWithDisabledPlugin();
+        TrackbackResponseSubmissionEvent event = createTrackbackResponseSubmissionEvent();
+        Blog blog = event.getBlog();
+        blog.setProperty(TrackbackKeywordPlugin.PROPERTY_ENABLED, "false");
         Map metaData = event.getMetaData();
         assertNull(metaData.get(TrackbackPlugin.BLOJSOM_PLUGIN_TRACKBACK_METADATA_DESTROY));
         assertNull(metaData.get(TrackbackModerationPlugin.BLOJSOM_TRACKBACK_MODERATION_PLUGIN_APPROVED));
@@ -144,8 +208,11 @@ public class TrackbackKeywordPluginTest extends TestCase {
 
     public void testProcessEventWithTrackbackToBeDeletedMarkedByPriorPlugin() {
         Listener trackbackKeywordPlugin = new TrackbackKeywordPlugin();
-        TrackbackResponseSubmissionEvent event = mDataFixture.createTrackbackResponseSubmissionEventWithEnabledPluginAndToBeDeletedMetaData();
+        TrackbackResponseSubmissionEvent event = createTrackbackResponseSubmissionEvent();
+        Blog blog = event.getBlog();
+        blog.setProperty(TrackbackKeywordPlugin.PROPERTY_ENABLED, "true");
         Map metaData = event.getMetaData();
+        metaData.put(TrackbackPlugin.BLOJSOM_PLUGIN_TRACKBACK_METADATA_DESTROY, Boolean.TRUE);
         String deleteMetaDataBeforeProcessing = metaData.get(TrackbackPlugin.BLOJSOM_PLUGIN_TRACKBACK_METADATA_DESTROY).toString();
         assertNull(metaData.get(TrackbackModerationPlugin.BLOJSOM_TRACKBACK_MODERATION_PLUGIN_APPROVED));
         trackbackKeywordPlugin.processEvent(event);
@@ -156,8 +223,11 @@ public class TrackbackKeywordPluginTest extends TestCase {
 
     public void testProcessEventWithTrackbackToBeModeratedMarkedByPriorPlugin() {
         Listener trackbackKeywordPlugin = new TrackbackKeywordPlugin();
-        TrackbackResponseSubmissionEvent event = mDataFixture.createTrackbackResponseSubmissionEventWithEnabledPluginAndToBeModeratedMetaData();
+        TrackbackResponseSubmissionEvent event = createTrackbackResponseSubmissionEvent();
+        Blog blog = event.getBlog();
+        blog.setProperty(TrackbackKeywordPlugin.PROPERTY_ENABLED, "true");
         Map metaData = event.getMetaData();
+        metaData.put(TrackbackModerationPlugin.BLOJSOM_TRACKBACK_MODERATION_PLUGIN_APPROVED, Boolean.FALSE);
         String deleteMetaDataBeforeProcessing = metaData.get(TrackbackModerationPlugin.BLOJSOM_TRACKBACK_MODERATION_PLUGIN_APPROVED).toString();
         assertNull(metaData.get(TrackbackPlugin.BLOJSOM_PLUGIN_TRACKBACK_METADATA_DESTROY));
         trackbackKeywordPlugin.processEvent(event);
@@ -168,7 +238,7 @@ public class TrackbackKeywordPluginTest extends TestCase {
 
     public void testResponseSubmissionEventLeftAsIs() {
         Listener trackbackKeywordPlugin = new TrackbackKeywordPlugin();
-        ResponseSubmissionEvent event = mDataFixture.createResponseSubmissionEvent();
+        ResponseSubmissionEvent event = createResponseSubmissionEvent();
         Map metaData = event.getMetaData();
         assertNull(metaData.get(TrackbackPlugin.BLOJSOM_PLUGIN_TRACKBACK_METADATA_DESTROY));
         assertNull(metaData.get(TrackbackModerationPlugin.BLOJSOM_TRACKBACK_MODERATION_PLUGIN_APPROVED));
@@ -179,7 +249,29 @@ public class TrackbackKeywordPluginTest extends TestCase {
 
     public void testHandleEventLeftAsIs() {
         Listener trackbackKeywordPlugin = new TrackbackKeywordPlugin();
-        ResponseSubmissionEvent event = mDataFixture.createResponseSubmissionEvent();
+        ResponseSubmissionEvent event = createResponseSubmissionEvent();
         trackbackKeywordPlugin.handleEvent(event);
+    }
+
+    ResponseSubmissionEvent createResponseSubmissionEvent() {
+        return (ResponseSubmissionEvent) createTrackbackResponseSubmissionEvent();
+    }
+
+    TrackbackResponseSubmissionEvent createTrackbackResponseSubmissionEvent() {
+        DatabaseBlog blog = new DatabaseBlog();
+        blog.setProperties(new HashMap());
+        TrackbackResponseSubmissionEvent event = new TrackbackResponseSubmissionEvent(
+                this,
+                new Date(),
+                blog,
+                (HttpServletRequest) EasyMock.createStrictMock(HttpServletRequest.class),
+                (HttpServletResponse) EasyMock.createStrictMock(HttpServletResponse.class),
+                "Some blog name",
+                "Some title",
+                "http://thisisavalidurl",
+                "Some excerpt",
+                new DatabaseEntry(),
+                new HashMap());
+        return event;
     }
 }

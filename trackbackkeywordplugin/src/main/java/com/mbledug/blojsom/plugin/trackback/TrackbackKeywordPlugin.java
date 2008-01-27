@@ -124,7 +124,7 @@ public class TrackbackKeywordPlugin implements Plugin, Listener {
     /**
      * UrlTextFetcher.
      */
-    private UrlTextFetcher mUrlTextFetcher;
+    private IUrlTextFetcher mUrlTextFetcher;
 
     /**
      * Plugin properties.
@@ -151,7 +151,7 @@ public class TrackbackKeywordPlugin implements Plugin, Listener {
      * {@link UrlTextFetcher}.
      * @param urlTextFetcher the specified {@link UrlTextFetcher}
      */
-    public TrackbackKeywordPlugin(final UrlTextFetcher urlTextFetcher) {
+    public TrackbackKeywordPlugin(final IUrlTextFetcher urlTextFetcher) {
         mUrlTextFetcher = urlTextFetcher;
         mProperties = new Properties();
         mEventBroadcaster = null;
@@ -285,7 +285,7 @@ public class TrackbackKeywordPlugin implements Plugin, Listener {
      * @param proxyPassword proxy password
      */
     private void setProxy(
-            final UrlTextFetcher urlTextFetcher,
+            final IUrlTextFetcher urlTextFetcher,
             final String proxyHost,
             final String proxyPort,
             final String proxyUsername,

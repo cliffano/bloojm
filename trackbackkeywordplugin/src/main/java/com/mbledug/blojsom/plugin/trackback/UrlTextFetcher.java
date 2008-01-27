@@ -43,7 +43,7 @@ import org.apache.commons.httpclient.util.URIUtil;
  * content.
  * @author Cliffano Subagio
  */
-class UrlTextFetcher {
+class UrlTextFetcher implements IUrlTextFetcher {
 
     /**
      * The client used to send request and receive response.
@@ -80,7 +80,7 @@ class UrlTextFetcher {
      * @param proxyHost proxy host name
      * @param proxyPort proxy port number
      */
-    final void setProxy(final String proxyHost, final int proxyPort) {
+    public final void setProxy(final String proxyHost, final int proxyPort) {
         mHttpClient.getHostConfiguration().setProxy(proxyHost, proxyPort);
     }
 
@@ -91,7 +91,7 @@ class UrlTextFetcher {
      * @param proxyUsername proxy username
      * @param proxyPassword proxy password
      */
-    final void setProxy(
+    public final void setProxy(
             final String proxyHost,
             final int proxyPort,
             final String proxyUsername,
