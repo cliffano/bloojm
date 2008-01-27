@@ -7,34 +7,34 @@ public class KeywordCheckerTest extends TestCase {
     private KeywordChecker mChecker;
 
     protected void setUp() {
-        mChecker = new KeywordChecker(DataFixture.KEYWORDS);
+        mChecker = new KeywordChecker(new String[]{"foo", "bar"});
     }
 
     public void testHasAtLeastOneKeywordSuccessWithOneKeyword() {
         boolean hasAtLeastOneKeyword = mChecker
-                .hasAtLeastOneKeyword(DataFixture.TEXT_ONE_KEYWORD);
+                .hasAtLeastOneKeyword("This has foo");
         assertTrue(hasAtLeastOneKeyword);
     }
 
     public void testHasAtLeastOneKeywordSuccessWithMoreThanOneKeyword() {
         boolean hasAtLeastOneKeyword = mChecker
-                .hasAtLeastOneKeyword(DataFixture.TEXT_ALL_KEYWORDS);
+                .hasAtLeastOneKeyword("This has foo bar");
         assertTrue(hasAtLeastOneKeyword);
     }
 
     public void testHasAtLeastOneKeywordFailure() {
         boolean hasAtLeastOneKeyword = mChecker
-                .hasAtLeastOneKeyword(DataFixture.TEXT_NO_KEYWORD);
+                .hasAtLeastOneKeyword("This has nothing");
         assertFalse(hasAtLeastOneKeyword);
     }
 
     public void testHasAllKeywordsSuccess() {
-        boolean hasAllKeywords = mChecker.hasAllKeywords(DataFixture.TEXT_ALL_KEYWORDS);
+        boolean hasAllKeywords = mChecker.hasAllKeywords("This has foo bar");
         assertTrue(hasAllKeywords);
     }
 
     public void testHasAllKeywordsFailure() {
-        boolean hasAllKeywords = mChecker.hasAllKeywords(DataFixture.TEXT_NO_KEYWORD);
+        boolean hasAllKeywords = mChecker.hasAllKeywords("This has nothing");
         assertFalse(hasAllKeywords);
     }
 }
