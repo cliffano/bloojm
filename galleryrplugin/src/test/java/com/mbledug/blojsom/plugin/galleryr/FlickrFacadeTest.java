@@ -16,15 +16,15 @@ public class FlickrFacadeTest extends TestCase {
         mDataFixture = new DataFixture();
     }
 
-    public void testGetPhotosViaLiveService() {
-        FlickrFacade flickrFacade = new FlickrFacade(DataFixture.API_KEY);
-        List photos = flickrFacade.getPhotos(DataFixture.PHOTO_IDS_CSV);
-        assertNotNull(photos);
-        for (Iterator it = photos.iterator(); it.hasNext();) {
-            GalleryrPhoto photo = (GalleryrPhoto) it.next();
-            assertPhoto(photo);
-        }
-    }
+//    public void testGetPhotosViaLiveService() {
+//        FlickrFacade flickrFacade = new FlickrFacade(DataFixture.API_KEY);
+//        List photos = flickrFacade.getPhotos(DataFixture.PHOTO_IDS_CSV);
+//        assertNotNull(photos);
+//        for (Iterator it = photos.iterator(); it.hasNext();) {
+//            GalleryrPhoto photo = (GalleryrPhoto) it.next();
+//            assertPhoto(photo);
+//        }
+//    }
 
     public void testGetPhotosViaMockService() {
         FlickrFacade flickrFacade = new FlickrFacade(mDataFixture.createMockFlickrWithPhotosInterface(null));
@@ -56,15 +56,15 @@ public class FlickrFacadeTest extends TestCase {
         }
     }
 
-    public void testGetPhotosetsViaLiveService() {
-        FlickrFacade flickrFacade = new FlickrFacade(DataFixture.API_KEY);
-        List photos = flickrFacade.getPhotosFromPhotosets(DataFixture.PHOTOSET_IDS_CSV);
-        assertNotNull(photos);
-        for (Iterator it = photos.iterator(); it.hasNext();) {
-            GalleryrPhoto photo = (GalleryrPhoto) it.next();
-            assertPhoto(photo);
-        }
-    }
+//    public void testGetPhotosetsViaLiveService() {
+//        FlickrFacade flickrFacade = new FlickrFacade(DataFixture.API_KEY);
+//        List photos = flickrFacade.getPhotosFromPhotosets(DataFixture.PHOTOSET_IDS_CSV);
+//        assertNotNull(photos);
+//        for (Iterator it = photos.iterator(); it.hasNext();) {
+//            GalleryrPhoto photo = (GalleryrPhoto) it.next();
+//            assertPhoto(photo);
+//        }
+//    }
 
     public void testGetPhotosetsViaMockService() {
         int size = DataFixture.PHOTOSET_IDS_CSV.split(",").length;

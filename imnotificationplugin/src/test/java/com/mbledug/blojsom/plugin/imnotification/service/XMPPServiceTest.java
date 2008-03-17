@@ -25,25 +25,25 @@ public class XMPPServiceTest extends TestCase {
         }
     }
 
-    public void testSendViaLiveService() {
-        XMPPService service = new XMPPService("jabber.org", new Integer("5222"), "bloojm", "password");
-        List recipients = new ArrayList();
-        recipients.add("bloojm@jabber.org");
-        try {
-            service.send(recipients, "unit test message");
-        } catch (Exception e) {
-            fail("Exception shouldn't have been thrown.");
-        }
-    }
-
-    public void testSendViaLiveServiceWithDefaultPort() {
-        XMPPService service = new XMPPService("jabber.org", null, "bloojm", "password");
-        List recipients = new ArrayList();
-        recipients.add("bloojm@jabber.org");
-        try {
-            service.send(recipients, "unit test message");
-        } catch (Exception e) {
-            fail("Exception shouldn't have been thrown.");
-        }
-    }
+//    public void testSendViaLiveService() {
+//        XMPPService service = new XMPPService("jabber.org", new Integer("5222"), "bloojm", "password");
+//        List recipients = new ArrayList();
+//        recipients.add("bloojm@jabber.org");
+//        try {
+//            service.send(recipients, "unit test message");
+//        } catch (Exception e) {
+//            fail("Exception shouldn't have been thrown.");
+//        }
+//    }
+//
+//    public void testSendViaLiveServiceWithDefaultPort() {
+//        XMPPService service = new XMPPService("jabber.org", null, "bloojm", "password");
+//        List recipients = new ArrayList();
+//        recipients.add("bloojm@jabber.org");
+//        try {
+//            service.send(recipients, "unit test message");
+//        } catch (Exception e) {
+//            fail("Exception shouldn't have been thrown.");
+//        }
+//    }
 }

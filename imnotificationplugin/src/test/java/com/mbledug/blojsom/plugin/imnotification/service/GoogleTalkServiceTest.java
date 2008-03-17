@@ -16,14 +16,14 @@ public class GoogleTalkServiceTest extends TestCase {
         }
     }
 
-    public void testSendViaLiveService() {
-        GoogleTalkService service = new GoogleTalkService("bloojm", "p4ssw0rd");
-        List recipients = new ArrayList();
-        recipients.add("bloojm@gmail.com");
-        try {
-            service.send(recipients, "unit test message");
-        } catch (Exception e) {
-            fail("Exception shouldn't have been thrown.");
-        }
-    }
+//    public void testSendViaLiveService() {
+//        GoogleTalkService service = new GoogleTalkService("bloojm", "p4ssw0rd");
+//        List recipients = new ArrayList();
+//        recipients.add("bloojm@gmail.com");
+//        try {
+//            service.send(recipients, "unit test message");
+//        } catch (Exception e) {
+//            fail("Exception shouldn't have been thrown.");
+//        }
+//    }
 }
