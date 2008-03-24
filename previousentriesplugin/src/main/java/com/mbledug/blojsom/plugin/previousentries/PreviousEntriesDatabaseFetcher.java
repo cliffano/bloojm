@@ -77,7 +77,9 @@ public class PreviousEntriesDatabaseFetcher {
      * @throws FetcherException when there's a problem with retrieving the
      *         previous entries from the database
      */
-    public final Entry[] loadPreviousEntries(
+    // checkstyle suggests this method to be final,
+    // but EasyMock can't mock final method
+    public Entry[] loadPreviousEntries(
             final Blog blog,
             final Entry entry,
             final int numPreviousEntries) throws FetcherException {

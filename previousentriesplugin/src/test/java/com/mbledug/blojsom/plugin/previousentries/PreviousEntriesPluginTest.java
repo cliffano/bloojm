@@ -4,6 +4,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Properties;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import junit.framework.TestCase;
 
 import org.blojsom.blog.Entry;
@@ -11,32 +14,36 @@ import org.blojsom.blog.database.DatabaseBlog;
 import org.blojsom.blog.database.DatabaseEntry;
 import org.blojsom.fetcher.FetcherException;
 import org.blojsom.plugin.PluginException;
+import org.easymock.classextension.EasyMock;
 
 public class PreviousEntriesPluginTest extends TestCase {
 
-    private DataFixture mDataFixture;
+    public void testProcessAddsPreviousEntriesToContextWhenTheresOnlyOneEntry() throws Exception {
 
-    protected void setUp() {
-        mDataFixture = new DataFixture();
-    }
-
-    public void testProcessAddsPreviousEntriesToContextWhenTheresOnlyOneEntry() {
         int numPreviousEntries = 24;
         HashMap context = new HashMap();
         Properties properties = new Properties();
         properties.put(PreviousEntriesPlugin.PROPERTY_PREVIOUS_ENTRIES_NUM, "" + numPreviousEntries);
-        DatabaseBlog blog = mDataFixture.createBlog(20);
+        DatabaseBlog blog = createBlog(20);
         blog.setProperties(properties);
         DatabaseEntry entry = new DatabaseEntry();
         entry.setDate(new Date());
         Entry[] entries = new Entry[] {entry};
 
-        PreviousEntriesPlugin previousEntriesPlugin = new PreviousEntriesPlugin(mDataFixture.createMockFetcher(numPreviousEntries));
+        HttpServletRequest request = (HttpServletRequest) EasyMock.createStrictMock(HttpServletRequest.class);
+        HttpServletResponse response = (HttpServletResponse) EasyMock.createStrictMock(HttpServletResponse.class);
+
+        PreviousEntriesDatabaseFetcher fetcher = (PreviousEntriesDatabaseFetcher) EasyMock.createStrictMock(PreviousEntriesDatabaseFetcher.class);
+        EasyMock.expect(fetcher.loadPreviousEntries(blog, entry, numPreviousEntries)).andReturn(createDatabaseEntry(numPreviousEntries));
+        PreviousEntriesPlugin previousEntriesPlugin = new PreviousEntriesPlugin(fetcher);
+
+        EasyMock.replay(new Object[]{fetcher, request, response});
+
         try {
             previousEntriesPlugin.init();
             previousEntriesPlugin.process(
-                    mDataFixture.createMockHttpServletRequest(),
-                    mDataFixture.createMockHttpServletResponse(),
+                    request,
+                    response,
                     blog,
                     context,
                     entries);
@@ -49,25 +56,34 @@ public class PreviousEntriesPluginTest extends TestCase {
         DatabaseEntry[] previousEntries = (DatabaseEntry[]) context.get(PreviousEntriesPlugin.CONTEXT_PREVIOUS_ENTRIES);
         assertNotNull(previousEntries);
         assertEquals(numPreviousEntries, previousEntries.length);
+
+        EasyMock.verify(new Object[]{fetcher, request, response});
     }
 
-    public void testProcessDoesntAddPreviousEntriesToContextWhenTheresMoreThanOneEntry() {
+    public void testProcessDoesntAddPreviousEntriesToContextWhenTheresMoreThanOneEntry() throws Exception {
         int numPreviousEntries = 24;
         HashMap context = new HashMap();
         Properties properties = new Properties();
         properties.put(PreviousEntriesPlugin.PROPERTY_PREVIOUS_ENTRIES_NUM, "" + numPreviousEntries);
-        DatabaseBlog blog = mDataFixture.createBlog(20);
+        DatabaseBlog blog = createBlog(20);
         blog.setProperties(properties);
         DatabaseEntry entry = new DatabaseEntry();
         entry.setDate(new Date());
         Entry[] entries = new Entry[] {entry, entry};
 
-        PreviousEntriesPlugin previousEntriesPlugin = new PreviousEntriesPlugin(mDataFixture.createMockFetcher(numPreviousEntries));
+        HttpServletRequest request = (HttpServletRequest) EasyMock.createStrictMock(HttpServletRequest.class);
+        HttpServletResponse response = (HttpServletResponse) EasyMock.createStrictMock(HttpServletResponse.class);
+
+        PreviousEntriesDatabaseFetcher fetcher = (PreviousEntriesDatabaseFetcher) EasyMock.createStrictMock(PreviousEntriesDatabaseFetcher.class);
+        PreviousEntriesPlugin previousEntriesPlugin = new PreviousEntriesPlugin(fetcher);
+
+        EasyMock.replay(new Object[]{fetcher, request, response});
+
         try {
             previousEntriesPlugin.init();
             previousEntriesPlugin.process(
-                    mDataFixture.createMockHttpServletRequest(),
-                    mDataFixture.createMockHttpServletResponse(),
+                    request,
+                    response,
                     blog,
                     context,
                     entries);
@@ -78,25 +94,34 @@ public class PreviousEntriesPluginTest extends TestCase {
         }
 
         assertNull(context.get(PreviousEntriesPlugin.CONTEXT_PREVIOUS_ENTRIES));
+
+        EasyMock.verify(new Object[]{fetcher, request, response});
     }
 
-    public void testProcessDoesntAddPreviousEntriesToContextWhenTheresNoEntry() {
+    public void testProcessDoesntAddPreviousEntriesToContextWhenTheresNoEntry() throws Exception {
         int numPreviousEntries = 24;
         HashMap context = new HashMap();
         Properties properties = new Properties();
         properties.put(PreviousEntriesPlugin.PROPERTY_PREVIOUS_ENTRIES_NUM, "" + numPreviousEntries);
-        DatabaseBlog blog = mDataFixture.createBlog(20);
+        DatabaseBlog blog = createBlog(20);
         blog.setProperties(properties);
         DatabaseEntry entry = new DatabaseEntry();
         entry.setDate(new Date());
         Entry[] entries = new Entry[0];
 
-        PreviousEntriesPlugin previousEntriesPlugin = new PreviousEntriesPlugin(mDataFixture.createMockFetcher(numPreviousEntries));
+        HttpServletRequest request = (HttpServletRequest) EasyMock.createStrictMock(HttpServletRequest.class);
+        HttpServletResponse response = (HttpServletResponse) EasyMock.createStrictMock(HttpServletResponse.class);
+
+        PreviousEntriesDatabaseFetcher fetcher = (PreviousEntriesDatabaseFetcher) EasyMock.createStrictMock(PreviousEntriesDatabaseFetcher.class);
+        PreviousEntriesPlugin previousEntriesPlugin = new PreviousEntriesPlugin(fetcher);
+
+        EasyMock.replay(new Object[]{fetcher, request, response});
+
         try {
             previousEntriesPlugin.init();
             previousEntriesPlugin.process(
-                    mDataFixture.createMockHttpServletRequest(),
-                    mDataFixture.createMockHttpServletResponse(),
+                    request,
+                    response,
                     blog,
                     context,
                     entries);
@@ -107,25 +132,34 @@ public class PreviousEntriesPluginTest extends TestCase {
         }
 
         assertNull(context.get(PreviousEntriesPlugin.CONTEXT_PREVIOUS_ENTRIES));
+
+        EasyMock.verify(new Object[]{fetcher, request, response});
     }
 
-    public void testProcessDoesntAddPreviousEntriesWhenFetcherExceptionOccurs() {
+    public void testProcessDoesntAddPreviousEntriesWhenFetcherExceptionOccurs() throws Exception {
         int numPreviousEntries = 24;
         HashMap context = new HashMap();
         Properties properties = new Properties();
         properties.put(PreviousEntriesPlugin.PROPERTY_PREVIOUS_ENTRIES_NUM, "" + numPreviousEntries);
-        DatabaseBlog blog = mDataFixture.createBlog(20);
+        DatabaseBlog blog = createBlog(20);
         blog.setProperties(properties);
         DatabaseEntry entry = new DatabaseEntry();
         entry.setDate(new Date());
-        Entry[] entries = new Entry[0];
+        Entry[] entries = new Entry[] {entry};
 
-        PreviousEntriesPlugin previousEntriesPlugin = new PreviousEntriesPlugin(mDataFixture.createMockFetcher(new FetcherException()));
+        HttpServletRequest request = (HttpServletRequest) EasyMock.createStrictMock(HttpServletRequest.class);
+        HttpServletResponse response = (HttpServletResponse) EasyMock.createStrictMock(HttpServletResponse.class);
+
+        PreviousEntriesDatabaseFetcher fetcher = (PreviousEntriesDatabaseFetcher) EasyMock.createStrictMock(PreviousEntriesDatabaseFetcher.class);
+        EasyMock.expect(fetcher.loadPreviousEntries(blog, entry, numPreviousEntries)).andThrow(new FetcherException());
+        PreviousEntriesPlugin previousEntriesPlugin = new PreviousEntriesPlugin(fetcher);
+
+        EasyMock.replay(new Object[]{fetcher, request, response});
         try {
             previousEntriesPlugin.init();
             previousEntriesPlugin.process(
-                    mDataFixture.createMockHttpServletRequest(),
-                    mDataFixture.createMockHttpServletResponse(),
+                    request,
+                    response,
                     blog,
                     context,
                     entries);
@@ -136,5 +170,21 @@ public class PreviousEntriesPluginTest extends TestCase {
         }
 
         assertNull(context.get(PreviousEntriesPlugin.CONTEXT_PREVIOUS_ENTRIES));
+
+        EasyMock.verify(new Object[]{fetcher, request, response});
+    }
+
+    DatabaseBlog createBlog(int id) {
+        DatabaseBlog blog = new DatabaseBlog();
+        blog.setId(new Integer(id));
+        return blog;
+    }
+
+    DatabaseEntry[] createDatabaseEntry(int numOfEntries) {
+    	DatabaseEntry[] entries = new DatabaseEntry[numOfEntries];
+        for (int i = 0; i < numOfEntries; i++) {
+            entries[i] = new DatabaseEntry();
+        }
+        return entries;
     }
 }

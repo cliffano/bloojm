@@ -100,7 +100,7 @@ public class PreviousEntriesPlugin implements Plugin {
      * @param context context
      * @param entries blog entries retrieved for the particular request
      * @return original entries when there are more than one entry, and an entry
-     * 	with previous entries when there's only one entry
+     * with previous entries when there's only one entry
      * @throws PluginException when there's an error processing the blog entries
      */
     public final Entry[] process(
