@@ -4,6 +4,11 @@
     <title>Changes</title>
   </properties>
   <body>
+    <release version="0.4-SNAPSHOT" date="current">
+      <action type="update" dev="cliffano">
+        Refactored unit tests, replaced JMock with EasyMock 2.
+      </action>
+    </release>
     <release version="0.3" date="17-02-2007">
       <action type="update" dev="cliffano">
         Updated plugin implementation to work with Blojsom 3, added unit tests.

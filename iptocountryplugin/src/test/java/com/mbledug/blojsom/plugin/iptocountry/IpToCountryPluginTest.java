@@ -1,42 +1,52 @@
 package com.mbledug.blojsom.plugin.iptocountry;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import junit.framework.TestCase;
 
 import org.blojsom.blog.Comment;
 import org.blojsom.blog.Entry;
 import org.blojsom.blog.database.DatabaseBlog;
+import org.blojsom.blog.database.DatabaseComment;
+import org.blojsom.blog.database.DatabaseEntry;
 import org.blojsom.event.Listener;
 import org.blojsom.event.SimpleEventBroadcaster;
 import org.blojsom.plugin.PluginException;
 import org.blojsom.plugin.comment.event.CommentResponseSubmissionEvent;
 import org.blojsom.plugin.response.event.ResponseSubmissionEvent;
+import org.easymock.classextension.EasyMock;
 
 public class IpToCountryPluginTest extends TestCase {
 
-    DataFixture mDataFixture;
-
-    public void setUp() {
-        mDataFixture = new DataFixture();
-    }
+	static final Country EXPECTED_COUNTRY = new Country("GB", "GBR", "UNITED KINGDOM");
 
     public void testProcessAddingCountryToComments() {
 
         IpToCountryPlugin ipToCountryPlugin = new IpToCountryPlugin();
-        Entry[] entries = new Entry[] {DataFixture.createEntryWithSingleCommentWithoutCountryCode("111.111.111.111")};
-        Country expectedCountry = DataFixture.EXPECTED_COUNTRY;
+        Entry[] entries = new Entry[] {createEntryWithSingleCommentWithoutCountryCode("111.111.111.111")};
+
+        HttpServletRequest request = (HttpServletRequest) EasyMock.createStrictMock(HttpServletRequest.class);
+        HttpServletResponse response = (HttpServletResponse) EasyMock.createStrictMock(HttpServletResponse.class);
+        IpToCountryDao ipToCountryDao = (IpToCountryDao) EasyMock.createStrictMock(IpToCountryDao.class);
+        EasyMock.expect(ipToCountryDao.getCountry(1869573999)).andReturn(EXPECTED_COUNTRY);
+
+        EasyMock.replay(new Object[]{ipToCountryDao, request, response});
 
         try {
             ipToCountryPlugin.setEventBroadcaster(new SimpleEventBroadcaster());
-            ipToCountryPlugin.setIpToCountryDao(mDataFixture.createMockIpToCountryDao(expectedCountry));
+            ipToCountryPlugin.setIpToCountryDao(ipToCountryDao);
             ipToCountryPlugin.init();
             entries = ipToCountryPlugin.process(
-                    mDataFixture.createMockHttpServletRequest(),
-                    mDataFixture.createMockHttpServletResponse(),
+                    request,
+                    response,
                     new DatabaseBlog(),
                     new HashMap(),
                     entries);
@@ -48,32 +58,39 @@ public class IpToCountryPluginTest extends TestCase {
                 assertNotNull(metaData.get(IpToCountryPlugin.METADATA_COUNTRY_CODE_2CHAR));
                 assertNotNull(metaData.get(IpToCountryPlugin.METADATA_COUNTRY_CODE_3CHAR));
                 assertNotNull(metaData.get(IpToCountryPlugin.METADATA_COUNTRY_NAME));
-                assertEquals(expectedCountry.getTwoCharCode(), String.valueOf(metaData.get(IpToCountryPlugin.METADATA_COUNTRY_CODE_2CHAR)));
-                assertEquals(expectedCountry.getThreeCharCode(), String.valueOf(metaData.get(IpToCountryPlugin.METADATA_COUNTRY_CODE_3CHAR)));
-                assertEquals(expectedCountry.getName(), String.valueOf(metaData.get(IpToCountryPlugin.METADATA_COUNTRY_NAME)));
+                assertEquals(EXPECTED_COUNTRY.getTwoCharCode(), String.valueOf(metaData.get(IpToCountryPlugin.METADATA_COUNTRY_CODE_2CHAR)));
+                assertEquals(EXPECTED_COUNTRY.getThreeCharCode(), String.valueOf(metaData.get(IpToCountryPlugin.METADATA_COUNTRY_CODE_3CHAR)));
+                assertEquals(EXPECTED_COUNTRY.getName(), String.valueOf(metaData.get(IpToCountryPlugin.METADATA_COUNTRY_NAME)));
             }
             ipToCountryPlugin.cleanup();
             ipToCountryPlugin.destroy();
         } catch (PluginException pe) {
             fail("PluginException should not occur: " + pe);
         }
+
+        EasyMock.verify(new Object[]{ipToCountryDao, request, response});
     }
 
     public void testProcessDoesntAddCountryToCommentsWhenIpAddressIsIgnored() {
 
         String ipAddress = "111.111.111.111";
         IpToCountryPlugin ipToCountryPlugin = new IpToCountryPlugin();
-        Entry[] entries = new Entry[] {DataFixture.createEntryWithSingleCommentWithoutCountryCode(ipAddress)};
-        Country expectedCountry = DataFixture.EXPECTED_COUNTRY;
+        Entry[] entries = new Entry[] {createEntryWithSingleCommentWithoutCountryCode(ipAddress)};
+
+        HttpServletRequest request = (HttpServletRequest) EasyMock.createStrictMock(HttpServletRequest.class);
+        HttpServletResponse response = (HttpServletResponse) EasyMock.createStrictMock(HttpServletResponse.class);
+        IpToCountryDao ipToCountryDao = (IpToCountryDao) EasyMock.createStrictMock(IpToCountryDao.class);
+
+        EasyMock.replay(new Object[]{ipToCountryDao, request, response});
 
         try {
             ipToCountryPlugin.setIgnoredIpAddresses(ipAddress + ",222.222.222.222");
             ipToCountryPlugin.setEventBroadcaster(new SimpleEventBroadcaster());
-            ipToCountryPlugin.setIpToCountryDao(mDataFixture.createMockIpToCountryDao(expectedCountry));
+            ipToCountryPlugin.setIpToCountryDao(ipToCountryDao);
             ipToCountryPlugin.init();
             entries = ipToCountryPlugin.process(
-                    mDataFixture.createMockHttpServletRequest(),
-                    mDataFixture.createMockHttpServletResponse(),
+                    request,
+                    response,
                     new DatabaseBlog(),
                     new HashMap(),
                     entries);
@@ -91,21 +108,28 @@ public class IpToCountryPluginTest extends TestCase {
         } catch (PluginException pe) {
             fail("PluginException should not occur: " + pe);
         }
+
+        EasyMock.verify(new Object[]{ipToCountryDao, request, response});
     }
 
     public void testProcessDoesntAddCountryToCommentWhenCommentIpIsNull() {
 
         IpToCountryPlugin ipToCountryPlugin = new IpToCountryPlugin();
-        Entry[] entries = new Entry[] {DataFixture.createEntryWithSingleCommentWithoutCountryCode(null)};
-        Country expectedCountry = DataFixture.EXPECTED_COUNTRY;
+        Entry[] entries = new Entry[] {createEntryWithSingleCommentWithoutCountryCode(null)};
+
+        HttpServletRequest request = (HttpServletRequest) EasyMock.createStrictMock(HttpServletRequest.class);
+        HttpServletResponse response = (HttpServletResponse) EasyMock.createStrictMock(HttpServletResponse.class);
+        IpToCountryDao ipToCountryDao = (IpToCountryDao) EasyMock.createStrictMock(IpToCountryDao.class);
+
+        EasyMock.replay(new Object[]{ipToCountryDao, request, response});
 
         try {
             ipToCountryPlugin.setEventBroadcaster(new SimpleEventBroadcaster());
-            ipToCountryPlugin.setIpToCountryDao(mDataFixture.createMockIpToCountryDao(expectedCountry));
+            ipToCountryPlugin.setIpToCountryDao(ipToCountryDao);
             ipToCountryPlugin.init();
             entries = ipToCountryPlugin.process(
-                    mDataFixture.createMockHttpServletRequest(),
-                    mDataFixture.createMockHttpServletResponse(),
+                    request,
+                    response,
                     new DatabaseBlog(),
                     new HashMap(),
                     entries);
@@ -123,28 +147,53 @@ public class IpToCountryPluginTest extends TestCase {
         } catch (PluginException pe) {
             fail("PluginException should not occur: " + pe);
         }
+
+        EasyMock.verify(new Object[]{ipToCountryDao, request, response});
     }
 
     public void testProcessCommentResponseSubmissionEventAddsCountryToMetaData() {
 
         IpToCountryPlugin ipToCountryPlugin = new IpToCountryPlugin();
-        Country expectedCountry = DataFixture.EXPECTED_COUNTRY;
-        ipToCountryPlugin.setIpToCountryDao(mDataFixture.createMockIpToCountryDao(expectedCountry));
-        CommentResponseSubmissionEvent event = DataFixture.createCommentResponseSubmissionEventWithCommentHavingNoCountryCode();
+
+        IpToCountryDao ipToCountryDao = (IpToCountryDao) EasyMock.createStrictMock(IpToCountryDao.class);
+        ipToCountryPlugin.setIpToCountryDao(ipToCountryDao);
+        EasyMock.expect(ipToCountryDao.getCountry(1869573999)).andReturn(EXPECTED_COUNTRY);
+
+        HttpServletRequest request = (HttpServletRequest) EasyMock.createStrictMock(HttpServletRequest.class);
+        EasyMock.expect(request.getRemoteAddr()).andReturn("111.111.111.111");
+        HttpServletResponse response = (HttpServletResponse) EasyMock.createStrictMock(HttpServletResponse.class);
+
+        CommentResponseSubmissionEvent event = new CommentResponseSubmissionEvent(
+                new Object(),
+                new Date(),
+                new DatabaseBlog(),
+                request,
+                response,
+                "Dummy Submitter",
+                "foo@bar.com",
+                "http://dummyurl.org",
+                "Dummy Comment Description",
+                new DatabaseEntry(),
+                new HashMap());
+
+        EasyMock.replay(new Object[]{ipToCountryDao, request, response});
+
         ipToCountryPlugin.processEvent(event);
         Map metaData = event.getMetaData();
         assertNotNull(metaData.get(IpToCountryPlugin.METADATA_COUNTRY_CODE_2CHAR));
         assertNotNull(metaData.get(IpToCountryPlugin.METADATA_COUNTRY_CODE_3CHAR));
         assertNotNull(metaData.get(IpToCountryPlugin.METADATA_COUNTRY_NAME));
-        assertEquals(expectedCountry.getTwoCharCode(), String.valueOf(metaData.get(IpToCountryPlugin.METADATA_COUNTRY_CODE_2CHAR)));
-        assertEquals(expectedCountry.getThreeCharCode(), String.valueOf(metaData.get(IpToCountryPlugin.METADATA_COUNTRY_CODE_3CHAR)));
-        assertEquals(expectedCountry.getName(), String.valueOf(metaData.get(IpToCountryPlugin.METADATA_COUNTRY_NAME)));
+        assertEquals(EXPECTED_COUNTRY.getTwoCharCode(), String.valueOf(metaData.get(IpToCountryPlugin.METADATA_COUNTRY_CODE_2CHAR)));
+        assertEquals(EXPECTED_COUNTRY.getThreeCharCode(), String.valueOf(metaData.get(IpToCountryPlugin.METADATA_COUNTRY_CODE_3CHAR)));
+        assertEquals(EXPECTED_COUNTRY.getName(), String.valueOf(metaData.get(IpToCountryPlugin.METADATA_COUNTRY_NAME)));
+
+        EasyMock.verify(new Object[]{ipToCountryDao, request, response});
     }
 
     public void testProcessResponseSubmissionEventDoesntAddCountryToMetaData() {
 
         Listener ipToCountryPlugin = new IpToCountryPlugin();
-        ResponseSubmissionEvent event = DataFixture.createResponseSubmissionEvent();
+        ResponseSubmissionEvent event = createResponseSubmissionEvent();
         ipToCountryPlugin.processEvent(event);
         Map metaData = event.getMetaData();
         assertNull(metaData.get(IpToCountryPlugin.METADATA_COUNTRY_CODE_2CHAR));
@@ -155,7 +204,40 @@ public class IpToCountryPluginTest extends TestCase {
     public void testHandleEventLeftEventAsIs() {
 
         Listener ipToCountryPlugin = new IpToCountryPlugin();
-        ResponseSubmissionEvent event = DataFixture.createResponseSubmissionEvent();
+        ResponseSubmissionEvent event = createResponseSubmissionEvent();
         ipToCountryPlugin.handleEvent(event);
+    }
+
+    private ResponseSubmissionEvent createResponseSubmissionEvent() {
+        return new ResponseSubmissionEvent(
+                new Object(),
+                new Date(),
+                new DatabaseBlog(),
+                (HttpServletRequest) EasyMock.createStrictMock(HttpServletRequest.class),
+                (HttpServletResponse) EasyMock.createStrictMock(HttpServletResponse.class),
+                "Dummy Submitter",
+                "foo@bar.com",
+                "http://dummyurl.org",
+                "Dummy Comment Description",
+                new DatabaseEntry(),
+                new HashMap());
+    }
+
+    private Entry createEntryWithSingleCommentWithoutCountryCode(String ipAddress) {
+
+        List comments = new ArrayList();
+        comments.add(createCommentWithoutCountryCode(ipAddress));
+        DatabaseEntry entry = new DatabaseEntry();
+        entry.setComments(comments);
+        return entry;
+    }
+
+    private DatabaseComment createCommentWithoutCountryCode(String ipAddress) {
+
+        DatabaseComment comment = new DatabaseComment();
+        comment.setAuthorEmail("foo@bar.com");
+        comment.setMetaData(new HashMap());
+        comment.setIp(ipAddress);
+        return comment;
     }
 }
