@@ -1,7 +1,13 @@
 package com.mbledug.blojsom.plugin.gatekeeper;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import junit.framework.TestCase;
 
@@ -10,14 +16,12 @@ import org.blojsom.blog.Entry;
 import org.blojsom.blog.database.DatabaseBlog;
 import org.blojsom.plugin.PluginException;
 import org.blojsom.plugin.comment.CommentPlugin;
+import org.easymock.EasyMock;
+
+import com.mbledug.blojsom.plugin.gatekeeper.provider.BlogQAProvider;
+import com.mbledug.blojsom.plugin.gatekeeper.provider.BlojsomQAProvider;
 
 public class GateKeeperPluginTest extends TestCase {
-
-    private DataFixture mDataFixture;
-
-    protected void setUp() {
-        mDataFixture = new DataFixture();
-    }
 
     public void testCreatingNewSCodePluginWithNullImageFactoryIllegalArgumentException() {
         try {
@@ -29,17 +33,38 @@ public class GateKeeperPluginTest extends TestCase {
     }
 
     public void testProcessWithPluginDisabledDoesntMarkCommentForDeletion() {
-        GateKeeperPlugin gateKeeperPlugin = new GateKeeperPlugin(mDataFixture.createQAManager());
+
+    	Blog blog = new DatabaseBlog();
+
+    	BlogQAProvider blogQAProvider = (BlogQAProvider) EasyMock.createStrictMock(BlogQAProvider.class);
+    	List blogQAProviders = new ArrayList();
+    	blogQAProviders.add(blogQAProvider);
+
+    	BlojsomQAProvider blojsomQAProvider = (BlojsomQAProvider) EasyMock.createStrictMock(BlojsomQAProvider.class);
+    	List blojsomQAProviders = new ArrayList();
+    	blojsomQAProviders.add(blojsomQAProvider);
+
+
+        QAManager manager = new QAManager(
+        		blojsomQAProviders,
+                blogQAProviders);
+
+        HttpServletRequest request = (HttpServletRequest) EasyMock.createStrictMock(HttpServletRequest.class);
+        EasyMock.expect(request.getParameter(CommentPlugin.COMMENT_PARAM)).andReturn("y");
+        HttpServletResponse response = (HttpServletResponse) EasyMock.createStrictMock(HttpServletResponse.class);
+
+        EasyMock.replay(new Object[]{blogQAProvider, blojsomQAProvider, request, response});
+
+        GateKeeperPlugin gateKeeperPlugin = new GateKeeperPlugin(manager);
         try {
             Map properties = new HashMap();
             properties.put(GateKeeperPlugin.PROPERTY_ENABLED, Boolean.FALSE.toString());
-            Blog blog = new DatabaseBlog();
             blog.setProperties(properties);
             blog.setBlogCommentsEnabled(Boolean.TRUE);
             Map context = new HashMap();
             gateKeeperPlugin.init();
-            gateKeeperPlugin.process(mDataFixture.createMockHttpServletRequest("y"),
-                            mDataFixture.createMockHttpServletResponse(),
+            gateKeeperPlugin.process(request,
+                            response,
                             blog,
                             context,
                             new Entry[]{});
@@ -51,20 +76,43 @@ public class GateKeeperPluginTest extends TestCase {
         } catch (PluginException pe) {
             fail("Unexpected PluginException thrown: " + pe);
         }
+
+        EasyMock.verify(new Object[]{blogQAProvider, blojsomQAProvider, request, response});
     }
 
     public void testProcessWithBlogCommentDisabledDoesntMarkCommentForDeletion() {
-        GateKeeperPlugin gateKeeperPlugin = new GateKeeperPlugin(mDataFixture.createQAManager());
+
+    	Blog blog = new DatabaseBlog();
+
+    	BlogQAProvider blogQAProvider = (BlogQAProvider) EasyMock.createStrictMock(BlogQAProvider.class);
+    	List blogQAProviders = new ArrayList();
+    	blogQAProviders.add(blogQAProvider);
+
+    	BlojsomQAProvider blojsomQAProvider = (BlojsomQAProvider) EasyMock.createStrictMock(BlojsomQAProvider.class);
+    	List blojsomQAProviders = new ArrayList();
+    	blojsomQAProviders.add(blojsomQAProvider);
+
+
+        QAManager manager = new QAManager(
+        		blojsomQAProviders,
+                blogQAProviders);
+
+        HttpServletRequest request = (HttpServletRequest) EasyMock.createStrictMock(HttpServletRequest.class);
+        EasyMock.expect(request.getParameter(CommentPlugin.COMMENT_PARAM)).andReturn("y");
+        HttpServletResponse response = (HttpServletResponse) EasyMock.createStrictMock(HttpServletResponse.class);
+
+        EasyMock.replay(new Object[]{blogQAProvider, blojsomQAProvider, request, response});
+
+        GateKeeperPlugin gateKeeperPlugin = new GateKeeperPlugin(manager);
         try {
             Map properties = new HashMap();
             properties.put(GateKeeperPlugin.PROPERTY_ENABLED, Boolean.TRUE.toString());
-            Blog blog = new DatabaseBlog();
             blog.setProperties(properties);
             blog.setBlogCommentsEnabled(Boolean.FALSE);
             Map context = new HashMap();
             gateKeeperPlugin.init();
-            gateKeeperPlugin.process(mDataFixture.createMockHttpServletRequest("y"),
-                            mDataFixture.createMockHttpServletResponse(),
+            gateKeeperPlugin.process(request,
+                            response,
                             blog,
                             context,
                             new Entry[]{});
@@ -76,20 +124,49 @@ public class GateKeeperPluginTest extends TestCase {
         } catch (PluginException pe) {
             fail("Unexpected PluginException thrown: " + pe);
         }
+
+        EasyMock.verify(new Object[]{blogQAProvider, blojsomQAProvider, request, response});
     }
 
-    public void testProcessWithNonCommentFormSubmissionDoesntMarkCommentForDeletionAndPutQAIntoContext() {
-        GateKeeperPlugin gateKeeperPlugin = new GateKeeperPlugin(mDataFixture.createQAManager());
+    public void testProcessWithNonCommentFormSubmissionDoesntMarkCommentForDeletionAndPutsQAIntoContext() {
+    	Blog blog = new DatabaseBlog();
+
+    	BlogQAProvider blogQAProvider = (BlogQAProvider) EasyMock.createStrictMock(BlogQAProvider.class);
+    	List blogQAs = createQuestionAnswerList(1);
+		EasyMock.expect(blogQAProvider.getQuestionAnswerList(blog)).andReturn(blogQAs);
+    	List blogQAProviders = new ArrayList();
+    	blogQAProviders.add(blogQAProvider);
+
+    	BlojsomQAProvider blojsomQAProvider = (BlojsomQAProvider) EasyMock.createStrictMock(BlojsomQAProvider.class);
+    	EasyMock.expect(blojsomQAProvider.getQuestionAnswerList()).andReturn(blogQAs);
+    	List blojsomQAProviders = new ArrayList();
+    	blojsomQAProviders.add(blojsomQAProvider);
+
+
+        QAManager manager = new QAManager(
+        		blojsomQAProviders,
+                blogQAProviders);
+
+        HttpSession session = (HttpSession) EasyMock.createStrictMock(HttpSession.class);
+        session.setAttribute(GateKeeperPlugin.SESSION_ATTR_QA, blogQAs.get(0));
+
+        HttpServletRequest request = (HttpServletRequest) EasyMock.createStrictMock(HttpServletRequest.class);
+        EasyMock.expect(request.getParameter(CommentPlugin.COMMENT_PARAM)).andReturn(null);
+        EasyMock.expect(request.getSession()).andReturn(session);
+        HttpServletResponse response = (HttpServletResponse) EasyMock.createStrictMock(HttpServletResponse.class);
+
+        EasyMock.replay(new Object[]{blogQAProvider, blojsomQAProvider, request, response, session});
+
+        GateKeeperPlugin gateKeeperPlugin = new GateKeeperPlugin(manager);
         try {
             Map properties = new HashMap();
             properties.put(GateKeeperPlugin.PROPERTY_ENABLED, Boolean.TRUE.toString());
-            Blog blog = new DatabaseBlog();
             blog.setProperties(properties);
             blog.setBlogCommentsEnabled(Boolean.TRUE);
             Map context = new HashMap();
             gateKeeperPlugin.init();
-            gateKeeperPlugin.process(mDataFixture.createMockHttpServletRequestWithNonCommentFormSubmission(null),
-                            mDataFixture.createMockHttpServletResponse(),
+            gateKeeperPlugin.process(request,
+                            response,
                             blog,
                             context,
                             new Entry[]{});
@@ -102,21 +179,49 @@ public class GateKeeperPluginTest extends TestCase {
         } catch (PluginException pe) {
             fail("Unexpected PluginException thrown: " + pe);
         }
+
+        EasyMock.verify(new Object[]{blogQAProvider, blojsomQAProvider, request, response, session});
     }
 
     public void testProcessWithCommentFormSubmissionHavingNullSCodeInputMarksCommentForDeletion() {
-        GateKeeperPlugin gateKeeperPlugin = new GateKeeperPlugin(mDataFixture.createQAManager());
+    	Blog blog = new DatabaseBlog();
+
+    	BlogQAProvider blogQAProvider = (BlogQAProvider) EasyMock.createStrictMock(BlogQAProvider.class);
+    	List blogQAs = createQuestionAnswerList(1);
+    	List blogQAProviders = new ArrayList();
+    	blogQAProviders.add(blogQAProvider);
+
+    	BlojsomQAProvider blojsomQAProvider = (BlojsomQAProvider) EasyMock.createStrictMock(BlojsomQAProvider.class);
+    	List blojsomQAProviders = new ArrayList();
+    	blojsomQAProviders.add(blojsomQAProvider);
+
+
+        QAManager manager = new QAManager(
+        		blojsomQAProviders,
+                blogQAProviders);
+
+        HttpSession session = (HttpSession) EasyMock.createStrictMock(HttpSession.class);
+        EasyMock.expect(session.getAttribute(GateKeeperPlugin.SESSION_ATTR_QA)).andReturn(new QA("dummy question", "eggtart"));
+
+        HttpServletRequest request = (HttpServletRequest) EasyMock.createStrictMock(HttpServletRequest.class);
+        EasyMock.expect(request.getParameter(CommentPlugin.COMMENT_PARAM)).andReturn("y");
+        EasyMock.expect(request.getParameter(GateKeeperPlugin.PARAM_GATEKEEPER)).andReturn(null);
+        EasyMock.expect(request.getSession()).andReturn(session);
+        HttpServletResponse response = (HttpServletResponse) EasyMock.createStrictMock(HttpServletResponse.class);
+
+        EasyMock.replay(new Object[]{blogQAProvider, blojsomQAProvider, request, response, session});
+
+        GateKeeperPlugin gateKeeperPlugin = new GateKeeperPlugin(manager);
         try {
             Map properties = new HashMap();
             properties.put(GateKeeperPlugin.PROPERTY_ENABLED, Boolean.TRUE.toString());
-            Blog blog = new DatabaseBlog();
             blog.setProperties(properties);
             blog.setBlogCommentsEnabled(Boolean.TRUE);
             Map context = new HashMap();
             gateKeeperPlugin.init();
             gateKeeperPlugin.process(
-                            mDataFixture.createMockHttpServletRequestWithCommentFormSubmission("y", null, "eggtart"),
-                            mDataFixture.createMockHttpServletResponse(),
+                            request,
+                            response,
                             blog,
                             context,
                             new Entry[]{});
@@ -128,22 +233,50 @@ public class GateKeeperPluginTest extends TestCase {
         } catch (PluginException pe) {
             fail("Unexpected PluginException thrown: " + pe);
         }
+
+        EasyMock.verify(new Object[]{blogQAProvider, blojsomQAProvider, request, response, session});
     }
 
     public void testProcessWithNullSCodeInputMarksCommentForDeletionForContextAlreadyContainingCommentMetaData() {
-        GateKeeperPlugin gateKeeperPlugin = new GateKeeperPlugin(mDataFixture.createQAManager());
+    	Blog blog = new DatabaseBlog();
+
+    	BlogQAProvider blogQAProvider = (BlogQAProvider) EasyMock.createStrictMock(BlogQAProvider.class);
+    	List blogQAs = createQuestionAnswerList(1);
+    	List blogQAProviders = new ArrayList();
+    	blogQAProviders.add(blogQAProvider);
+
+    	BlojsomQAProvider blojsomQAProvider = (BlojsomQAProvider) EasyMock.createStrictMock(BlojsomQAProvider.class);
+    	List blojsomQAProviders = new ArrayList();
+    	blojsomQAProviders.add(blojsomQAProvider);
+
+
+        QAManager manager = new QAManager(
+        		blojsomQAProviders,
+                blogQAProviders);
+
+        HttpSession session = (HttpSession) EasyMock.createStrictMock(HttpSession.class);
+        EasyMock.expect(session.getAttribute(GateKeeperPlugin.SESSION_ATTR_QA)).andReturn(new QA("dummy question", "eggtart"));
+
+        HttpServletRequest request = (HttpServletRequest) EasyMock.createStrictMock(HttpServletRequest.class);
+        EasyMock.expect(request.getParameter(CommentPlugin.COMMENT_PARAM)).andReturn("y");
+        EasyMock.expect(request.getParameter(GateKeeperPlugin.PARAM_GATEKEEPER)).andReturn(null);
+        EasyMock.expect(request.getSession()).andReturn(session);
+        HttpServletResponse response = (HttpServletResponse) EasyMock.createStrictMock(HttpServletResponse.class);
+
+        EasyMock.replay(new Object[]{blogQAProvider, blojsomQAProvider, request, response, session});
+
+        GateKeeperPlugin gateKeeperPlugin = new GateKeeperPlugin(manager);
         try {
             Map properties = new HashMap();
             properties.put(GateKeeperPlugin.PROPERTY_ENABLED, Boolean.TRUE.toString());
-            Blog blog = new DatabaseBlog();
             blog.setProperties(properties);
             blog.setBlogCommentsEnabled(Boolean.TRUE);
             Map context = new HashMap();
             context.put(CommentPlugin.BLOJSOM_PLUGIN_COMMENT_METADATA, new HashMap());
             gateKeeperPlugin.init();
             gateKeeperPlugin.process(
-                            mDataFixture.createMockHttpServletRequestWithCommentFormSubmission("y", null, "eggtart"),
-                            mDataFixture.createMockHttpServletResponse(),
+                            request,
+                            response,
                             blog,
                             context,
                             new Entry[]{});
@@ -155,21 +288,49 @@ public class GateKeeperPluginTest extends TestCase {
         } catch (PluginException pe) {
             fail("Unexpected PluginException thrown: " + pe);
         }
+
+        EasyMock.verify(new Object[]{blogQAProvider, blojsomQAProvider, request, response, session});
     }
 
     public void testProcessWithNullSCodeAnswerMarksCommentForDeletion() {
-        GateKeeperPlugin gateKeeperPlugin = new GateKeeperPlugin(mDataFixture.createQAManager());
+    	Blog blog = new DatabaseBlog();
+
+    	BlogQAProvider blogQAProvider = (BlogQAProvider) EasyMock.createStrictMock(BlogQAProvider.class);
+    	List blogQAs = createQuestionAnswerList(1);
+    	List blogQAProviders = new ArrayList();
+    	blogQAProviders.add(blogQAProvider);
+
+    	BlojsomQAProvider blojsomQAProvider = (BlojsomQAProvider) EasyMock.createStrictMock(BlojsomQAProvider.class);
+    	List blojsomQAProviders = new ArrayList();
+    	blojsomQAProviders.add(blojsomQAProvider);
+
+
+        QAManager manager = new QAManager(
+        		blojsomQAProviders,
+                blogQAProviders);
+
+        HttpSession session = (HttpSession) EasyMock.createStrictMock(HttpSession.class);
+        EasyMock.expect(session.getAttribute(GateKeeperPlugin.SESSION_ATTR_QA)).andReturn(new QA("dummy question", null));
+
+        HttpServletRequest request = (HttpServletRequest) EasyMock.createStrictMock(HttpServletRequest.class);
+        EasyMock.expect(request.getParameter(CommentPlugin.COMMENT_PARAM)).andReturn("y");
+        EasyMock.expect(request.getParameter(GateKeeperPlugin.PARAM_GATEKEEPER)).andReturn("eggtart");
+        EasyMock.expect(request.getSession()).andReturn(session);
+        HttpServletResponse response = (HttpServletResponse) EasyMock.createStrictMock(HttpServletResponse.class);
+
+        EasyMock.replay(new Object[]{blogQAProvider, blojsomQAProvider, request, response, session});
+
+        GateKeeperPlugin gateKeeperPlugin = new GateKeeperPlugin(manager);
         try {
             Map properties = new HashMap();
             properties.put(GateKeeperPlugin.PROPERTY_ENABLED, Boolean.TRUE.toString());
-            Blog blog = new DatabaseBlog();
             blog.setProperties(properties);
             blog.setBlogCommentsEnabled(Boolean.TRUE);
             Map context = new HashMap();
             gateKeeperPlugin.init();
             gateKeeperPlugin.process(
-                            mDataFixture.createMockHttpServletRequestWithCommentFormSubmission("y", "eggtart", null),
-                            mDataFixture.createMockHttpServletResponse(),
+                            request,
+                            response,
                             blog,
                             context,
                             new Entry[]{});
@@ -181,21 +342,48 @@ public class GateKeeperPluginTest extends TestCase {
         } catch (PluginException pe) {
             fail("Unexpected PluginException thrown: " + pe);
         }
+        EasyMock.verify(new Object[]{blogQAProvider, blojsomQAProvider, request, response, session});
     }
 
     public void testProcessWithSCodeInputNotMatchingSCodeAnswerMarksCommentForDeletion() {
-        GateKeeperPlugin gateKeeperPlugin = new GateKeeperPlugin(mDataFixture.createQAManager());
+    	Blog blog = new DatabaseBlog();
+
+    	BlogQAProvider blogQAProvider = (BlogQAProvider) EasyMock.createStrictMock(BlogQAProvider.class);
+    	List blogQAs = createQuestionAnswerList(1);
+    	List blogQAProviders = new ArrayList();
+    	blogQAProviders.add(blogQAProvider);
+
+    	BlojsomQAProvider blojsomQAProvider = (BlojsomQAProvider) EasyMock.createStrictMock(BlojsomQAProvider.class);
+    	List blojsomQAProviders = new ArrayList();
+    	blojsomQAProviders.add(blojsomQAProvider);
+
+
+        QAManager manager = new QAManager(
+        		blojsomQAProviders,
+                blogQAProviders);
+
+        HttpSession session = (HttpSession) EasyMock.createStrictMock(HttpSession.class);
+        EasyMock.expect(session.getAttribute(GateKeeperPlugin.SESSION_ATTR_QA)).andReturn(new QA("dummy question", "fruittart"));
+
+        HttpServletRequest request = (HttpServletRequest) EasyMock.createStrictMock(HttpServletRequest.class);
+        EasyMock.expect(request.getParameter(CommentPlugin.COMMENT_PARAM)).andReturn("y");
+        EasyMock.expect(request.getParameter(GateKeeperPlugin.PARAM_GATEKEEPER)).andReturn("eggtart");
+        EasyMock.expect(request.getSession()).andReturn(session);
+        HttpServletResponse response = (HttpServletResponse) EasyMock.createStrictMock(HttpServletResponse.class);
+
+        EasyMock.replay(new Object[]{blogQAProvider, blojsomQAProvider, request, response, session});
+
+        GateKeeperPlugin gateKeeperPlugin = new GateKeeperPlugin(manager);
         try {
             Map properties = new HashMap();
             properties.put(GateKeeperPlugin.PROPERTY_ENABLED, Boolean.TRUE.toString());
-            Blog blog = new DatabaseBlog();
             blog.setProperties(properties);
             blog.setBlogCommentsEnabled(Boolean.TRUE);
             Map context = new HashMap();
             gateKeeperPlugin.init();
             gateKeeperPlugin.process(
-                            mDataFixture.createMockHttpServletRequestWithCommentFormSubmission("y", "eggtart", "fruittart"),
-                            mDataFixture.createMockHttpServletResponse(),
+                            request,
+                            response,
                             blog,
                             context,
                             new Entry[]{});
@@ -207,21 +395,47 @@ public class GateKeeperPluginTest extends TestCase {
         } catch (PluginException pe) {
             fail("Unexpected PluginException thrown: " + pe);
         }
+        EasyMock.verify(new Object[]{blogQAProvider, blojsomQAProvider, request, response, session});
     }
 
     public void testProcessWithSCodeInputMatchingSCodeAnswerDoesntMarkCommentForDeletion() {
-        GateKeeperPlugin gateKeeperPlugin = new GateKeeperPlugin(mDataFixture.createQAManager());
+    	Blog blog = new DatabaseBlog();
+
+    	BlogQAProvider blogQAProvider = (BlogQAProvider) EasyMock.createStrictMock(BlogQAProvider.class);
+    	List blogQAs = createQuestionAnswerList(1);
+    	List blogQAProviders = new ArrayList();
+    	blogQAProviders.add(blogQAProvider);
+
+    	BlojsomQAProvider blojsomQAProvider = (BlojsomQAProvider) EasyMock.createStrictMock(BlojsomQAProvider.class);
+    	List blojsomQAProviders = new ArrayList();
+    	blojsomQAProviders.add(blojsomQAProvider);
+
+
+        QAManager manager = new QAManager(
+        		blojsomQAProviders,
+                blogQAProviders);
+
+        HttpSession session = (HttpSession) EasyMock.createStrictMock(HttpSession.class);
+        EasyMock.expect(session.getAttribute(GateKeeperPlugin.SESSION_ATTR_QA)).andReturn(new QA("dummy question", "eggtart"));
+
+        HttpServletRequest request = (HttpServletRequest) EasyMock.createStrictMock(HttpServletRequest.class);
+        EasyMock.expect(request.getParameter(CommentPlugin.COMMENT_PARAM)).andReturn("y");
+        EasyMock.expect(request.getParameter(GateKeeperPlugin.PARAM_GATEKEEPER)).andReturn("eggtart");
+        EasyMock.expect(request.getSession()).andReturn(session);
+        HttpServletResponse response = (HttpServletResponse) EasyMock.createStrictMock(HttpServletResponse.class);
+
+        EasyMock.replay(new Object[]{blogQAProvider, blojsomQAProvider, request, response, session});
+        GateKeeperPlugin gateKeeperPlugin = new GateKeeperPlugin(manager);
         try {
             Map properties = new HashMap();
             properties.put(GateKeeperPlugin.PROPERTY_ENABLED, Boolean.TRUE.toString());
-            Blog blog = new DatabaseBlog();
             blog.setProperties(properties);
             blog.setBlogCommentsEnabled(Boolean.TRUE);
             Map context = new HashMap();
             gateKeeperPlugin.init();
             gateKeeperPlugin.process(
-                            mDataFixture.createMockHttpServletRequestWithCommentFormSubmission("y", "eggtart", "eggtart"),
-                            mDataFixture.createMockHttpServletResponse(),
+                            request,
+                            response,
                             blog,
                             context,
                             new Entry[]{});
@@ -233,6 +447,7 @@ public class GateKeeperPluginTest extends TestCase {
         } catch (PluginException pe) {
             fail("Unexpected PluginException thrown: " + pe);
         }
+        EasyMock.verify(new Object[]{blogQAProvider, blojsomQAProvider, request, response, session});
     }
 
     private boolean isMarkedForDeletion(final Map context) {
@@ -247,5 +462,13 @@ public class GateKeeperPluginTest extends TestCase {
             isMarkedForDeletion = false;
         }
         return isMarkedForDeletion;
+    }
+
+    private List createQuestionAnswerList(int numOfQuestionAnswer) {
+        List list = new ArrayList();
+        for (int i = 0; i < numOfQuestionAnswer; i++) {
+            list.add(new QA("dummy question", "dummy answer"));
+        }
+        return list;
     }
 }

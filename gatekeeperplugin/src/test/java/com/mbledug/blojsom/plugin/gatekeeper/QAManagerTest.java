@@ -1,25 +1,41 @@
 package com.mbledug.blojsom.plugin.gatekeeper;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import junit.framework.TestCase;
 
 import org.blojsom.blog.database.DatabaseBlog;
+import org.easymock.EasyMock;
+
+import com.mbledug.blojsom.plugin.gatekeeper.provider.BlogQAProvider;
+import com.mbledug.blojsom.plugin.gatekeeper.provider.BlojsomQAProvider;
 
 public class QAManagerTest extends TestCase {
 
-    private DataFixture mDataFixture;
-
-    protected void setUp() {
-        mDataFixture = new DataFixture();
-    }
-
     public void testGetRandomQuestionAnswer() {
+
+    	DatabaseBlog blog = new DatabaseBlog();
+
+    	BlogQAProvider blogQAProvider = (BlogQAProvider) EasyMock.createStrictMock(BlogQAProvider.class);
+    	EasyMock.expect(blogQAProvider.getQuestionAnswerList(blog)).andReturn(createQuestionAnswerList(1));
+    	List blogQAProviders = new ArrayList();
+    	blogQAProviders.add(blogQAProvider);
+
+    	BlojsomQAProvider blojsomQAProvider = (BlojsomQAProvider) EasyMock.createStrictMock(BlojsomQAProvider.class);
+    	EasyMock.expect(blojsomQAProvider.getQuestionAnswerList()).andReturn(createQuestionAnswerList(1));
+    	List blojsomQAProviders = new ArrayList();
+    	blojsomQAProviders.add(blojsomQAProvider);
+
+    	EasyMock.replay(new Object[]{blogQAProvider, blojsomQAProvider});
+
         QAManager manager = new QAManager(
-                mDataFixture.createBlojsomQAProviders(3, 20),
-                mDataFixture.createBlogQAProviders(5, 60));
-        QA questionAnswer = manager.getRandomQuestionAnswer(new DatabaseBlog());
+        		blojsomQAProviders,
+                blogQAProviders);
+		QA questionAnswer = manager.getRandomQuestionAnswer(blog);
         assertNotNull(questionAnswer);
+
+        EasyMock.verify(new Object[]{blogQAProvider, blojsomQAProvider});
     }
 
     public void testConstructQAManagerWithNullBlojsomQAProvidersThrowsIllegalArgumentException() {
@@ -47,5 +63,13 @@ public class QAManagerTest extends TestCase {
         } catch (IllegalArgumentException iae) {
             // expected
         }
+    }
+
+    private List createQuestionAnswerList(int numOfQuestionAnswer) {
+        List list = new ArrayList();
+        for (int i = 0; i < numOfQuestionAnswer; i++) {
+            list.add(new QA("dummy question", "dummy answer"));
+        }
+        return list;
     }
 }
