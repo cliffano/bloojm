@@ -1,14 +1,16 @@
 package com.mbledug.blojsom.plugin.imnotification.message;
 
+import java.util.GregorianCalendar;
+
 import junit.framework.TestCase;
 
+import org.blojsom.blog.Entry;
+import org.blojsom.blog.Pingback;
+import org.blojsom.blog.database.DatabaseBlog;
+import org.blojsom.blog.database.DatabaseEntry;
+import org.blojsom.blog.database.DatabasePingback;
 import org.blojsom.plugin.admin.event.EntryAddedEvent;
 import org.blojsom.plugin.pingback.event.PingbackAddedEvent;
-
-import com.mbledug.blojsom.plugin.imnotification.DataFixture;
-import com.mbledug.blojsom.plugin.imnotification.message.CommentMessageCreator;
-import com.mbledug.blojsom.plugin.imnotification.message.MessageCreator;
-import com.mbledug.blojsom.plugin.imnotification.message.PingbackMessageCreator;
 
 public class PingbackMessageCreatorTest extends TestCase {
 
@@ -22,12 +24,22 @@ public class PingbackMessageCreatorTest extends TestCase {
     }
 
     public void testGetMessageWithPingbackAddedEventCreatesExpectedMessage() {
-        String title = "Sam I Am";
+        GregorianCalendar calendar = new GregorianCalendar(2000, 11, 25);
+    	String title = "Sam I Am";
         String sourceUri = "http://somedummyurl";
-        PingbackAddedEvent event = DataFixture.createPingbackAddedEvent(title, sourceUri);
+        Entry entry = new DatabaseEntry();
+        entry.setTitle(title);
+        Pingback pingback = new DatabasePingback();
+        pingback.setSourceURI(sourceUri);
+        pingback.setEntry(entry);
+        PingbackAddedEvent event = new PingbackAddedEvent(
+                "dummy source",
+                calendar.getTime(),
+                pingback,
+                new DatabaseBlog());
         assertEquals(
                 MessageCreator.MESSAGE_PREFIX
-                + DataFixture.getChristmasDayIn2000AsString()
+                + "Mon Dec 25 00:00:00 EST 2000"
                 + " - New pingback was added from "
                 + sourceUri
                 + " to entry '"

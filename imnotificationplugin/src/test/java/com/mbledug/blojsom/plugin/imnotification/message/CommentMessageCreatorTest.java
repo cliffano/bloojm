@@ -1,13 +1,16 @@
 package com.mbledug.blojsom.plugin.imnotification.message;
 
+import java.util.GregorianCalendar;
+
 import junit.framework.TestCase;
 
+import org.blojsom.blog.Comment;
+import org.blojsom.blog.Entry;
+import org.blojsom.blog.database.DatabaseBlog;
+import org.blojsom.blog.database.DatabaseComment;
+import org.blojsom.blog.database.DatabaseEntry;
 import org.blojsom.plugin.admin.event.EntryAddedEvent;
 import org.blojsom.plugin.comment.event.CommentAddedEvent;
-
-import com.mbledug.blojsom.plugin.imnotification.DataFixture;
-import com.mbledug.blojsom.plugin.imnotification.message.CommentMessageCreator;
-import com.mbledug.blojsom.plugin.imnotification.message.MessageCreator;
 
 public class CommentMessageCreatorTest extends TestCase {
 
@@ -23,10 +26,20 @@ public class CommentMessageCreatorTest extends TestCase {
     public void testGetMessageWithCommentAddedEventCreatesExpectedMessage() {
         String title = "Sam I Am";
         String author = "Dr. Seuss";
-        CommentAddedEvent event = DataFixture.createCommentAddedEvent(author, title);
+        GregorianCalendar calendar = new GregorianCalendar(2000, 11, 25);
+        Entry entry = new DatabaseEntry();
+        entry.setTitle(title);
+        Comment comment = new DatabaseComment();
+        comment.setAuthor(author);
+        comment.setEntry(entry);
+        CommentAddedEvent event = new CommentAddedEvent(
+                "dummy source",
+                calendar.getTime(),
+                comment,
+                new DatabaseBlog());
         assertEquals(
                 MessageCreator.MESSAGE_PREFIX
-                + DataFixture.getChristmasDayIn2000AsString()
+                + "Mon Dec 25 00:00:00 EST 2000"
                 + " - New comment was added by "
                 + author
                 + " to entry '"
