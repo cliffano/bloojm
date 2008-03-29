@@ -84,8 +84,10 @@ public class PreviousEntriesDatabaseFetcher {
             final Entry entry,
             final int numPreviousEntries) throws FetcherException {
 
+        Entry[] previousEntries;
+        Session session = null;
         try {
-            Session session = mSessionFactory.openSession();
+            session = mSessionFactory.openSession();
             Transaction tx = session.beginTransaction();
 
             Query query = session.createQuery(QUERY);
@@ -93,16 +95,19 @@ public class PreviousEntriesDatabaseFetcher {
             query.setTimestamp("entryDate", entry.getDate());
             query.setFirstResult(1);
             query.setMaxResults(numPreviousEntries);
-            List previousEntries = query.list();
+            List resultList = query.list();
+            previousEntries = (Entry[]) resultList.toArray(
+                    new DatabaseEntry[resultList.size()]);
 
             tx.commit();
-            session.close();
-
-            return (Entry[]) previousEntries.toArray(
-                    new DatabaseEntry[previousEntries.size()]);
-
         } catch (HibernateException he) {
             throw new FetcherException(he);
+        } finally {
+            if (session != null) {
+                session.close();
+            }
         }
+        return previousEntries;
+
     }
 }
