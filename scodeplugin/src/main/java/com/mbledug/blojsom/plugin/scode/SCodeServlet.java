@@ -76,10 +76,12 @@ public class SCodeServlet extends HttpServlet {
      * session atttribute.
      * @param httpServletRequest the servlet request
      * @param httpServletResponse  the servlet response
+     * @throws IOException when there's a problem creating the image
      */
     public final void service(
             final HttpServletRequest httpServletRequest,
-            final HttpServletResponse httpServletResponse) {
+            final HttpServletResponse httpServletResponse)
+            throws IOException {
 
         String sCode = RandomStringUtils.random(SCODE_LENGTH, false, true);
         if (LOG.isDebugEnabled()) {
@@ -104,13 +106,15 @@ public class SCodeServlet extends HttpServlet {
         // create a PNG image of the SCode
         BufferedImage image = imageFactory.getImage(sCode, flavor);
 
+        ServletOutputStream out = null;
         try {
-            ServletOutputStream out = httpServletResponse.getOutputStream();
+            out = httpServletResponse.getOutputStream();
             ImageIO.write(image, "png", out);
             out.flush();
-            out.close();
-        } catch (IOException ioe) {
-            LOG.error("Unable to write SCode image.", ioe);
+        } finally {
+            if (out != null) {
+                out.close();
+            }
         }
     }
 }
