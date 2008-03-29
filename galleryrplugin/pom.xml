@@ -4,7 +4,7 @@
   <groupId>blojsom</groupId>
   <artifactId>galleryrplugin</artifactId>
   <packaging>jar</packaging>
-  <version>0.2</version>
+  <version>0.3-SNAPSHOT</version>
   <description>
     Blojsom plugin that retrieves information of photos/photosets stored in Flickr.
     This plugin is useful for creating a simple a photo gallery.
@@ -42,6 +42,18 @@
       <scope>compile</scope>
     </dependency>
     <dependency>
+      <groupId>org.easymock</groupId>
+      <artifactId>easymock</artifactId>
+      <version>2.3</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.easymock</groupId>
+      <artifactId>easymockclassextension</artifactId>
+      <version>2.2.2</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>flickrj</groupId>
       <artifactId>flickrapi</artifactId>
       <version>1.0a8</version>
@@ -52,12 +64,6 @@
       <artifactId>servlet-api</artifactId>
       <version>2.3</version>
       <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>jmock</groupId>
-      <artifactId>jmock-cglib</artifactId>
-      <version>1.1.0</version>
-      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
