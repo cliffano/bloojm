@@ -51,7 +51,7 @@
   </mailingLists>
   <ciManagement>
     <system>hudson</system>
-    <url>http://dobby:8080/hudson/job/bloojm/</url>
+    <url>http://qoqoa.dnsdojo.org:8080/hudson/job/bloojm/</url>
     <notifiers>
       <notifier>
         <type>mail</type>
@@ -64,7 +64,7 @@
   <distributionManagement>
     <site>
       <id>qoqoa</id>
-      <url>sftp://qoqoa.com:2218//var/www/qoqoa/htdocs/code/blojsom/bloojm/report</url>
+      <url>scp://cliffano@qoqoa.com:2218/var/www/qoqoa.com/code/blojsom/bloojm/report</url>
     </site>
   </distributionManagement>
   <scm>
