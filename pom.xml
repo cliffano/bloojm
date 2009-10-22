@@ -19,7 +19,7 @@
     <module>trackbackkeywordplugin</module>
   </modules>
   <version>0.1</version>
-  <description>A collection of Blojsom plugins contributed by Qoqoa.</description>
+  <description>A collection of Blojsom plugins contributed by Studio Cliffano.</description>
   <inceptionYear>2006</inceptionYear>
   <name>Bloojm</name>
   <url>http://code.google.com/p/bloojm/</url>
@@ -51,20 +51,20 @@
   </mailingLists>
   <ciManagement>
     <system>hudson</system>
-    <url>http://qoqoa.dnsdojo.org:8080/hudson/job/bloojm/</url>
+    <url>http://tools.cliffano.com/hudson/job/bloojm/</url>
     <notifiers>
       <notifier>
         <type>mail</type>
         <configuration>
-          <address>cliffano@qoqoa.com</address>
+          <address>blah@cliffano.com</address>
         </configuration>
       </notifier>
     </notifiers>
   </ciManagement>
   <distributionManagement>
     <site>
-      <id>qoqoa</id>
-      <url>scp://cliffano@qoqoa.com:2218/var/www/qoqoa.com/code/blojsom/bloojm/report</url>
+      <id>ayame</id>
+      <url>scp://cliffano@cliffano.com:2218/var/www/cliffano.com/studio/blojsom/bloojm</url>
     </site>
   </distributionManagement>
   <scm>
@@ -76,8 +76,8 @@
     <developer>
       <id>cliffano</id>
       <name>Cliffano Subagio</name>
-      <email>cliffano@qoqoa.com</email>
-      <url>http://blog.qoqoa.com</url>
+      <email>blah@cliffano.com</email>
+      <url>http://blog.cliffano.com</url>
       <roles>
         <role>Developer</role>
       </roles>
@@ -91,8 +91,8 @@
     </license>
   </licenses>
   <organization>
-    <name>Qoqoa</name>
-    <url>http://qoqoa.com</url>
+    <name>Studio Cliffano</name>
+    <url>http://cliffano.com</url>
   </organization>
   <dependencies>
   </dependencies>
