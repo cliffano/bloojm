@@ -25,13 +25,13 @@
     <dependency>
       <groupId>blojsom</groupId>
       <artifactId>blojsom-core</artifactId>
-      <version>3.0</version>
+      <version>3.2</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>blojsom</groupId>
       <artifactId>blojsom-plugins</artifactId>
-      <version>3.0</version>
+      <version>3.2</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
