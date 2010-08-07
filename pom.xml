@@ -51,7 +51,7 @@
   </mailingLists>
   <ciManagement>
     <system>hudson</system>
-    <url>http://tools.cliffano.com/hudson/job/bloojm/</url>
+    <url>http://tools.cliffano.com/hudson/job/blojsom-bloojm/</url>
     <notifiers>
       <notifier>
         <type>mail</type>
