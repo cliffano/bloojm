@@ -64,7 +64,7 @@
   <distributionManagement>
     <site>
       <id>ayame</id>
-      <url>scp://ayame:2218/var/www/cliffano.com/studio/blojsom/bloojm</url>
+      <url>scp://teuchi:2218/var/www/cliffano.com/studio/blojsom/bloojm</url>
     </site>
   </distributionManagement>
   <scm>
