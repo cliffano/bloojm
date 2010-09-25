@@ -63,7 +63,7 @@
   </ciManagement>
   <distributionManagement>
     <site>
-      <id>ayame</id>
+      <id>studio</id>
       <url>scp://teuchi:2218/var/www/cliffano.com/studio/blojsom/bloojm</url>
     </site>
   </distributionManagement>
