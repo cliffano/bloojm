@@ -28,7 +28,6 @@ public class CommentMessageCreatorTest extends TestCase {
         String title = "Sam I Am";
         String author = "Dr. Seuss";
         GregorianCalendar calendar = new GregorianCalendar(2000, 11, 25);
-        calendar.setTimeZone(TimeZone.getTimeZone("EST"));
         Entry entry = new DatabaseEntry();
         entry.setTitle(title);
         Comment comment = new DatabaseComment();
@@ -41,7 +40,7 @@ public class CommentMessageCreatorTest extends TestCase {
                 new DatabaseBlog());
         assertEquals(
                 MessageCreator.MESSAGE_PREFIX
-                + "Mon Dec 25 00:00:00 EST 2000"
+                + "Mon Dec 25 00:00:00 UTC 2000"
                 + " - New comment was added by "
                 + author
                 + " to entry '"

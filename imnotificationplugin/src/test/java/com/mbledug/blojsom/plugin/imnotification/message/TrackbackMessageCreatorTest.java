@@ -1,7 +1,6 @@
 package com.mbledug.blojsom.plugin.imnotification.message;
 
 import java.util.GregorianCalendar;
-import java.util.TimeZone;
 
 import junit.framework.TestCase;
 
@@ -26,7 +25,6 @@ public class TrackbackMessageCreatorTest extends TestCase {
 
     public void testGetMessageWithTrackbackAddedEventCreatesExpectedMessage() {
         GregorianCalendar calendar = new GregorianCalendar(2000, 11, 25);
-        calendar.setTimeZone(TimeZone.getTimeZone("EST"));
         String title = "Sam I Am";
         String url = "http://somedummyurl";
         Entry entry = new DatabaseEntry();
@@ -41,7 +39,7 @@ public class TrackbackMessageCreatorTest extends TestCase {
                 new DatabaseBlog());
         assertEquals(
                 MessageCreator.MESSAGE_PREFIX
-                + "Mon Dec 25 00:00:00 EST 2000"
+                + "Mon Dec 25 00:00:00 UTC 2000"
                 + " - New trackback was added from "
                 + url
                 + " to entry '"

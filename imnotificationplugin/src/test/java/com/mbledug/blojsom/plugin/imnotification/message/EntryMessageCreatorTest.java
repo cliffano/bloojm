@@ -1,7 +1,6 @@
 package com.mbledug.blojsom.plugin.imnotification.message;
 
 import java.util.GregorianCalendar;
-import java.util.TimeZone;
 
 import junit.framework.TestCase;
 
@@ -31,7 +30,6 @@ public class EntryMessageCreatorTest extends TestCase {
 
     public void testGetMessageWithEntryAddedEventCreatesExpectedMessage() {
         GregorianCalendar calendar = new GregorianCalendar(2000, 11, 25);
-        calendar.setTimeZone(TimeZone.getTimeZone("EST"));
         String title = "Sam I Am";
         String author = "Dr. Seuss";
         Entry entry = new DatabaseEntry();
@@ -44,7 +42,7 @@ public class EntryMessageCreatorTest extends TestCase {
                 new DatabaseBlog());
         assertEquals(
                 MessageCreator.MESSAGE_PREFIX
-                + "Mon Dec 25 00:00:00 EST 2000"
+                + "Mon Dec 25 00:00:00 UTC 2000"
                 + " - New entry '"
                 + title
                 + "' was added by "

@@ -5,7 +5,6 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TimeZone;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -48,7 +47,6 @@ public class IMNotificationPluginTest extends TestCase {
         comment.setAuthor("dummy author");
         comment.setEntry(entry);
         GregorianCalendar calendar = new GregorianCalendar(2000, 11, 25);
-        calendar.setTimeZone(TimeZone.getTimeZone("EST"));
         CommentAddedEvent event = new CommentAddedEvent(
                 "dummy source",
                 calendar.getTime(),
@@ -67,7 +65,6 @@ public class IMNotificationPluginTest extends TestCase {
         comment.setAuthor("dummy author");
         comment.setEntry(entry);
         GregorianCalendar calendar = new GregorianCalendar(2000, 11, 25);
-        calendar.setTimeZone(TimeZone.getTimeZone("EST"));
         CommentAddedEvent commentAddedEvent = new CommentAddedEvent(
                 "dummy source",
                 calendar.getTime(),
