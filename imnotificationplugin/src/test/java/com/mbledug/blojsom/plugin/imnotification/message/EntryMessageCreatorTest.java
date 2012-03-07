@@ -1,6 +1,7 @@
 package com.mbledug.blojsom.plugin.imnotification.message;
 
 import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
 import junit.framework.TestCase;
 
@@ -30,6 +31,7 @@ public class EntryMessageCreatorTest extends TestCase {
 
     public void testGetMessageWithEntryAddedEventCreatesExpectedMessage() {
         GregorianCalendar calendar = new GregorianCalendar(2000, 11, 25);
+        calendar.setTimeZone(TimeZone.getTimeZone("EST"));
         String title = "Sam I Am";
         String author = "Dr. Seuss";
         Entry entry = new DatabaseEntry();

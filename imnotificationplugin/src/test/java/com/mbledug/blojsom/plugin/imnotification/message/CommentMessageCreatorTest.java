@@ -1,6 +1,7 @@
 package com.mbledug.blojsom.plugin.imnotification.message;
 
 import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
 import junit.framework.TestCase;
 
@@ -27,6 +28,7 @@ public class CommentMessageCreatorTest extends TestCase {
         String title = "Sam I Am";
         String author = "Dr. Seuss";
         GregorianCalendar calendar = new GregorianCalendar(2000, 11, 25);
+        calendar.setTimeZone(TimeZone.getTimeZone("EST"));
         Entry entry = new DatabaseEntry();
         entry.setTitle(title);
         Comment comment = new DatabaseComment();
