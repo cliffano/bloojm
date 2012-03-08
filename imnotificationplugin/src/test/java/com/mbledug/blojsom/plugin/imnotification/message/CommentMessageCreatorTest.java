@@ -1,7 +1,6 @@
 package com.mbledug.blojsom.plugin.imnotification.message;
 
 import java.util.GregorianCalendar;
-import java.util.TimeZone;
 
 import junit.framework.TestCase;
 
@@ -38,14 +37,8 @@ public class CommentMessageCreatorTest extends TestCase {
                 calendar.getTime(),
                 comment,
                 new DatabaseBlog());
-        assertEquals(
-                MessageCreator.MESSAGE_PREFIX
-                + "Mon Dec 25 00:00:00 UTC 2000"
-                + " - New comment was added by "
-                + author
-                + " to entry '"
-                + title
-                + "'",
-                new CommentMessageCreator().getMessage(event));
+        String message = new CommentMessageCreator().getMessage(event);
+        assertTrue(message.startsWith(MessageCreator.MESSAGE_PREFIX + "Mon Dec 25 00:00:00 "));
+        assertTrue(message.endsWith(" 2000 - New comment was added by " + author + " to entry '" + title + "'"));
     }
 }

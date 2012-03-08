@@ -37,14 +37,8 @@ public class TrackbackMessageCreatorTest extends TestCase {
                 calendar.getTime(),
                 trackback,
                 new DatabaseBlog());
-        assertEquals(
-                MessageCreator.MESSAGE_PREFIX
-                + "Mon Dec 25 00:00:00 UTC 2000"
-                + " - New trackback was added from "
-                + url
-                + " to entry '"
-                + title
-                + "'",
-                new TrackbackMessageCreator().getMessage(event));
+        String message = new TrackbackMessageCreator().getMessage(event);
+        assertTrue(message.startsWith(MessageCreator.MESSAGE_PREFIX + "Mon Dec 25 00:00:00 "));
+        assertTrue(message.endsWith(" 2000 - New trackback was added from " + url + " to entry '" + title + "'"));
     }
 }

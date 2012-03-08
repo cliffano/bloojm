@@ -40,13 +40,8 @@ public class EntryMessageCreatorTest extends TestCase {
                 calendar.getTime(),
                 entry,
                 new DatabaseBlog());
-        assertEquals(
-                MessageCreator.MESSAGE_PREFIX
-                + "Mon Dec 25 00:00:00 UTC 2000"
-                + " - New entry '"
-                + title
-                + "' was added by "
-                + author,
-                new EntryMessageCreator().getMessage(entryAddedEvent));
+        String message = new EntryMessageCreator().getMessage(entryAddedEvent);
+        assertTrue(message.startsWith(MessageCreator.MESSAGE_PREFIX + "Mon Dec 25 00:00:00 "));
+        assertTrue(message.endsWith(" 2000 - New entry '" + title + "' was added by " + author));
     }
 }

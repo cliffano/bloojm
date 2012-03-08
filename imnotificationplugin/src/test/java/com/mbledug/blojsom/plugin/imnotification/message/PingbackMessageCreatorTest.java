@@ -37,14 +37,8 @@ public class PingbackMessageCreatorTest extends TestCase {
                 calendar.getTime(),
                 pingback,
                 new DatabaseBlog());
-        assertEquals(
-                MessageCreator.MESSAGE_PREFIX
-                + "Mon Dec 25 00:00:00 UTC 2000"
-                + " - New pingback was added from "
-                + sourceUri
-                + " to entry '"
-                + title
-                + "'",
-                new PingbackMessageCreator().getMessage(event));
+        String message = new PingbackMessageCreator().getMessage(event);
+        assertTrue(message.startsWith(MessageCreator.MESSAGE_PREFIX + "Mon Dec 25 00:00:00 "));
+        assertTrue(message.endsWith(" 2000 - New pingback was added from " + sourceUri + " to entry '" + title + "'"));
     }
 }
