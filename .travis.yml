@@ -6,4 +6,6 @@ before_install:
   - mvn install:install-file -DgroupId=flickrj -DartifactId=flickrapi -Dversion=1.0a8 -Dpackaging=jar -Dfile=lib/flickrapi-1.0a8.jar
   - mvn install:install-file -DgroupId=kaptcha -DartifactId=kaptcha -Dversion=1.1 -Dpackaging=jar -Dfile=lib/kaptcha-1.1.jar
   - mvn install:install-file -DgroupId=markdownj -DartifactId=markdownj -Dversion=1.0.2b4-0.3.0 -Dpackaging=jar -Dfile=lib/markdownj-1.0.2b4-0.3.0.jar
-script: "mvn -Xmx512m -XX:MaxPermSize=512m clean test package site:site"
+before_script:
+  - export MAVEN_OPTS="-Xmx512m -XX:MaxPermSize=512m"
+script: "mvn clean test package site:site"
