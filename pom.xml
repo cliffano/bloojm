@@ -19,7 +19,7 @@
     <module>trackbackkeywordplugin</module>
   </modules>
   <version>0.1</version>
-  <description>A collection of Blojsom plugins contributed by Studio Cliffano.</description>
+  <description>A collection of Blojsom plugins.</description>
   <inceptionYear>2006</inceptionYear>
   <name>Bloojm</name>
   <url>http://code.google.com/p/bloojm/</url>
