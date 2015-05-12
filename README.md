@@ -1,4 +1,4 @@
-Bloojm [![http://travis-ci.org/cliffano/bloojm](https://secure.travis-ci.org/cliffano/bloojm.png?branch=master)](http://travis-ci.org/cliffano/bloojm)
+Bloojm [![http://travis-ci.org/cliffano/bloojm](https://img.shields.io/travis/cliffano/bloojm.svg)](http://travis-ci.org/cliffano/bloojm)
 ------
 
 Bloojm is a collection of Blojsom plugins.
